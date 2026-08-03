@@ -20,17 +20,15 @@ export default function MenuPanel() {
   ]
 
   return (
-    <aside
-      aria-hidden={!open}
-      className="fixed right-0 top-0 z-30 flex h-[100svh] w-[74%] flex-col justify-center px-8 md:w-[38%] md:px-14"
-    >
-      {/* Circular close button sitting on the seam (left edge of the panel) */}
+    <>
+      {/* Circular close button — fixed on the divider (the shell's right edge),
+          above the shell so it's never clipped. left = 100% - panel width. */}
       <button
         onClick={close}
         aria-label="Fechar menu"
         tabIndex={open ? 0 : -1}
-        className={`absolute left-0 top-1/2 z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-text text-bg shadow-lg transition-all duration-500 ${
-          open ? 'scale-100 opacity-100 delay-200' : 'scale-75 opacity-0'
+        className={`fixed left-[28%] top-1/2 z-[70] flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-text text-bg shadow-lg transition-all duration-500 md:left-[64%] ${
+          open ? 'scale-100 opacity-100 delay-200' : 'pointer-events-none scale-75 opacity-0'
         }`}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -38,7 +36,11 @@ export default function MenuPanel() {
         </svg>
       </button>
 
-      <nav className="flex flex-col gap-1">
+      <aside
+        aria-hidden={!open}
+        className="fixed right-0 top-0 z-30 flex h-[100svh] w-[72%] flex-col justify-center px-8 md:w-[36%] md:px-14"
+      >
+        <nav className="flex flex-col gap-1">
         {links.map((l, i) => {
           const active = pathname === l.to
           return (
@@ -80,6 +82,7 @@ export default function MenuPanel() {
         </ul>
         <LiveClock className="text-muted" />
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
