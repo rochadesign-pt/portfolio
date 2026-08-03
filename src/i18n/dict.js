@@ -31,9 +31,10 @@ export const dict = {
     },
     homeProcess: {
       label: 'Como trabalhamos',
-      title: 'O nosso',
-      titleAccent: 'processo',
+      title: 'A jornada até à',
+      titleAccent: 'excelência.',
       sub: 'De uma primeira conversa a um lançamento impecável — quatro passos, sem surpresas.',
+      cta: 'Começar um projeto',
     },
     stats: {
       label: 'Em números',
@@ -159,9 +160,10 @@ export const dict = {
     },
     homeProcess: {
       label: 'How we work',
-      title: 'Our',
-      titleAccent: 'process',
+      title: 'The journey to',
+      titleAccent: 'excellence.',
       sub: 'From a first conversation to an immaculate launch — four steps, no surprises.',
+      cta: 'Start a project',
     },
     stats: {
       label: 'By the numbers',

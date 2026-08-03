@@ -76,6 +76,17 @@
   letter-spacing: var(--display-tracking, -0.035em);
 }
 
+/* Diagonal hatch fill for the "empty" process cells */
+@utility hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(242, 239, 233, 0.05) 0,
+    rgba(242, 239, 233, 0.05) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
 /* Serif italic — brand accent words inside grotesk headings */
 @utility ital {
   font-family: var(--font-serif);
