@@ -31,7 +31,7 @@ export default function WorkStrip({ projects, speed = 60 }) {
             to={`/work/${p.slug}`}
             className="group relative block w-[280px] flex-none md:w-[360px]"
           >
-            <Cover colors={p.cover} className="aspect-[4/3] w-full rounded-xl" />
+            <Cover colors={p.cover} image={p.coverImage} className="aspect-[4/3] w-full rounded-xl" />
             <div className="mt-3 flex items-center justify-between">
               <span className="display text-xl">{p.title}</span>
               <span className="text-xs text-muted">{p.category}</span>

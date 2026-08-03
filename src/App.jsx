@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { LanguageProvider } from './i18n/LanguageContext'
+import { ContentProvider } from './content/ContentProvider'
 import { ZoomProvider } from './context/Zoom'
 import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
@@ -36,6 +37,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <LanguageProvider>
+      <ContentProvider>
       <BrowserRouter>
         <ZoomProvider>
           <Analytics />
@@ -48,6 +50,7 @@ export default function App() {
           </SmoothScroll>
         </ZoomProvider>
       </BrowserRouter>
+      </ContentProvider>
     </LanguageProvider>
   )
 }

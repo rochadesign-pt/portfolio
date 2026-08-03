@@ -4,10 +4,11 @@ import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import PageTransition from '../components/PageTransition'
-import { projects } from '../data/projects'
+import { useContent } from '../content/ContentProvider'
 
 export default function Studio() {
   const { t, lang } = useLang()
+  const { projects } = useContent()
 
   return (
     <PageTransition>
@@ -32,6 +33,7 @@ export default function Studio() {
             <Cover
               key={p.slug}
               colors={p.cover}
+              image={p.coverImage}
               className={`aspect-[3/4] rounded-xl ${i % 2 === 1 ? 'md:mt-10' : ''}`}
             />
           ))}
@@ -61,7 +63,11 @@ export default function Studio() {
         <div className="grid gap-x-6 gap-y-12 md:grid-cols-4">
           {team.map((m, i) => (
             <Reveal key={i}>
-              <Cover colors={projects[i % projects.length].cover} className="aspect-[4/5] rounded-xl" />
+              <Cover
+                colors={projects[i % projects.length]?.cover}
+                image={projects[i % projects.length]?.coverImage}
+                className="aspect-[4/5] rounded-xl"
+              />
               <h3 className="mt-4 text-lg">{m.name}</h3>
               <p className="text-sm text-muted">{m.role[lang]}</p>
             </Reveal>

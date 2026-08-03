@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
-import { projects } from '../data/projects'
+import { useContent } from '../content/ContentProvider'
 import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
 import Cover from '../components/Cover'
@@ -13,6 +13,7 @@ import PageTransition from '../components/PageTransition'
 export default function Project() {
   const { slug } = useParams()
   const { t, lang } = useLang()
+  const { projects } = useContent()
   const bodyRef = useRef(null)
 
   // Did we arrive via the click-to-zoom transition? If so, skip the page
@@ -70,6 +71,8 @@ export default function Project() {
   )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  // Gallery image (from Sanity) for slot i, if any — else the duotone shows.
+  const gi = (i) => p.galleryImages?.[i]
 
   return (
     <PageTransition instant={zoomEntry}>
@@ -150,7 +153,7 @@ export default function Project() {
             </div>
 
             {/* Full-width image */}
-            <ParallaxImage colors={p.gallery[0]} className="aspect-[16/9] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[0]} image={gi(0)} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Challenge */}
             <div id="ch-challenge" className="scroll-mt-28">
@@ -161,7 +164,7 @@ export default function Project() {
             </div>
 
             {/* Wide image */}
-            <ParallaxImage colors={p.gallery[4]} className="aspect-[2/1] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[4]} image={gi(4)} className="aspect-[2/1] w-full rounded-2xl" />
 
             {/* Approach */}
             <div id="ch-approach" className="scroll-mt-28">
@@ -174,10 +177,10 @@ export default function Project() {
             {/* Image pair — offset */}
             <div className="grid gap-4 md:grid-cols-2">
               <Reveal y={30}>
-                <Cover colors={p.gallery[1]} className="aspect-[4/5] w-full rounded-2xl" />
+                <Cover colors={p.gallery[1]} image={gi(1)} className="aspect-[4/5] w-full rounded-2xl" />
               </Reveal>
               <Reveal y={30} className="md:mt-16">
-                <Cover colors={p.gallery[2]} className="aspect-[4/5] w-full rounded-2xl" />
+                <Cover colors={p.gallery[2]} image={gi(2)} className="aspect-[4/5] w-full rounded-2xl" />
               </Reveal>
             </div>
 
@@ -200,18 +203,18 @@ export default function Project() {
             {/* Three-up image row */}
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
               <Reveal y={30}>
-                <Cover colors={p.gallery[5]} className="aspect-[3/4] w-full rounded-xl" />
+                <Cover colors={p.gallery[5]} image={gi(5)} className="aspect-[3/4] w-full rounded-xl" />
               </Reveal>
               <Reveal y={30} className="md:mt-10">
-                <Cover colors={p.gallery[3]} className="aspect-[3/4] w-full rounded-xl" />
+                <Cover colors={p.gallery[3]} image={gi(3)} className="aspect-[3/4] w-full rounded-xl" />
               </Reveal>
               <Reveal y={30} className="col-span-2 md:col-span-1 md:mt-20">
-                <Cover colors={p.gallery[6]} className="aspect-[16/10] w-full rounded-xl md:aspect-[3/4]" />
+                <Cover colors={p.gallery[6]} image={gi(6)} className="aspect-[16/10] w-full rounded-xl md:aspect-[3/4]" />
               </Reveal>
             </div>
 
             {/* Full-width image */}
-            <ParallaxImage colors={p.gallery[7]} className="aspect-[16/9] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[7]} image={gi(7)} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Results: outcome + quote + stats */}
             <div id="ch-results" className="flex scroll-mt-28 flex-col gap-12">
@@ -220,18 +223,20 @@ export default function Project() {
                 <Para items={p.outcome[lang]} />
               </Reveal>
 
-              <Reveal>
-                <blockquote className="border-t border-line pt-10">
-                  <p className="display text-3xl leading-[1.25] md:text-4xl">“{p.quote.text[lang]}”</p>
-                  <footer className="mt-6 flex items-center gap-3 text-sm">
-                    <span className="h-8 w-8 rounded-full bg-accent" />
-                    <span>
-                      <span className="text-text">{p.quote.author}</span>
-                      <span className="text-muted"> · {p.quote.role[lang]}</span>
-                    </span>
-                  </footer>
-                </blockquote>
-              </Reveal>
+              {p.quote && (p.quote.text?.[lang] || p.quote.author) && (
+                <Reveal>
+                  <blockquote className="border-t border-line pt-10">
+                    <p className="display text-3xl leading-[1.25] md:text-4xl">“{p.quote.text?.[lang]}”</p>
+                    <footer className="mt-6 flex items-center gap-3 text-sm">
+                      <span className="h-8 w-8 rounded-full bg-accent" />
+                      <span>
+                        <span className="text-text">{p.quote.author}</span>
+                        <span className="text-muted"> · {p.quote.role?.[lang]}</span>
+                      </span>
+                    </footer>
+                  </blockquote>
+                </Reveal>
+              )}
 
               <Reveal>
                 <div className="border-t-2 border-accent pt-8">
@@ -254,9 +259,9 @@ export default function Project() {
       {/* Gallery band */}
       <section className="mx-auto max-w-[1400px] px-6 pt-24 md:px-10 md:pt-28">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {[p.gallery[0], p.gallery[2], p.gallery[5], p.gallery[1]].map((g, i) => (
+          {[0, 2, 5, 1].map((idx, i) => (
             <Reveal key={i} delay={(i % 4) * 0.05} className={i % 2 === 1 ? 'md:mt-10' : ''}>
-              <Cover colors={g} className="aspect-[3/4] w-full rounded-xl" />
+              <Cover colors={p.gallery[idx]} image={gi(idx)} className="aspect-[3/4] w-full rounded-xl" />
             </Reveal>
           ))}
         </div>

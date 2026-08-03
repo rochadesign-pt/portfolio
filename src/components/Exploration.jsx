@@ -1,5 +1,5 @@
 import { useLang } from '../i18n/LanguageContext'
-import { explorations } from '../data/site'
+import { useContent } from '../content/ContentProvider'
 import Cover from './Cover'
 import Reveal from './Reveal'
 import MaskReveal from './MaskReveal'
@@ -11,6 +11,7 @@ const OFFSETS = [64, 20, 88, 4, 48, 28, 72, 12]
 
 export default function Exploration() {
   const { t, lang } = useLang()
+  const { explorations } = useContent()
 
   return (
     <section className="overflow-hidden py-24 md:py-32">

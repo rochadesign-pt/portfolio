@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
-import { projects, disciplines } from '../data/projects'
+import { disciplines } from '../data/projects'
+import { useContent } from '../content/ContentProvider'
 import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
@@ -11,10 +12,11 @@ import PageTransition from '../components/PageTransition'
 
 export default function Work() {
   const { t } = useLang()
+  const { projects } = useContent()
   const [filter, setFilter] = useState('All')
 
   const filtered =
-    filter === 'All' ? projects : projects.filter((p) => p.disciplines.includes(filter))
+    filter === 'All' ? projects : projects.filter((p) => (p.disciplines || []).includes(filter))
 
   const filters = ['All', ...disciplines]
 

@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
-import { projects } from '../data/projects'
+import { useContent } from '../content/ContentProvider'
 import { services, stats, clients } from '../data/site'
 import { fadeUp } from '../lib/motion'
 import Reveal from '../components/Reveal'
@@ -107,6 +107,7 @@ function IntroStatement() {
 
 function FeaturedWork() {
   const { t } = useLang()
+  const { projects } = useContent()
   const featured = projects.slice(0, 4)
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-16 md:px-10">
@@ -221,6 +222,7 @@ function ClientsBand() {
 
 function StudioTeaser() {
   const { t } = useLang()
+  const { projects } = useContent()
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
       <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-center">
@@ -237,8 +239,16 @@ function StudioTeaser() {
           </Magnetic>
         </Reveal>
         <Reveal y={30} className="grid grid-cols-2 gap-4">
-          <Cover colors={projects[1].cover} className="aspect-[3/4] rounded-xl" />
-          <Cover colors={projects[4].cover} className="mt-10 aspect-[3/4] rounded-xl" />
+          <Cover
+            colors={projects[1 % projects.length]?.cover}
+            image={projects[1 % projects.length]?.coverImage}
+            className="aspect-[3/4] rounded-xl"
+          />
+          <Cover
+            colors={projects[4 % projects.length]?.cover}
+            image={projects[4 % projects.length]?.coverImage}
+            className="mt-10 aspect-[3/4] rounded-xl"
+          />
         </Reveal>
       </div>
     </section>

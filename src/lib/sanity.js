@@ -4,7 +4,7 @@ import imageUrlBuilder from '@sanity/image-url'
 // Configure via env (Vercel → Environment Variables):
 //   VITE_SANITY_PROJECT_ID=xxxxxxxx
 //   VITE_SANITY_DATASET=production   (optional, defaults to production)
-const projectId = import.meta.env.VITE_SANITY_PROJECT_ID
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'amrp5r6y'
 const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 
 export const sanityConfigured = Boolean(projectId)
@@ -33,9 +33,22 @@ const EXPLORATION_QUERY = `*[_type == "exploration"] | order(order asc){ name, c
 
 // Map a Sanity project doc to the shape the site components expect.
 function mapProject(p) {
+  const cover = p.coverColors?.length === 2 ? p.coverColors : ['#ffc700', '#0b0b0d']
+  const a = cover[0]
+  const gallery = [
+    [a, '#0b0b0d'],
+    ['#1d1d20', '#151517'],
+    ['#0b0b0d', a],
+    ['#151517', '#1d1d20'],
+    [a, '#151517'],
+    ['#0b0b0d', '#1d1d20'],
+    ['#1d1d20', a],
+    ['#151517', '#0b0b0d'],
+  ]
   return {
     slug: p.slug,
     title: p.title,
+    gallery,
     isCaseStudy: p.isCaseStudy !== false,
     category: p.category || '',
     disciplines: p.disciplines || [],
@@ -43,7 +56,7 @@ function mapProject(p) {
     country: p.country || '',
     year: p.year || '',
     services: p.services || [],
-    cover: p.coverColors?.length === 2 ? p.coverColors : ['#ffc700', '#0b0b0d'],
+    cover,
     coverImage: imgUrl(p.coverImage),
     tagline: p.tagline || { pt: '', en: '' },
     intro: p.intro || { pt: '', en: '' },
