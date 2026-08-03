@@ -148,3 +148,41 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Salient "Signal"-style menu: the page shell slides aside to reveal the
+   MenuPanel behind it. No transform when closed, so position: fixed/sticky
+   inside pages behave normally. */
+.page-shell {
+  position: relative;
+  z-index: 40;
+  min-height: 100svh;
+  background: var(--color-bg);
+  transform-origin: center;
+  transition:
+    transform 0.7s cubic-bezier(0.32, 0.72, 0, 1),
+    border-radius 0.7s cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.page-shell.is-open {
+  transform: translateX(-68%) scale(0.88);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 120px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--color-line);
+  will-change: transform;
+}
+@media (min-width: 768px) {
+  .page-shell.is-open {
+    transform: translateX(-34%) scale(0.82);
+    border-radius: 24px;
+  }
+}
+.page-shell-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}

@@ -4,8 +4,10 @@ import { ThemeProvider } from './theme/ThemeContext'
 import { LanguageProvider } from './i18n/LanguageContext'
 import { ContentProvider } from './content/ContentProvider'
 import { ZoomProvider } from './context/Zoom'
+import { MenuProvider, useMenu } from './context/Menu'
 import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
+import MenuPanel from './components/MenuPanel'
 import Footer from './components/Footer'
 import TypePanel from './components/TypePanel'
 import Preloader from './components/Preloader'
@@ -35,6 +37,17 @@ function AnimatedRoutes() {
   )
 }
 
+// The scrollable content that slides aside to reveal the menu panel.
+function PageShell({ children }) {
+  const { open, close } = useMenu()
+  return (
+    <div className={`page-shell ${open ? 'is-open' : ''}`}>
+      {open && <button aria-label="Fechar menu" className="page-shell-cover" onClick={close} />}
+      {children}
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -42,14 +55,19 @@ export default function App() {
       <ContentProvider>
       <BrowserRouter>
         <ZoomProvider>
-          <Analytics />
-          <Preloader />
-          <SmoothScroll>
-            <Nav />
-            <AnimatedRoutes />
-            <Footer />
-            <TypePanel />
-          </SmoothScroll>
+          <MenuProvider>
+            <Analytics />
+            <Preloader />
+            <SmoothScroll>
+              <Nav />
+              <MenuPanel />
+              <PageShell>
+                <AnimatedRoutes />
+                <Footer />
+              </PageShell>
+              <TypePanel />
+            </SmoothScroll>
+          </MenuProvider>
         </ZoomProvider>
       </BrowserRouter>
       </ContentProvider>

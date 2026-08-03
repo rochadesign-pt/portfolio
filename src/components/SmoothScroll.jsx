@@ -11,6 +11,8 @@ export default function SmoothScroll({ children }) {
     if (reduce) return
 
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+    // Exposed so overlays (e.g. the fullscreen menu) can lock/unlock scroll.
+    window.__lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -31,6 +33,7 @@ export default function SmoothScroll({ children }) {
       window.removeEventListener('load', onLoad)
       gsap.ticker.remove(raf)
       lenis.destroy()
+      if (window.__lenis === lenis) delete window.__lenis
     }
   }, [])
 
