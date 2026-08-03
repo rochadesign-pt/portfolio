@@ -68,12 +68,12 @@
   font-weight: 500;
 }
 
-/* Grotesk display — headline treatment */
+/* Grotesk display — headline treatment. Weight + tracking are live-tweakable. */
 @utility display {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: var(--display-weight, 500);
   line-height: 0.98;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--display-tracking, -0.035em);
 }
 
 /* Serif italic — brand accent words inside grotesk headings */

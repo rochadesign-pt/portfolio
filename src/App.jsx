@@ -4,6 +4,7 @@ import { LanguageProvider } from './i18n/LanguageContext'
 import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
+import TypePanel from './components/TypePanel'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
@@ -37,6 +38,7 @@ export default function App() {
           <Nav />
           <AnimatedRoutes />
           <Footer />
+          <TypePanel />
         </SmoothScroll>
       </BrowserRouter>
     </LanguageProvider>

@@ -16,31 +16,13 @@ function Hero() {
   const { t } = useLang()
   const reduce = useReducedMotion()
 
-  const float = (delay) =>
-    reduce
-      ? {}
-      : { animate: { y: [0, -14, 0] }, transition: { duration: 6, repeat: Infinity, ease: 'easeInOut', delay } }
-
   return (
     <section className="relative mx-auto max-w-[1400px] px-6 pt-40 pb-24 md:px-10 md:pt-52">
-      {/* floating collage — decorative, desktop only */}
-      <div className="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden>
-        <motion.div className="absolute right-[6%] top-[22%] h-40 w-32 rotate-6 rounded-lg overflow-hidden shadow-2xl" {...float(0)}>
-          <Cover colors={projects[0].cover} className="h-full w-full" />
-        </motion.div>
-        <motion.div className="absolute right-[20%] top-[52%] h-28 w-40 -rotate-3 rounded-lg overflow-hidden shadow-2xl" {...float(1.2)}>
-          <Cover colors={projects[2].cover} className="h-full w-full" />
-        </motion.div>
-        <motion.div className="absolute right-[2%] top-[60%] h-24 w-24 rotate-12 rounded-lg overflow-hidden shadow-2xl" {...float(0.6)}>
-          <Cover colors={projects[3].cover} className="h-full w-full" />
-        </motion.div>
-      </div>
-
       <motion.p variants={fadeUp} initial="hidden" animate="show" className="label mb-8">
         {t.hero.eyebrow}
       </motion.p>
 
-      <h1 className="display text-[15vw] leading-[0.9] tracking-tight md:text-[7.5rem] lg:text-[8.5rem]">
+      <h1 className="display text-[12vw] leading-[0.92] tracking-tight md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
         <motion.span custom={0} variants={fadeUp} initial="hidden" animate="show" className="block">
           {t.hero.line1}
         </motion.span>
