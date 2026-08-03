@@ -51,46 +51,46 @@ export default function Project() {
 
   return (
     <PageTransition>
-      {/* Hero */}
-      <section className="mx-auto max-w-[1400px] px-6 pt-36 md:px-10 md:pt-44">
-        <Reveal>
-          <Link to="/work" className="link-underline text-sm text-muted hover:text-text">
-            ← {t.project.back}
-          </Link>
-        </Reveal>
-        <div className="mt-8 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+      {/* Full-bleed hero header — the zoom lands here */}
+      <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
+        <ParallaxImage colors={p.cover} className="absolute inset-0 h-full w-full" amount={6} />
+        {/* legibility scrims */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
+
+        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-between px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32">
+          <Reveal>
+            <Link to="/work" className="link-underline text-sm text-text/80 hover:text-text">
+              ← {t.project.back}
+            </Link>
+          </Reveal>
+
           <div>
-            <Reveal className="mb-4">
-              <p className="label">{p.category}</p>
+            <Reveal className="mb-5">
+              <span className="text-xs font-medium uppercase tracking-[0.22em] text-text/70">{p.category}</span>
             </Reveal>
             <MaskReveal>
-              <h1 className="display text-6xl leading-[0.95] md:text-8xl">{p.title}</h1>
+              <h1 className="display text-7xl leading-[0.88] md:text-[9rem]">{p.title}</h1>
             </MaskReveal>
-            <Reveal className="mt-6 max-w-2xl">
-              <p className="ital text-2xl text-muted md:text-3xl">{p.tagline[lang]}</p>
-            </Reveal>
+            <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <Reveal className="max-w-2xl">
+                <p className="ital text-2xl leading-snug text-text/85 md:text-3xl">{p.tagline[lang]}</p>
+              </Reveal>
+              <Reveal>
+                <button
+                  onClick={scrollToBody}
+                  className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 hover:text-text"
+                >
+                  {t.project.keepReading} ↓
+                </button>
+              </Reveal>
+            </div>
           </div>
-          <Reveal>
-            <button
-              onClick={scrollToBody}
-              className="link-underline flex items-center gap-2 text-sm text-muted hover:text-text"
-            >
-              {t.project.keepReading} ↓
-            </button>
-          </Reveal>
         </div>
       </section>
 
-      {/* Cover with fade into bg */}
-      <section className="mx-auto mt-14 max-w-[1400px] px-6 md:px-10">
-        <Reveal y={30} className="relative">
-          <Cover colors={p.cover} className="aspect-[16/9] w-full rounded-2xl" label={p.title} />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 rounded-b-2xl bg-gradient-to-t from-bg to-transparent" />
-        </Reveal>
-      </section>
-
       {/* Meta bar */}
-      <section className="mx-auto max-w-[1400px] px-6 pt-10 md:px-10">
+      <section className="mx-auto max-w-[1400px] px-6 pt-14 md:px-10 md:pt-16">
         <Reveal className="grid grid-cols-2 gap-6 border-y border-line py-6 md:grid-cols-5">
           {meta.map((m) => (
             <div key={m.label}>
