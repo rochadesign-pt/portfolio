@@ -14,7 +14,7 @@ export default function Services() {
         </Reveal>
         <Reveal>
           <h1 className="display text-6xl md:text-8xl">
-            {t.servicesPage.title} <span className="italic text-accent">{t.servicesPage.titleAccent}</span>
+            {t.servicesPage.title} <span className="ital text-accent">{t.servicesPage.titleAccent}</span>
           </h1>
         </Reveal>
         <Reveal className="mt-6 max-w-xl">

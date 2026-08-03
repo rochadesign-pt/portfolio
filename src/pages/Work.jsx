@@ -5,6 +5,7 @@ import { projects, disciplines } from '../data/projects'
 import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import WorkCard from '../components/WorkCard'
+import WorkStrip from '../components/WorkStrip'
 import PageTransition from '../components/PageTransition'
 
 export default function Work() {
@@ -24,14 +25,23 @@ export default function Work() {
         </Reveal>
         <Reveal>
           <h1 className="display text-6xl md:text-8xl">
-            {t.workPage.title} <span className="italic text-accent">{t.workPage.titleAccent}</span>
+            {t.workPage.title} <span className="ital text-accent">{t.workPage.titleAccent}</span>
           </h1>
         </Reveal>
         <Reveal className="mt-6 max-w-xl">
           <p className="text-lg text-muted">{t.workPage.sub}</p>
         </Reveal>
+      </section>
 
-        <Reveal className="mt-12 flex flex-wrap gap-2">
+      {/* Full-bleed work showcase strip */}
+      <section className="mb-8 pl-6 md:pl-10">
+        <Reveal>
+          <WorkStrip projects={projects} />
+        </Reveal>
+      </section>
+
+      <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
+        <Reveal className="mb-12 flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
               key={f}
@@ -46,9 +56,6 @@ export default function Work() {
             </button>
           ))}
         </Reveal>
-      </section>
-
-      <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
         <motion.div layout className="grid gap-x-6 gap-y-14 md:grid-cols-2">
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (

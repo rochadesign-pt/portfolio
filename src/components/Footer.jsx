@@ -13,7 +13,7 @@ export default function Footer() {
         <Reveal>
           <p className="label mb-4">{t.cta.label}</p>
           <Link to="/contact" className="display block text-6xl leading-[0.9] tracking-tight md:text-8xl">
-            {t.cta.line} <span className="italic text-accent">{t.cta.lineAccent}</span>
+            {t.cta.line} <span className="ital text-accent">{t.cta.lineAccent}</span>
           </Link>
         </Reveal>
 

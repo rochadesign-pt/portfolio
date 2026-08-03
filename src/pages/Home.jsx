@@ -47,7 +47,7 @@ function Hero() {
         <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.08 }} className="block">
           {t.hero.line2}
         </motion.span>
-        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.16 }} className="block italic text-accent">
+        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.16 }} className="block ital text-accent">
           {t.hero.accent}
         </motion.span>
       </h1>
@@ -108,7 +108,7 @@ function FeaturedWork() {
           </Reveal>
           <Reveal>
             <h2 className="display text-5xl md:text-7xl">
-              {t.work.title} <span className="italic text-accent">{t.work.titleAccent}</span>
+              {t.work.title} <span className="ital text-accent">{t.work.titleAccent}</span>
             </h2>
           </Reveal>
         </div>
@@ -146,7 +146,7 @@ function ServicesPreview() {
         </Reveal>
         <Reveal>
           <h2 className="display text-5xl md:text-7xl">
-            {t.services.title} <span className="italic text-accent">{t.services.titleAccent}</span>
+            {t.services.title} <span className="ital text-accent">{t.services.titleAccent}</span>
           </h2>
         </Reveal>
       </div>

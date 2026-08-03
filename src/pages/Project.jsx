@@ -2,8 +2,10 @@ import { useRef } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { projects } from '../data/projects'
+import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
 import Cover from '../components/Cover'
+import ChapterNav from '../components/ChapterNav'
 import PageTransition from '../components/PageTransition'
 
 export default function Project() {
@@ -16,18 +18,32 @@ export default function Project() {
   const p = projects[index]
   const moreCases = [projects[(index + 1) % projects.length], projects[(index + 2) % projects.length]]
 
-  const sections = [
-    { title: t.project.challenge, body: p.challenge[lang] },
-    { title: t.project.approach, body: p.approach[lang] },
-    { title: t.project.outcome, body: p.outcome[lang] },
-  ]
-
   const meta = [
     { label: t.project.client, value: p.client },
     { label: t.project.industry, value: p.industry[lang] },
     { label: t.project.country, value: p.country },
     { label: t.project.year, value: p.year },
   ]
+
+  const chapters = [
+    { id: 'ch-context', label: t.project.context },
+    { id: 'ch-challenge', label: t.project.challenge },
+    { id: 'ch-approach', label: t.project.approach },
+    { id: 'ch-process', label: t.project.process },
+    { id: 'ch-results', label: t.project.results },
+  ]
+
+  const Para = ({ items }) => (
+    <div className="flex max-w-2xl flex-col gap-4 text-lg leading-relaxed text-text/85">
+      {items.map((para, i) => (
+        <p key={i}>{para}</p>
+      ))}
+    </div>
+  )
+
+  const Heading = ({ children }) => (
+    <h2 className="ital text-accent text-4xl md:text-5xl">{children}</h2>
+  )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
@@ -47,7 +63,7 @@ export default function Project() {
               <h1 className="display text-6xl leading-[0.95] md:text-8xl">{p.title}</h1>
             </Reveal>
             <Reveal className="mt-6 max-w-2xl">
-              <p className="display text-2xl italic text-muted md:text-3xl">{p.tagline[lang]}</p>
+              <p className="ital text-2xl text-muted md:text-3xl">{p.tagline[lang]}</p>
             </Reveal>
           </div>
           <Reveal>
@@ -69,90 +85,127 @@ export default function Project() {
         </Reveal>
       </section>
 
-      {/* Body: sticky meta sidebar + wide content */}
-      <section ref={bodyRef} className="mx-auto max-w-[1400px] px-6 pt-24 md:px-10 md:pt-32">
-        <div className="grid gap-x-10 gap-y-12 md:grid-cols-[3fr_8fr]">
-          {/* Sidebar */}
-          <Reveal className="self-start md:sticky md:top-28">
-            <div className="border-t border-line">
-              {meta.map((m) => (
-                <div key={m.label} className="flex items-center justify-between gap-4 border-b border-line py-4">
-                  <span className="label">{m.label}</span>
-                  <span className="text-sm text-text">{m.value}</span>
-                </div>
-              ))}
-              <div className="border-b border-line py-4">
-                <span className="label mb-3 block">{t.project.services}</span>
-                <ul className="space-y-1.5">
-                  {p.services.map((s) => (
-                    <li key={s} className="flex items-center gap-2 text-sm text-text">
-                      <span className="h-1 w-1 rounded-full bg-accent" />
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+      {/* Meta bar */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-10 md:px-10">
+        <Reveal className="grid grid-cols-2 gap-6 border-y border-line py-6 md:grid-cols-5">
+          {meta.map((m) => (
+            <div key={m.label}>
+              <p className="label mb-1.5">{m.label}</p>
+              <p className="text-sm text-text">{m.value}</p>
             </div>
-          </Reveal>
+          ))}
+          <div className="col-span-2 md:col-span-1">
+            <p className="label mb-1.5">{t.project.services}</p>
+            <p className="text-sm text-text">{p.services.join(', ')}</p>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Body: sticky chapter stepper + content */}
+      <section ref={bodyRef} className="mx-auto max-w-[1400px] px-6 pt-20 md:px-10 md:pt-28">
+        <div className="grid gap-x-12 gap-y-12 md:grid-cols-[3fr_9fr]">
+          {/* Chapter stepper */}
+          <div className="hidden md:block">
+            <div className="sticky top-28">
+              <ChapterNav chapters={chapters} label={t.project.chapters} />
+            </div>
+          </div>
 
           {/* Content */}
-          <div className="flex flex-col gap-14">
-            {/* Lead */}
-            <Reveal>
-              <p className="display text-3xl leading-[1.2] md:text-4xl">{p.intro[lang]}</p>
+          <div className="flex flex-col gap-16">
+            {/* Context / lead */}
+            <div id="ch-context" className="scroll-mt-28">
+              <Reveal>
+                <p className="display text-3xl leading-[1.2] md:text-4xl">{p.intro[lang]}</p>
+              </Reveal>
+            </div>
+
+            {/* Full-width image */}
+            <Reveal y={30}>
+              <Cover colors={p.gallery[0]} className="aspect-[16/9] w-full rounded-2xl" />
             </Reveal>
 
-            <div className="h-px w-full bg-line" />
+            {/* Challenge */}
+            <div id="ch-challenge" className="scroll-mt-28">
+              <Reveal className="flex flex-col gap-6">
+                <Heading>{t.project.challenge}</Heading>
+                <Para items={p.challenge[lang]} />
+              </Reveal>
+            </div>
 
-            {/* Narrative sections */}
-            {sections.map((s) => (
-              <Reveal key={s.title}>
-                <div className="flex flex-col gap-6">
-                  <h2 className="display text-4xl italic text-accent md:text-5xl">{s.title}</h2>
-                  <div className="flex max-w-2xl flex-col gap-4 text-lg leading-relaxed text-text/85">
-                    {s.body.map((para, i) => (
-                      <p key={i}>{para}</p>
+            {/* Approach */}
+            <div id="ch-approach" className="scroll-mt-28">
+              <Reveal className="flex flex-col gap-6">
+                <Heading>{t.project.approach}</Heading>
+                <Para items={p.approach[lang]} />
+              </Reveal>
+            </div>
+
+            {/* Image pair */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <Reveal y={30}>
+                <Cover colors={p.gallery[1]} className="aspect-square w-full rounded-2xl" />
+              </Reveal>
+              <Reveal y={30} className="md:mt-12">
+                <Cover colors={p.gallery[2]} className="aspect-square w-full rounded-2xl" />
+              </Reveal>
+            </div>
+
+            {/* Process */}
+            <div id="ch-process" className="scroll-mt-28">
+              <Reveal className="mb-8">
+                <Heading>{t.project.process}</Heading>
+              </Reveal>
+              <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+                {caseProcess.map((step) => (
+                  <Reveal key={step.n} className="bg-bg p-6 md:p-8">
+                    <span className="display text-3xl text-accent">{step.n}</span>
+                    <h3 className="mt-6 text-xl">{step.title[lang]}</h3>
+                    <p className="mt-2 text-sm text-muted">{step.desc[lang]}</p>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
+            {/* Full-width image */}
+            <Reveal y={30}>
+              <Cover colors={p.gallery[3]} className="aspect-[16/9] w-full rounded-2xl" />
+            </Reveal>
+
+            {/* Results: outcome + quote + stats */}
+            <div id="ch-results" className="flex scroll-mt-28 flex-col gap-12">
+              <Reveal className="flex flex-col gap-6">
+                <Heading>{t.project.outcome}</Heading>
+                <Para items={p.outcome[lang]} />
+              </Reveal>
+
+              <Reveal>
+                <blockquote className="border-t border-line pt-10">
+                  <p className="display text-3xl leading-[1.25] md:text-4xl">“{p.quote.text[lang]}”</p>
+                  <footer className="mt-6 flex items-center gap-3 text-sm">
+                    <span className="h-8 w-8 rounded-full bg-accent" />
+                    <span>
+                      <span className="text-text">{p.quote.author}</span>
+                      <span className="text-muted"> · {p.quote.role[lang]}</span>
+                    </span>
+                  </footer>
+                </blockquote>
+              </Reveal>
+
+              <Reveal>
+                <div className="border-t-2 border-accent pt-8">
+                  <span className="label mb-8 block">{t.project.results}</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3">
+                    {p.results.map((r) => (
+                      <div key={r.label.en}>
+                        <p className="display text-5xl md:text-6xl">{r.value}</p>
+                        <p className="mt-2 text-sm text-muted">{r.label[lang]}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
               </Reveal>
-            ))}
-
-            {/* Gallery 2×2 */}
-            <Reveal y={30} className="grid grid-cols-2 gap-4">
-              {p.gallery.map((g, i) => (
-                <Cover key={i} colors={g} className="aspect-[4/3] w-full rounded-xl" />
-              ))}
-            </Reveal>
-
-            {/* Pull quote */}
-            <Reveal>
-              <blockquote className="border-t border-line pt-10">
-                <p className="display text-3xl leading-[1.25] md:text-4xl">“{p.quote.text[lang]}”</p>
-                <footer className="mt-6 flex items-center gap-3 text-sm">
-                  <span className="h-8 w-8 rounded-full bg-accent" />
-                  <span>
-                    <span className="text-text">{p.quote.author}</span>
-                    <span className="text-muted"> · {p.quote.role[lang]}</span>
-                  </span>
-                </footer>
-              </blockquote>
-            </Reveal>
-
-            {/* Results */}
-            <Reveal>
-              <div className="border-t-2 border-accent pt-8">
-                <span className="label mb-8 block">{t.project.results}</span>
-                <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3">
-                  {p.results.map((r) => (
-                    <div key={r.label.en}>
-                      <p className="display text-5xl md:text-6xl">{r.value}</p>
-                      <p className="mt-2 text-sm text-muted">{r.label[lang]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -161,7 +214,7 @@ export default function Project() {
       <section className="mx-auto max-w-[1400px] px-6 pt-28 md:px-10 md:pt-36">
         <Reveal className="mb-12 border-t border-line pt-12">
           <h2 className="display text-5xl md:text-7xl">
-            {t.project.moreCases} <span className="italic text-accent">{t.project.moreCasesAccent}</span>
+            {t.project.moreCases} <span className="ital text-accent">{t.project.moreCasesAccent}</span>
           </h2>
         </Reveal>
         <div className="grid gap-6 md:grid-cols-2">
