@@ -2,6 +2,7 @@ import { useLang } from '../i18n/LanguageContext'
 import { explorations } from '../data/site'
 import Cover from './Cover'
 import Reveal from './Reveal'
+import MaskReveal from './MaskReveal'
 
 // Exploration / lab — a packed masonry mosaic of off-brief experiments.
 // Each tile carries a "Name / Category" caption.
@@ -14,13 +15,13 @@ export default function Exploration() {
         <Reveal className="mb-6">
           <span className="label">{t.exploration.label}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h2 className="display text-4xl leading-[1.08] md:text-6xl">
             {t.exploration.lead1} <span className="ital text-accent">{t.exploration.acc1}</span>{' '}
             {t.exploration.lead2} <span className="ital text-accent">{t.exploration.acc2}</span>{' '}
             {t.exploration.lead3}
           </h2>
-        </Reveal>
+        </MaskReveal>
         <Reveal className="mt-6 max-w-md">
           <p className="text-muted">{t.exploration.sub}</p>
         </Reveal>

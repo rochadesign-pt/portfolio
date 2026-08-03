@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import MaskText from '../components/MaskText'
+import MaskReveal from '../components/MaskReveal'
 import { projects } from '../data/projects'
 import { services, stats, clients } from '../data/site'
 import { fadeUp } from '../lib/motion'
@@ -114,11 +115,11 @@ function FeaturedWork() {
           <Reveal className="mb-4">
             <span className="label">{t.work.label}</span>
           </Reveal>
-          <Reveal>
+          <MaskReveal>
             <h2 className="display text-5xl md:text-7xl">
               {t.work.title} <span className="ital text-accent">{t.work.titleAccent}</span>
             </h2>
-          </Reveal>
+          </MaskReveal>
         </div>
         <Reveal className="hidden md:block">
           <Link to="/work" className="link-underline text-sm text-muted hover:text-text">
@@ -152,11 +153,11 @@ function ServicesPreview() {
         <Reveal className="mb-4">
           <span className="label">{t.services.label}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h2 className="display text-5xl md:text-7xl">
             {t.services.title} <span className="ital text-accent">{t.services.titleAccent}</span>
           </h2>
-        </Reveal>
+        </MaskReveal>
       </div>
 
       <div className="border-t border-line">

@@ -4,6 +4,7 @@ import { useLang } from '../i18n/LanguageContext'
 import { projects, disciplines } from '../data/projects'
 import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
+import MaskReveal from '../components/MaskReveal'
 import WorkCard from '../components/WorkCard'
 import WorkStrip from '../components/WorkStrip'
 import PageTransition from '../components/PageTransition'
@@ -23,11 +24,11 @@ export default function Work() {
         <Reveal className="mb-4">
           <span className="label">{t.workPage.eyebrow}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h1 className="display text-6xl md:text-8xl">
             {t.workPage.title} <span className="ital text-accent">{t.workPage.titleAccent}</span>
           </h1>
-        </Reveal>
+        </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
           <p className="text-lg text-muted">{t.workPage.sub}</p>
         </Reveal>

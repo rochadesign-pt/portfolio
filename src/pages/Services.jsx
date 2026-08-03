@@ -1,6 +1,7 @@
 import { useLang } from '../i18n/LanguageContext'
 import { services, process } from '../data/site'
 import Reveal from '../components/Reveal'
+import MaskReveal from '../components/MaskReveal'
 import PageTransition from '../components/PageTransition'
 
 export default function Services() {
@@ -12,11 +13,11 @@ export default function Services() {
         <Reveal className="mb-4">
           <span className="label">{t.servicesPage.eyebrow}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h1 className="display text-6xl md:text-8xl">
             {t.servicesPage.title} <span className="ital text-accent">{t.servicesPage.titleAccent}</span>
           </h1>
-        </Reveal>
+        </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
           <p className="text-lg text-muted">{t.servicesPage.sub}</p>
         </Reveal>

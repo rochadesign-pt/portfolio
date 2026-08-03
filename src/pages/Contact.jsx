@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLang } from '../i18n/LanguageContext'
 import { contact, social } from '../data/site'
 import Reveal from '../components/Reveal'
+import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
 import PageTransition from '../components/PageTransition'
 
@@ -24,11 +25,11 @@ export default function Contact() {
         <Reveal className="mb-4">
           <span className="label">{t.contactPage.eyebrow}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h1 className="display text-6xl leading-[0.95] md:text-8xl">
             {t.contactPage.title} <span className="ital text-accent">{t.contactPage.titleAccent}</span>
           </h1>
-        </Reveal>
+        </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
           <p className="text-lg text-muted">{t.contactPage.sub}</p>
         </Reveal>

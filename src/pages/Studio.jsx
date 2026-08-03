@@ -1,6 +1,7 @@
 import { useLang } from '../i18n/LanguageContext'
 import { values, team } from '../data/site'
 import Reveal from '../components/Reveal'
+import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import PageTransition from '../components/PageTransition'
 import { projects } from '../data/projects'
@@ -14,11 +15,11 @@ export default function Studio() {
         <Reveal className="mb-4">
           <span className="label">{t.studioPage.eyebrow}</span>
         </Reveal>
-        <Reveal>
+        <MaskReveal>
           <h1 className="display text-6xl leading-[0.95] md:text-8xl">
             {t.studioPage.title} <span className="ital text-accent">{t.studioPage.titleAccent}</span>
           </h1>
-        </Reveal>
+        </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
           <p className="text-lg text-muted">{t.studioPage.sub}</p>
         </Reveal>

@@ -4,6 +4,7 @@ import { useLang } from '../i18n/LanguageContext'
 import { projects } from '../data/projects'
 import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
+import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import ParallaxImage from '../components/ParallaxImage'
 import ChapterNav from '../components/ChapterNav'
@@ -59,10 +60,12 @@ export default function Project() {
         </Reveal>
         <div className="mt-8 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
           <div>
-            <Reveal>
-              <p className="label mb-4">{p.category}</p>
-              <h1 className="display text-6xl leading-[0.95] md:text-8xl">{p.title}</h1>
+            <Reveal className="mb-4">
+              <p className="label">{p.category}</p>
             </Reveal>
+            <MaskReveal>
+              <h1 className="display text-6xl leading-[0.95] md:text-8xl">{p.title}</h1>
+            </MaskReveal>
             <Reveal className="mt-6 max-w-2xl">
               <p className="ital text-2xl text-muted md:text-3xl">{p.tagline[lang]}</p>
             </Reveal>
