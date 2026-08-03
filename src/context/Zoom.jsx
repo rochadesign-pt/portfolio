@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, useState } from 'react'
+import { createContext, useContext, useCallback, useState, useRef, useLayoutEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Cover from '../components/Cover'
@@ -10,19 +10,48 @@ export function useZoom() {
   return useContext(ZoomContext)
 }
 
-// Seamless click-to-zoom: the clicked cover grows from its position to a full
-// viewport takeover while the project mounts underneath (with its entrance
-// skipped and its header text held back). When the overlay reaches full size it
-// exactly matches the project's full-bleed header, so it's removed without a
-// visible swap; only then does the header text rise in. Signals via
-// window.__zoomEntry + a 'rds:zoomlanded' event. Plain nav for reduced-motion.
+// Soft, iOS-like curve (see animation-stack).
+const EASE = [0.32, 0.72, 0, 1]
+const EXPAND = 0.7
+
+// Seamless click-to-zoom.
+//
+// The clicked cover grows from its on-screen position to a full-viewport
+// takeover while the project mounts underneath (entrance skipped, header text
+// held back). When the overlay reaches full size it exactly matches the
+// project's full-bleed header, so it fades out over the identical image — no
+// visible swap; only then does the header text rise in.
+//
+// Reliability comes from two choices:
+//  1. Framer Motion `layout` drives the growth via *transform* (compositor),
+//     not top/left/width/height (which thrash layout every frame). It stays
+//     smooth even while React is unmounting Home / mounting Project on the main
+//     thread, and the inner `layout` node cancels the scale so the image never
+//     stretches.
+//  2. The handoff is state-driven — `onLayoutAnimationComplete` — not a
+//     setTimeout racing the animation. It lands exactly when the growth ends.
 export function ZoomProvider({ children }) {
   const navigate = useNavigate()
-  const [state, setState] = useState(null)
+  const [state, setState] = useState(null) // { colors, image, rect }
+  const [expanded, setExpanded] = useState(false)
+  const fallback = useRef(null)
+
+  // Paint one frame at the card's box, then flip to full — Framer Motion sees
+  // the layout delta and animates transform between the two.
+  useLayoutEffect(() => {
+    if (!state) return
+    const id = requestAnimationFrame(() => setExpanded(true))
+    return () => cancelAnimationFrame(id)
+  }, [state])
 
   const land = useCallback(() => {
+    if (fallback.current) {
+      clearTimeout(fallback.current)
+      fallback.current = null
+    }
     window.dispatchEvent(new Event('rds:zoomlanded'))
     setState(null)
+    setExpanded(false)
   }, [])
 
   const zoom = useCallback(
@@ -34,11 +63,14 @@ export function ZoomProvider({ children }) {
       }
       window.__zoomEntry = true
       setState({ colors, image, rect })
-      // Mount the project under the (near-full) overlay late in the expand, so
-      // the home→project swap happens hidden behind it.
-      setTimeout(() => navigate(`/work/${slug}`), 640)
+      // Mount the project immediately underneath the overlay; the overlay
+      // covers the home→project swap for its whole growth.
+      navigate(`/work/${slug}`)
+      // Safety net in case the layout-complete callback never fires.
+      if (fallback.current) clearTimeout(fallback.current)
+      fallback.current = setTimeout(land, (EXPAND + 0.25) * 1000)
     },
-    [navigate],
+    [navigate, land],
   )
 
   return (
@@ -47,24 +79,35 @@ export function ZoomProvider({ children }) {
       <AnimatePresence>
         {state && (
           <motion.div
+            key="zoom"
+            layout
             className="fixed z-[95] overflow-hidden"
-            initial={{
-              top: state.rect.top,
-              left: state.rect.left,
-              width: state.rect.width,
-              height: state.rect.height,
-              borderRadius: 12,
+            style={
+              expanded
+                ? { top: 0, left: 0, right: 0, bottom: 0, borderRadius: 0 }
+                : {
+                    top: state.rect.top,
+                    left: state.rect.left,
+                    width: state.rect.width,
+                    height: state.rect.height,
+                    borderRadius: 12,
+                  }
+            }
+            transition={{
+              layout: { duration: EXPAND, ease: EASE },
+              opacity: { duration: 0.28, ease: 'easeInOut' },
             }}
-            animate={{ top: 0, left: 0, width: '100vw', height: '100vh', borderRadius: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.35, ease: 'easeInOut' } }}
-            transition={{ duration: 0.8, ease: [0.6, 0, 0.2, 1] }}
-            onAnimationComplete={(def) => {
-              // Fire only when the expand (not the exit) finishes.
-              if (def && typeof def === 'object' && def.width) land()
+            onLayoutAnimationComplete={() => {
+              if (expanded) land()
             }}
+            exit={{ opacity: 0 }}
           >
-            <Cover colors={state.colors} image={state.image} className="h-full w-full" />
-            {/* Match the header scrims so brightness is identical at the swap */}
+            {/* Inner `layout` node cancels the parent's scale so the image
+                grows without stretching. */}
+            <motion.div layout className="h-full w-full">
+              <Cover colors={state.colors} image={state.image} className="h-full w-full" />
+            </motion.div>
+            {/* Match the header scrims exactly so brightness is identical at the fade-out */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
             <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
           </motion.div>
