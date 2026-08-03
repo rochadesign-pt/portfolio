@@ -3,6 +3,7 @@ import { values, team } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
+import Marquee from '../components/Marquee'
 import PageTransition from '../components/PageTransition'
 import { useContent } from '../content/ContentProvider'
 import { useSeo } from '../lib/useSeo'
@@ -77,13 +78,15 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* Giant wordmark moment */}
-      <section className="overflow-hidden px-6 py-24 md:px-10">
-        <Reveal>
-          <p className="display whitespace-nowrap text-center text-[18vw] leading-none text-text/90">
-            Rocha<span className="ital text-accent-text">·</span>Studio
-          </p>
-        </Reveal>
+      {/* Giant wordmark moment — outlined, scrolling */}
+      <section className="py-16 md:py-24">
+        <Marquee
+          items={['Rocha Design Studio']}
+          separator="✳"
+          outline
+          speed={55}
+          textClass="text-[13vw] leading-none md:text-[9rem]"
+        />
       </section>
     </PageTransition>
   )

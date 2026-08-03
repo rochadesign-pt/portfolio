@@ -16,7 +16,6 @@ import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
-import SectionNumeral from '../components/SectionNumeral'
 import { useSeo } from '../lib/useSeo'
 
 function Hero() {
@@ -96,12 +95,11 @@ function IntroStatement() {
   const { t } = useLang()
   return (
     <section className="border-y border-line bg-surface/40">
-      <div className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <SectionNumeral className="right-0 top-4 md:top-8">01</SectionNumeral>
-        <Reveal className="relative mb-8">
+      <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <Reveal className="mb-8">
           <h2 className="label">{t.intro.label}</h2>
         </Reveal>
-        <Reveal y={30} className="relative">
+        <Reveal y={30}>
           <p className="display max-w-5xl text-3xl leading-[1.15] md:text-5xl md:leading-[1.15]">
             {t.intro.body}
           </p>
@@ -116,9 +114,8 @@ function FeaturedWork() {
   const { projects } = useContent()
   const featured = projects.slice(0, 4)
   return (
-    <section className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-16 md:px-10">
-      <SectionNumeral className="right-0 top-0">02</SectionNumeral>
-      <div className="relative mb-12 flex items-end justify-between">
+    <section className="mx-auto max-w-[1400px] px-6 py-16 md:px-10">
+      <div className="mb-12 flex items-end justify-between">
         <div>
           <Reveal className="mb-4">
             <span className="label">{t.work.label}</span>
@@ -136,7 +133,7 @@ function FeaturedWork() {
         </Reveal>
       </div>
 
-      <div className="relative grid gap-x-6 gap-y-14 md:grid-cols-2">
+      <div className="grid gap-x-6 gap-y-14 md:grid-cols-2">
         {featured.map((p, i) => (
           <div key={p.slug} className={i % 2 === 1 ? 'md:mt-16' : ''}>
             <WorkCard project={p} index={i} />
@@ -156,9 +153,8 @@ function FeaturedWork() {
 function ServicesPreview() {
   const { t, lang } = useLang()
   return (
-    <section className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-      <SectionNumeral className="right-0 top-8">03</SectionNumeral>
-      <div className="relative mb-14 max-w-3xl">
+    <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+      <div className="mb-14 max-w-3xl">
         <Reveal className="mb-4">
           <span className="label">{t.services.label}</span>
         </Reveal>
@@ -169,7 +165,7 @@ function ServicesPreview() {
         </MaskReveal>
       </div>
 
-      <div className="relative border-t border-line">
+      <div className="border-t border-line">
         {services.map((s) => (
           <Reveal key={s.key}>
             <Link
@@ -200,13 +196,12 @@ function StatsBand() {
   const { t, lang } = useLang()
   return (
     <section className="border-y border-line bg-surface/40">
-      <div className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-20 md:px-10 md:py-28">
-        <SectionNumeral className="right-0 top-6">05</SectionNumeral>
-        <Reveal className="relative mb-14 max-w-md">
+      <div className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 md:py-28">
+        <Reveal className="mb-14 max-w-md">
           <h2 className="label mb-4 block">{t.stats.label}</h2>
           <p className="text-lg text-muted">{t.stats.body}</p>
         </Reveal>
-        <div className="relative grid grid-cols-2 gap-10 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
           {stats.map((s, i) => (
             <Reveal key={s.label.en} delay={i * 0.06}>
               <div className="display text-6xl md:text-7xl">
@@ -229,13 +224,25 @@ function ClientsBand() {
   )
 }
 
+function KeywordBand() {
+  const { lang } = useLang()
+  const words =
+    lang === 'pt'
+      ? ['Branding', 'Web', 'Produto', 'Estratégia', 'Identidade', 'Motion']
+      : ['Branding', 'Web', 'Product', 'Strategy', 'Identity', 'Motion']
+  return (
+    <section className="py-8 md:py-12">
+      <Marquee items={words} separator="✳" outline speed={50} textClass="text-[12vw] leading-none md:text-[7.5rem]" />
+    </section>
+  )
+}
+
 function StudioTeaser() {
   const { t } = useLang()
   const { projects } = useContent()
   return (
-    <section className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-      <SectionNumeral className="right-0 top-4">07</SectionNumeral>
-      <div className="relative grid gap-10 md:grid-cols-[1fr_1fr] md:items-center">
+    <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+      <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-center">
         <Reveal>
           <h2 className="label mb-6 block">{t.studioTeaser.label}</h2>
           <p className="display text-4xl leading-[1.1] md:text-6xl">{t.studioTeaser.body}</p>
@@ -278,6 +285,7 @@ export default function Home() {
       <ProcessTimeline />
       <StatsBand />
       <Exploration />
+      <KeywordBand />
       <StudioTeaser />
     </PageTransition>
   )

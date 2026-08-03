@@ -9,7 +9,13 @@ const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 
 // Continuous horizontal marquee. Loops seamlessly and leans (skews) with scroll
 // velocity — a small signature touch.
-export default function Marquee({ items, speed = 30, separator = '·' }) {
+export default function Marquee({
+  items,
+  speed = 30,
+  separator = '·',
+  outline = false,
+  textClass = 'text-4xl md:text-6xl',
+}) {
   const track = useRef(null)
 
   useGSAP(
@@ -36,7 +42,7 @@ export default function Marquee({ items, speed = 30, separator = '·' }) {
       <div ref={track} className="flex w-max items-center gap-8 whitespace-nowrap will-change-transform">
         {content.map((item, i) => (
           <span key={i} className="flex items-center gap-8">
-            <span className="display text-4xl md:text-6xl text-text/90">{item}</span>
+            <span className={`display ${textClass} ${outline ? 'text-outline' : 'text-text/90'}`}>{item}</span>
             <span className="text-accent-text text-3xl md:text-5xl">{separator}</span>
           </span>
         ))}

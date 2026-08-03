@@ -5,7 +5,6 @@ import { useLang } from '../i18n/LanguageContext'
 import { process } from '../data/site'
 import Reveal from './Reveal'
 import MaskReveal from './MaskReveal'
-import SectionNumeral from './SectionNumeral'
 
 // A single step cell: hatched base with a "paper" fill that wipes down as the
 // scroll percentage moves through this step's slice.
@@ -36,10 +35,9 @@ export default function ProcessTimeline() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 65%', 'end 90%'] })
 
   return (
-    <section className="relative overflow-hidden mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-      <SectionNumeral className="right-0 top-0">04</SectionNumeral>
+    <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
       {/* Header + CTA */}
-      <div className="relative mb-12 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+      <div className="mb-12 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div className="max-w-2xl">
           <Reveal className="mb-4">
             <span className="label">{t.homeProcess.label}</span>

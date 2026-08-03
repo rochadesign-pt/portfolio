@@ -3,7 +3,6 @@ import { useContent } from '../content/ContentProvider'
 import Cover from './Cover'
 import Reveal from './Reveal'
 import MaskReveal from './MaskReveal'
-import SectionNumeral from './SectionNumeral'
 
 // Scattered widths + vertical offsets give the row an editorial, dynamic
 // baseline (each tile sits at a different height), à la the reference.
@@ -17,8 +16,7 @@ export default function Exploration() {
   return (
     <section className="overflow-hidden py-24 md:py-32">
       {/* Header — heading left, intro right */}
-      <div className="relative mx-auto mb-16 max-w-[1400px] px-6 md:px-10">
-        <SectionNumeral className="right-6 top-0 md:right-10">06</SectionNumeral>
+      <div className="mx-auto mb-16 max-w-[1400px] px-6 md:px-10">
         <Reveal className="mb-6">
           <span className="label">{t.exploration.label}</span>
         </Reveal>
