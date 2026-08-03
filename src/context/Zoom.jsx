@@ -26,14 +26,14 @@ export function ZoomProvider({ children }) {
   }, [])
 
   const zoom = useCallback(
-    (slug, colors, rect) => {
+    (slug, colors, image, rect) => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (reduce || !rect) {
         navigate(`/work/${slug}`)
         return
       }
       window.__zoomEntry = true
-      setState({ colors, rect })
+      setState({ colors, image, rect })
       // Mount the project under the (near-full) overlay late in the expand, so
       // the home→project swap happens hidden behind it.
       setTimeout(() => navigate(`/work/${slug}`), 640)
@@ -63,7 +63,7 @@ export function ZoomProvider({ children }) {
               if (def && typeof def === 'object' && def.width) land()
             }}
           >
-            <Cover colors={state.colors} className="h-full w-full" />
+            <Cover colors={state.colors} image={state.image} className="h-full w-full" />
             {/* Match the header scrims so brightness is identical at the swap */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
             <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />

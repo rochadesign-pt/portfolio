@@ -75,7 +75,7 @@ export default function Project() {
     <PageTransition instant={zoomEntry}>
       {/* Full-bleed hero header — the zoom lands here */}
       <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
-        <ParallaxImage colors={p.cover} className="absolute inset-0 h-full w-full" amount={6} />
+        <ParallaxImage colors={p.cover} image={p.coverImage} className="absolute inset-0 h-full w-full" amount={6} />
         {/* legibility scrims */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />

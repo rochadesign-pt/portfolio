@@ -16,7 +16,7 @@ export default function WorkCard({ project, index = 0 }) {
     if (!zoomCtx || !coverRef.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     e.preventDefault()
-    zoomCtx.zoom(project.slug, project.cover, coverRef.current.getBoundingClientRect())
+    zoomCtx.zoom(project.slug, project.cover, project.coverImage, coverRef.current.getBoundingClientRect())
   }
 
   return (
@@ -24,7 +24,7 @@ export default function WorkCard({ project, index = 0 }) {
       <Link to={`/work/${project.slug}`} onClick={onClick} className="group block">
         <div ref={coverRef} className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
-            <Cover colors={project.cover} className="aspect-[4/3] w-full" />
+            <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" />
           </motion.div>
           <div className="absolute inset-0 flex items-end bg-gradient-to-t from-bg/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             <span className="m-5 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-xs font-medium text-accent-ink">

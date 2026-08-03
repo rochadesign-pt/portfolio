@@ -8,7 +8,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 // Image frame with a scroll-driven parallax on the inner fill. The inner is
 // oversized so it always covers the frame as it translates.
-export default function ParallaxImage({ colors, className = '', amount = 8, label }) {
+export default function ParallaxImage({ colors, image, className = '', amount = 8, label }) {
   const frame = useRef(null)
   const inner = useRef(null)
 
@@ -37,7 +37,7 @@ export default function ParallaxImage({ colors, className = '', amount = 8, labe
   return (
     <div ref={frame} className={`overflow-hidden ${className}`}>
       <div ref={inner} className="h-[118%] w-full" style={{ marginTop: `-${amount + 1}%` }}>
-        <Cover colors={colors} className="h-full w-full" label={label} />
+        <Cover colors={colors} image={image} className="h-full w-full" label={label} />
       </div>
     </div>
   )
