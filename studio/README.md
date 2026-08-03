@@ -31,6 +31,29 @@ With those set, the site pulls Projects and Explorations from Sanity; without
 them it falls back to the bundled local data. (The page-level wiring is the
 final step — see the site's `src/lib/sanity.js`.)
 
+## Seed the current content (one command)
+
+The 6 projects + explorations + site settings are already exported to
+`studio/seed.ndjson`. To import them into your dataset:
+
+```bash
+cd studio
+npm install
+npx sanity login          # once
+npm run seed              # imports seed.ndjson into the production dataset
+```
+
+Then make the dataset readable by the site (manage.sanity.io → API):
+- **Datasets → production → Public**
+- **CORS origins →** add your Vercel URL + `http://localhost:5173`
+
+That's it — the website (already wired) will pull everything from Sanity.
+(Cover/gallery images aren't in the seed — add them per project in the Studio;
+the site falls back to the duotone placeholder until you do.)
+
+To regenerate the seed after changing local data:
+`node scripts/generate-seed.mjs > studio/seed.ndjson` (from the repo root).
+
 ## Content types
 
 - **Project** — title, slug, *is case study*, category, disciplines, industry,
