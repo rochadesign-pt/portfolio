@@ -77,10 +77,10 @@ export default function ProcessTimeline() {
                   n={n}
                   step={process[r]}
                   lang={lang}
-                  cellClass="min-h-[200px]"
+                  cellClass="min-h-[156px]"
                 />
               ) : (
-                <div key={`${r}-${c}`} className="relative min-h-[200px] bg-bg">
+                <div key={`${r}-${c}`} className="relative min-h-[156px] bg-bg">
                   <div className="hatch pointer-events-none absolute inset-0" />
                 </div>
               ),
@@ -98,7 +98,7 @@ export default function ProcessTimeline() {
               n={n}
               step={step}
               lang={lang}
-              cellClass="min-h-[150px]"
+              cellClass="min-h-[132px]"
             />
           ))}
         </div>
