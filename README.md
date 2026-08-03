@@ -29,6 +29,14 @@ npm run dev
 Deploy contínuo via **Vercel** (SPA rewrites em `vercel.json`). Importar o
 repo no Vercel e apontar a branch de produção.
 
+## Analytics
+
+- **Vercel Analytics + Speed Insights** — cookieless (sem banner de consentimento).
+  Ativar no Vercel: Project → **Analytics** e **Speed Insights** (toggle on).
+- **Google Analytics 4** — opcional. Define `VITE_GA_ID` (Measurement ID `G-…`)
+  nas env vars do Vercel para ativar. Page views são enviadas por rota (SPA).
+- Eventos: `project_open`, `contact_submit`, `language_change`.
+
 ## Estado
 
 🚧 Em construção — scaffold + página de arranque. Estrutura completa

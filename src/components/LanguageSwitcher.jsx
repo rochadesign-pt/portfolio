@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
+import { track } from '../lib/analytics'
 
 // Small inline SVG flags — render consistently across platforms (unlike emoji flags).
 function FlagPT() {
@@ -89,6 +90,7 @@ export default function LanguageSwitcher() {
                   <button
                     onClick={() => {
                       setLang(o.code)
+                      track('language_change', { language: o.code })
                       setOpen(false)
                     }}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${

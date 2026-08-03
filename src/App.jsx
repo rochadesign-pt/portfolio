@@ -7,6 +7,7 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import TypePanel from './components/TypePanel'
 import Preloader from './components/Preloader'
+import Analytics from './components/Analytics'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
@@ -37,6 +38,7 @@ export default function App() {
     <LanguageProvider>
       <BrowserRouter>
         <ZoomProvider>
+          <Analytics />
           <Preloader />
           <SmoothScroll>
             <Nav />

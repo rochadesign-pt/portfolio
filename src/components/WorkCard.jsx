@@ -6,6 +6,7 @@ import { easeSoft } from '../lib/motion'
 import Cover from './Cover'
 import Reveal from './Reveal'
 import { useZoom } from '../context/Zoom'
+import { track } from '../lib/analytics'
 
 export default function WorkCard({ project, index = 0 }) {
   const { lang } = useLang()
@@ -13,6 +14,7 @@ export default function WorkCard({ project, index = 0 }) {
   const zoomCtx = useZoom()
 
   const onClick = (e) => {
+    track('project_open', { slug: project.slug })
     if (!zoomCtx || !coverRef.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     e.preventDefault()

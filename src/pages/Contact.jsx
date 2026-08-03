@@ -5,6 +5,7 @@ import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
 import PageTransition from '../components/PageTransition'
+import { track } from '../lib/analytics'
 
 export default function Contact() {
   const { t } = useLang()
@@ -12,6 +13,7 @@ export default function Contact() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    track('contact_submit')
     // Placeholder — wire to a form backend (Formspree / Framer form) later.
     setSent(true)
   }
