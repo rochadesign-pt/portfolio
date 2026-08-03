@@ -55,7 +55,7 @@ function Hero() {
         <MaskText
           as="span"
           text={t.hero.accent}
-          className="block ital text-accent"
+          className="block ital text-accent-text"
           trigger="mount"
           active={started}
           delay={0.24}
@@ -119,7 +119,7 @@ function FeaturedWork() {
           </Reveal>
           <MaskReveal>
             <h2 className="display text-5xl md:text-7xl">
-              {t.work.title} <span className="ital text-accent">{t.work.titleAccent}</span>
+              {t.work.title} <span className="ital text-accent-text">{t.work.titleAccent}</span>
             </h2>
           </MaskReveal>
         </div>
@@ -157,7 +157,7 @@ function ServicesPreview() {
         </Reveal>
         <MaskReveal>
           <h2 className="display text-5xl md:text-7xl">
-            {t.services.title} <span className="ital text-accent">{t.services.titleAccent}</span>
+            {t.services.title} <span className="ital text-accent-text">{t.services.titleAccent}</span>
           </h2>
         </MaskReveal>
       </div>
@@ -169,7 +169,7 @@ function ServicesPreview() {
               to="/services"
               className="group grid grid-cols-[auto_1fr] items-center gap-6 border-b border-line py-8 transition-colors md:grid-cols-[80px_1fr_auto] md:py-10"
             >
-              <span className="display text-2xl text-muted transition-colors group-hover:text-accent md:text-3xl">
+              <span className="display text-2xl text-muted transition-colors group-hover:text-accent-text md:text-3xl">
                 {s.n}
               </span>
               <div>

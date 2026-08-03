@@ -18,7 +18,7 @@ export default function Studio() {
         </Reveal>
         <MaskReveal>
           <h1 className="display text-6xl leading-[0.95] md:text-8xl">
-            {t.studioPage.title} <span className="ital text-accent">{t.studioPage.titleAccent}</span>
+            {t.studioPage.title} <span className="ital text-accent-text">{t.studioPage.titleAccent}</span>
           </h1>
         </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
@@ -79,7 +79,7 @@ export default function Studio() {
       <section className="overflow-hidden px-6 py-24 md:px-10">
         <Reveal>
           <p className="display whitespace-nowrap text-center text-[18vw] leading-none text-text/90">
-            Rocha<span className="ital text-accent">·</span>Studio
+            Rocha<span className="ital text-accent-text">·</span>Studio
           </p>
         </Reveal>
       </section>

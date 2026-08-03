@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { ThemeProvider } from './theme/ThemeContext'
 import { LanguageProvider } from './i18n/LanguageContext'
 import { ContentProvider } from './content/ContentProvider'
 import { ZoomProvider } from './context/Zoom'
@@ -36,7 +37,8 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
       <ContentProvider>
       <BrowserRouter>
         <ZoomProvider>
@@ -51,6 +53,7 @@ export default function App() {
         </ZoomProvider>
       </BrowserRouter>
       </ContentProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }

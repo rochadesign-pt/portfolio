@@ -6,16 +6,14 @@ import { process } from '../data/site'
 import Reveal from './Reveal'
 import MaskReveal from './MaskReveal'
 
-const FILL = '#efeadf' // warm off-white — softer than pure white
-
-// A single step cell: hatched base with a warm fill that wipes down as the
+// A single step cell: hatched base with a "paper" fill that wipes down as the
 // scroll percentage moves through this step's slice.
 function StepCard({ progress, i, n, step, lang, cellClass }) {
   const height = useTransform(progress, [i / n, (i + 0.85) / n], ['0%', '100%'], { clamp: true })
   return (
     <div className={`relative bg-bg ${cellClass}`}>
       <div className="hatch pointer-events-none absolute inset-0" />
-      <motion.div style={{ height, background: FILL }} className="absolute inset-x-0 top-0 overflow-hidden">
+      <motion.div style={{ height }} className="absolute inset-x-0 top-0 overflow-hidden bg-paper">
         <div className="w-full p-6">
           <p className="text-base font-medium text-[#0b0b0d]">
             {i + 1}. {step.title[lang]}
@@ -46,7 +44,7 @@ export default function ProcessTimeline() {
           </Reveal>
           <MaskReveal>
             <h2 className="display text-5xl md:text-7xl">
-              {t.homeProcess.title} <span className="ital text-accent">{t.homeProcess.titleAccent}</span>
+              {t.homeProcess.title} <span className="ital text-accent-text">{t.homeProcess.titleAccent}</span>
             </h2>
           </MaskReveal>
         </div>

@@ -15,9 +15,30 @@
   /* Brand accent — yellow. Swap this one value for the exact brand hex. */
   --color-accent: #ffc700;
   --color-accent-ink: #0b0b0d;
+  /* Accent used as text/foreground (yellow on dark; ink on light for legibility) */
+  --color-accent-text: #ffc700;
+  /* "Paper" fill for revealed cards (off-white on dark, white on light) */
+  --color-paper: #efeadf;
+  --hatch-line: rgba(242, 239, 233, 0.05);
 
   --ease-out-soft: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Light theme — background #F5F5F5, white used for slight contrast */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-surface-2: #ececec;
+  --color-text: #17140f;
+  --color-muted: #6b6862;
+  --color-line: rgba(23, 20, 15, 0.14);
+  --color-accent: #ffc700;
+  --color-accent-ink: #0b0b0d;
+  --color-accent-text: #17140f;
+  --color-paper: #ffffff;
+  --hatch-line: rgba(23, 20, 15, 0.07);
 }
 
 @layer base {
@@ -80,8 +101,8 @@
 @utility hatch {
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(242, 239, 233, 0.05) 0,
-    rgba(242, 239, 233, 0.05) 1px,
+    var(--hatch-line) 0,
+    var(--hatch-line) 1px,
     transparent 1px,
     transparent 9px
   );

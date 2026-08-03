@@ -37,7 +37,7 @@ export default function Marquee({ items, speed = 30, separator = '·' }) {
         {content.map((item, i) => (
           <span key={i} className="flex items-center gap-8">
             <span className="display text-4xl md:text-6xl text-text/90">{item}</span>
-            <span className="text-accent text-3xl md:text-5xl">{separator}</span>
+            <span className="text-accent-text text-3xl md:text-5xl">{separator}</span>
           </span>
         ))}
       </div>

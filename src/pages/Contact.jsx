@@ -29,7 +29,7 @@ export default function Contact() {
         </Reveal>
         <MaskReveal>
           <h1 className="display text-6xl leading-[0.95] md:text-8xl">
-            {t.contactPage.title} <span className="ital text-accent">{t.contactPage.titleAccent}</span>
+            {t.contactPage.title} <span className="ital text-accent-text">{t.contactPage.titleAccent}</span>
           </h1>
         </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
@@ -43,7 +43,7 @@ export default function Contact() {
             {sent ? (
               <div className="flex min-h-72 items-center">
                 <p className="display text-4xl md:text-5xl">
-                  {t.contactPage.title} <span className="ital text-accent">✓</span>
+                  {t.contactPage.title} <span className="ital text-accent-text">✓</span>
                   <span className="mt-4 block text-lg text-muted">{t.contactPage.response}</span>
                 </p>
               </div>

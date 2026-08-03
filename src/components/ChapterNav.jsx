@@ -56,7 +56,7 @@ export default function ChapterNav({ chapters, label }) {
                     isActive ? 'text-text' : 'text-muted group-hover:text-text'
                   }`}
                 >
-                  <span className={`text-xs tabular-nums ${isActive ? 'text-accent' : 'text-muted/60'}`}>
+                  <span className={`text-xs tabular-nums ${isActive ? 'text-accent-text' : 'text-muted/60'}`}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   {c.label}

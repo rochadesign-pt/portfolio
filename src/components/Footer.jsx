@@ -16,7 +16,7 @@ export default function Footer() {
         </Reveal>
         <MaskReveal>
           <Link to="/contact" className="display block text-6xl leading-[0.9] md:text-8xl">
-            {t.cta.line} <span className="ital text-accent">{t.cta.lineAccent}</span>
+            {t.cta.line} <span className="ital text-accent-text">{t.cta.lineAccent}</span>
           </Link>
         </MaskReveal>
 

@@ -67,7 +67,7 @@ export default function Project() {
   )
 
   const Heading = ({ children }) => (
-    <h2 className="ital text-accent text-4xl md:text-5xl">{children}</h2>
+    <h2 className="ital text-accent-text text-4xl md:text-5xl">{children}</h2>
   )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -192,7 +192,7 @@ export default function Project() {
               <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
                 {caseProcess.map((step) => (
                   <Reveal key={step.n} className="bg-bg p-6 md:p-8">
-                    <span className="display text-3xl text-accent">{step.n}</span>
+                    <span className="display text-3xl text-accent-text">{step.n}</span>
                     <h3 className="mt-6 text-xl">{step.title[lang]}</h3>
                     <p className="mt-2 text-sm text-muted">{step.desc[lang]}</p>
                   </Reveal>
@@ -271,7 +271,7 @@ export default function Project() {
       <section className="mx-auto max-w-[1400px] px-6 pt-28 md:px-10 md:pt-36">
         <Reveal className="mb-12 border-t border-line pt-12">
           <h2 className="display text-5xl md:text-7xl">
-            {t.project.moreCases} <span className="ital text-accent">{t.project.moreCasesAccent}</span>
+            {t.project.moreCases} <span className="ital text-accent-text">{t.project.moreCasesAccent}</span>
           </h2>
         </Reveal>
         <div className="grid gap-6 md:grid-cols-2">
