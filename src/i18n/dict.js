@@ -29,6 +29,12 @@ export const dict = {
       titleAccent: 'trabalharmos juntos',
       sub: 'Do zero ou a partir do que já existe — entramos onde fazemos mais diferença.',
     },
+    homeProcess: {
+      label: 'Como trabalhamos',
+      title: 'O nosso',
+      titleAccent: 'processo',
+      sub: 'De uma primeira conversa a um lançamento impecável — quatro passos, sem surpresas.',
+    },
     stats: {
       label: 'Em números',
       body: 'Números não fazem bom design. Mas dão contexto ao que construímos.',
@@ -150,6 +156,12 @@ export const dict = {
       title: 'Three ways to',
       titleAccent: 'work together',
       sub: 'From scratch or from what already exists — we step in where we make the most difference.',
+    },
+    homeProcess: {
+      label: 'How we work',
+      title: 'Our',
+      titleAccent: 'process',
+      sub: 'From a first conversation to an immaculate launch — four steps, no surprises.',
     },
     stats: {
       label: 'By the numbers',

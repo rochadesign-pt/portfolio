@@ -14,6 +14,7 @@ import Cover from '../components/Cover'
 import WorkCard from '../components/WorkCard'
 import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
+import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
 
 function Hero() {
@@ -263,6 +264,7 @@ export default function Home() {
       <IntroStatement />
       <FeaturedWork />
       <ServicesPreview />
+      <ProcessTimeline />
       <StatsBand />
       <Exploration />
       <StudioTeaser />
