@@ -40,10 +40,12 @@ export const dict = {
     },
     exploration: {
       label: 'Exploration',
-      title: 'Para lá do',
-      titleAccent: 'briefing',
-      sub: 'Estudos, experiências e coisas que fazemos por gosto. É aqui que o próximo trabalho começa.',
-      hint: 'Arrasta',
+      lead1: 'As nossas',
+      acc1: 'experiências, produtos',
+      lead2: 'e',
+      acc2: 'curiosidade',
+      lead3: 'moldam novas formas de trabalhar.',
+      sub: 'Estudos, ferramentas internas e coisas que fazemos por gosto. É aqui que o próximo trabalho começa.',
     },
     cta: {
       label: 'Vamos a isto',
@@ -160,10 +162,12 @@ export const dict = {
     },
     exploration: {
       label: 'Exploration',
-      title: 'Beyond the',
-      titleAccent: 'brief',
-      sub: 'Studies, experiments and things we make for the love of it. This is where the next project starts.',
-      hint: 'Drag',
+      lead1: 'Our',
+      acc1: 'experiments, products',
+      lead2: 'and',
+      acc2: 'curiosity',
+      lead3: 'shape new ways of working.',
+      sub: 'Studies, internal tools and things we make for the love of it. This is where the next project starts.',
     },
     cta: {
       label: "Let's do this",

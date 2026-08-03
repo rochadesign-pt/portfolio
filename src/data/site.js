@@ -158,16 +158,21 @@ export const team = [
 
 export const clients = ['Lumen', 'Meridian', 'Ferve', 'Orbit', 'Casa Nova', 'Pulse', 'Northwind', 'Atlas']
 
-// Exploration / lab tiles — off-brief experiments. Placeholder duotones for now.
+// Exploration / lab tiles — off-brief experiments, laid out as a mosaic.
+// `ratio` drives the masonry variety. Placeholder duotones for now.
 export const explorations = [
-  { tag: { pt: 'Estudo de tipo', en: 'Type study' }, colors: ['#ffc700', '#0b0b0d'] },
-  { tag: { pt: 'Motion', en: 'Motion' }, colors: ['#7c8cff', '#0b0b0d'] },
-  { tag: { pt: '3D', en: '3D' }, colors: ['#4de3c1', '#0b0b0d'] },
-  { tag: { pt: 'Poster', en: 'Poster' }, colors: ['#ff7a4d', '#0b0b0d'] },
-  { tag: { pt: 'Grelha', en: 'Grid' }, colors: ['#e8e2d4', '#0b0b0d'] },
-  { tag: { pt: 'Cor', en: 'Colour' }, colors: ['#ff5c8a', '#0b0b0d'] },
-  { tag: { pt: 'Web', en: 'Web' }, colors: ['#ffc700', '#151517'] },
-  { tag: { pt: 'Ícones', en: 'Icons' }, colors: ['#7c8cff', '#151517'] },
+  { name: 'ASCII', category: { pt: 'Ferramenta', en: 'Design Tool' }, colors: ['#0b0b0d', '#1d1d20'], ratio: '4 / 5' },
+  { name: 'Kinetic Type', category: { pt: 'Motion', en: 'Motion' }, colors: ['#ffc700', '#0b0b0d'], ratio: '4 / 3' },
+  { name: 'Midjourney', category: { pt: 'Exploração', en: 'Exploration' }, colors: ['#7c8cff', '#0b0b0d'], ratio: '3 / 4' },
+  { name: 'OiOne', category: { pt: 'Interno', en: 'Internal' }, colors: ['#ff7a4d', '#151517'], ratio: '16 / 11' },
+  { name: 'Noteworthy', category: { pt: 'Conceito', en: 'Concept' }, colors: ['#0b0b0d', '#ffc700'], ratio: '1 / 1' },
+  { name: 'Paleta', category: { pt: 'Estudo de cor', en: 'Colour study' }, colors: ['#ff5c8a', '#0b0b0d'], ratio: '3 / 4' },
+  { name: 'Warlock Island', category: { pt: 'Jogo', en: 'Game' }, colors: ['#4de3c1', '#0b0b0d'], ratio: '16 / 9' },
+  { name: 'SuppStack', category: { pt: 'Produto', en: 'Product' }, colors: ['#e8e2d4', '#0b0b0d'], ratio: '3 / 4' },
+  { name: 'Grelha', category: { pt: 'Sistema', en: 'System' }, colors: ['#1d1d20', '#151517'], ratio: '4 / 5' },
+  { name: 'Ícones', category: { pt: 'Set', en: 'Set' }, colors: ['#ffc700', '#151517'], ratio: '1 / 1' },
+  { name: 'Web Toy', category: { pt: 'Experiência', en: 'Experiment' }, colors: ['#7c8cff', '#151517'], ratio: '4 / 3' },
+  { name: '3D', category: { pt: 'Exploração', en: 'Exploration' }, colors: ['#ff7a4d', '#0b0b0d'], ratio: '3 / 4' },
 ]
 
 export const social = [
