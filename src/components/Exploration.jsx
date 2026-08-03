@@ -44,10 +44,9 @@ export default function Exploration() {
                 className="flex-none"
                 style={{ width: WIDTHS[i % WIDTHS.length], marginBottom: OFFSETS[i % OFFSETS.length] }}
               >
-                <p className="mb-3 text-[11px] uppercase leading-tight tracking-[0.12em] text-muted">
-                  {e.name}
-                  <br />
-                  {e.category[lang]}
+                <p className="mb-3 text-sm leading-snug">
+                  <span className="text-text">{e.name}</span>
+                  <span className="text-muted"> / {e.category[lang]}</span>
                 </p>
                 <div
                   className="group overflow-hidden rounded-lg"
