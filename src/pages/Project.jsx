@@ -1,10 +1,10 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { projects } from '../data/projects'
 import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
-import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import ParallaxImage from '../components/ParallaxImage'
 import ChapterNav from '../components/ChapterNav'
@@ -14,6 +14,28 @@ export default function Project() {
   const { slug } = useParams()
   const { t, lang } = useLang()
   const bodyRef = useRef(null)
+
+  // Did we arrive via the click-to-zoom transition? If so, skip the page
+  // entrance and hold the header text until the overlay has "landed".
+  const [zoomEntry] = useState(() => {
+    if (typeof window !== 'undefined' && window.__zoomEntry) {
+      window.__zoomEntry = false
+      return true
+    }
+    return false
+  })
+  const [landed, setLanded] = useState(!zoomEntry)
+
+  useEffect(() => {
+    if (!zoomEntry) return
+    const on = () => setLanded(true)
+    window.addEventListener('rds:zoomlanded', on)
+    const fb = setTimeout(() => setLanded(true), 1400)
+    return () => {
+      window.removeEventListener('rds:zoomlanded', on)
+      clearTimeout(fb)
+    }
+  }, [zoomEntry])
 
   const index = projects.findIndex((p) => p.slug === slug)
   if (index === -1) return <Navigate to="/work" replace />
@@ -50,7 +72,7 @@ export default function Project() {
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   return (
-    <PageTransition>
+    <PageTransition instant={zoomEntry}>
       {/* Full-bleed hero header — the zoom lands here */}
       <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
         <ParallaxImage colors={p.cover} className="absolute inset-0 h-full w-full" amount={6} />
@@ -59,33 +81,36 @@ export default function Project() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
 
         <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-between px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32">
-          <Reveal>
+          {/* Header text is held back until the zoom has landed, then rises in */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: landed ? 1 : 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             <Link to="/work" className="link-underline text-sm text-text/80 hover:text-text">
               ← {t.project.back}
             </Link>
-          </Reveal>
+          </motion.div>
 
-          <div>
-            <Reveal className="mb-5">
-              <span className="text-xs font-medium uppercase tracking-[0.22em] text-text/70">{p.category}</span>
-            </Reveal>
-            <MaskReveal>
-              <h1 className="display text-7xl leading-[0.88] md:text-[9rem]">{p.title}</h1>
-            </MaskReveal>
+          <motion.div
+            initial={{ opacity: 0, y: 26 }}
+            animate={landed ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.3, 1], delay: 0.12 }}
+          >
+            <span className="mb-5 block text-xs font-medium uppercase tracking-[0.22em] text-text/70">
+              {p.category}
+            </span>
+            <h1 className="display text-7xl leading-[0.88] md:text-[9rem]">{p.title}</h1>
             <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <Reveal className="max-w-2xl">
-                <p className="ital text-2xl leading-snug text-text/85 md:text-3xl">{p.tagline[lang]}</p>
-              </Reveal>
-              <Reveal>
-                <button
-                  onClick={scrollToBody}
-                  className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 hover:text-text"
-                >
-                  {t.project.keepReading} ↓
-                </button>
-              </Reveal>
+              <p className="ital max-w-2xl text-2xl leading-snug text-text/85 md:text-3xl">{p.tagline[lang]}</p>
+              <button
+                onClick={scrollToBody}
+                className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 hover:text-text"
+              >
+                {t.project.keepReading} ↓
+              </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 

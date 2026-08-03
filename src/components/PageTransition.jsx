@@ -1,14 +1,23 @@
-import { motion } from 'framer-motion'
-import { useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useEffect } from 'react'
 
 // Wraps each page. Fades content in and resets scroll on route change.
-export default function PageTransition({ children }) {
+// `instant` skips the entrance (used when arriving via the zoom transition, so
+// the page is already solid underneath the overlay).
+export default function PageTransition({ children, instant = false }) {
   const reduce = useReducedMotion()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  if (instant) {
+    return (
+      <motion.main initial={false} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+        {children}
+      </motion.main>
+    )
+  }
 
   return (
     <motion.main
