@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { LanguageProvider } from './i18n/LanguageContext'
+import { ZoomProvider } from './context/Zoom'
 import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
@@ -35,13 +36,15 @@ export default function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        <Preloader />
-        <SmoothScroll>
-          <Nav />
-          <AnimatedRoutes />
-          <Footer />
-          <TypePanel />
-        </SmoothScroll>
+        <ZoomProvider>
+          <Preloader />
+          <SmoothScroll>
+            <Nav />
+            <AnimatedRoutes />
+            <Footer />
+            <TypePanel />
+          </SmoothScroll>
+        </ZoomProvider>
       </BrowserRouter>
     </LanguageProvider>
   )

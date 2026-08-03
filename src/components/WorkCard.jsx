@@ -1,17 +1,28 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { easeSoft } from '../lib/motion'
 import Cover from './Cover'
 import Reveal from './Reveal'
+import { useZoom } from '../context/Zoom'
 
 export default function WorkCard({ project, index = 0 }) {
   const { lang } = useLang()
+  const coverRef = useRef(null)
+  const zoomCtx = useZoom()
+
+  const onClick = (e) => {
+    if (!zoomCtx || !coverRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    e.preventDefault()
+    zoomCtx.zoom(project.slug, project.cover, coverRef.current.getBoundingClientRect())
+  }
 
   return (
     <Reveal delay={(index % 2) * 0.06}>
-      <Link to={`/work/${project.slug}`} className="group block">
-        <div className="relative overflow-hidden rounded-xl">
+      <Link to={`/work/${project.slug}`} onClick={onClick} className="group block">
+        <div ref={coverRef} className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
             <Cover colors={project.cover} className="aspect-[4/3] w-full" />
           </motion.div>
@@ -22,12 +33,16 @@ export default function WorkCard({ project, index = 0 }) {
           </div>
         </div>
 
-        <div className="mt-4 flex items-start justify-between gap-4">
-          <div>
-            <h3 className="display text-2xl leading-none md:text-3xl">{project.title}</h3>
-            <p className="mt-1 text-sm text-muted">{project.category}</p>
+        {/* Caption with intro line for context */}
+        <div className="mt-5">
+          <p className="max-w-xl text-lg leading-snug md:text-xl">
+            <span className="text-text">{project.title}</span>
+            <span className="text-muted"> — {project.tagline[lang]}</span>
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            <span className="text-xs uppercase tracking-[0.15em] text-muted">{project.category}</span>
           </div>
-          <span className="text-sm text-muted">{project.year}</span>
         </div>
       </Link>
     </Reveal>
