@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { social, contact } from '../data/site'
 import Reveal from './Reveal'
+import LiveClock from './LiveClock'
 
 export default function Footer() {
   const { t, lang } = useLang()
@@ -12,7 +13,7 @@ export default function Footer() {
         <Reveal>
           <p className="label mb-4">{t.cta.label}</p>
           <Link to="/contact" className="display block text-6xl leading-[0.9] tracking-tight md:text-8xl">
-            {t.cta.line} <span className="italic hl">{t.cta.lineAccent}</span>
+            {t.cta.line} <span className="italic text-accent">{t.cta.lineAccent}</span>
           </Link>
         </Reveal>
 
@@ -54,14 +55,17 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-2 text-xs text-muted md:flex-row md:items-center">
-          <span>© {new Date().getFullYear()} Rocha Design Studio. {t.footer.rights}</span>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="link-underline hover:text-text"
-          >
-            {t.footer.back} ↑
-          </button>
+        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-line pt-8 text-xs text-muted md:flex-row md:items-center">
+          <LiveClock className="text-text/80" />
+          <div className="flex items-center gap-6">
+            <span>© {new Date().getFullYear()} Rocha Design Studio</span>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="link-underline hover:text-text"
+            >
+              {t.footer.back} ↑
+            </button>
+          </div>
         </div>
       </div>
     </footer>

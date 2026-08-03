@@ -3,9 +3,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import Magnetic from './Magnetic'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Nav() {
-  const { t, lang, toggle } = useLang()
+  const { t } = useLang()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
@@ -52,15 +53,7 @@ export default function Nav() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={toggle}
-              className="flex items-center gap-1 text-xs font-medium tracking-wide"
-              aria-label="Toggle language"
-            >
-              <span className={lang === 'pt' ? 'text-text' : 'text-muted'}>PT</span>
-              <span className="text-muted">/</span>
-              <span className={lang === 'en' ? 'text-text' : 'text-muted'}>EN</span>
-            </button>
+            <LanguageSwitcher />
 
             <Magnetic className="hidden md:inline-block">
               <Link

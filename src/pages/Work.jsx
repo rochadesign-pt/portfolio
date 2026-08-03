@@ -24,7 +24,7 @@ export default function Work() {
         </Reveal>
         <Reveal>
           <h1 className="display text-6xl md:text-8xl">
-            {t.workPage.title} <span className="italic">{t.workPage.titleAccent}</span>
+            {t.workPage.title} <span className="italic text-accent">{t.workPage.titleAccent}</span>
           </h1>
         </Reveal>
         <Reveal className="mt-6 max-w-xl">

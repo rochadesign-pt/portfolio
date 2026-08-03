@@ -33,8 +33,6 @@ export default function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        {/* Signature frame — a thin editorial border around the whole site */}
-        <div className="pointer-events-none fixed inset-0 z-[60] m-2.5 rounded-2xl border border-line md:m-4" />
         <SmoothScroll>
           <Nav />
           <AnimatedRoutes />
