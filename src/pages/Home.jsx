@@ -22,7 +22,7 @@ function Hero() {
         {t.hero.eyebrow}
       </motion.p>
 
-      <h1 className="display text-[12vw] leading-[0.92] tracking-tight md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
+      <h1 className="display text-[12vw] leading-[0.92] md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
         <motion.span custom={0} variants={fadeUp} initial="hidden" animate="show" className="block">
           {t.hero.line1}
         </motion.span>

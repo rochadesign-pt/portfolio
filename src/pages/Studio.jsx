@@ -71,7 +71,7 @@ export default function Studio() {
       {/* Giant wordmark moment */}
       <section className="overflow-hidden px-6 py-24 md:px-10">
         <Reveal>
-          <p className="display whitespace-nowrap text-center text-[18vw] leading-none tracking-tight text-text/90">
+          <p className="display whitespace-nowrap text-center text-[18vw] leading-none text-text/90">
             Rocha<span className="ital text-accent">·</span>Studio
           </p>
         </Reveal>
