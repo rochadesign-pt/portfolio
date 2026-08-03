@@ -38,6 +38,13 @@ export const dict = {
       body: 'Pequenos por escolha. Trabalhamos em poucos projetos de cada vez para nos entregarmos a sério a cada um.',
       cta: 'Conhecer o estúdio',
     },
+    exploration: {
+      label: 'Exploration',
+      title: 'Para lá do',
+      titleAccent: 'briefing',
+      sub: 'Estudos, experiências e coisas que fazemos por gosto. É aqui que o próximo trabalho começa.',
+      hint: 'Arrasta',
+    },
     cta: {
       label: 'Vamos a isto',
       line: 'Tens uma marca',
@@ -150,6 +157,13 @@ export const dict = {
       label: 'The studio',
       body: 'Small by choice. We take on few projects at a time so we can give each one everything.',
       cta: 'Meet the studio',
+    },
+    exploration: {
+      label: 'Exploration',
+      title: 'Beyond the',
+      titleAccent: 'brief',
+      sub: 'Studies, experiments and things we make for the love of it. This is where the next project starts.',
+      hint: 'Drag',
     },
     cta: {
       label: "Let's do this",

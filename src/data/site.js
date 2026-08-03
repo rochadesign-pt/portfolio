@@ -158,6 +158,18 @@ export const team = [
 
 export const clients = ['Lumen', 'Meridian', 'Ferve', 'Orbit', 'Casa Nova', 'Pulse', 'Northwind', 'Atlas']
 
+// Exploration / lab tiles — off-brief experiments. Placeholder duotones for now.
+export const explorations = [
+  { tag: { pt: 'Estudo de tipo', en: 'Type study' }, colors: ['#ffc700', '#0b0b0d'] },
+  { tag: { pt: 'Motion', en: 'Motion' }, colors: ['#7c8cff', '#0b0b0d'] },
+  { tag: { pt: '3D', en: '3D' }, colors: ['#4de3c1', '#0b0b0d'] },
+  { tag: { pt: 'Poster', en: 'Poster' }, colors: ['#ff7a4d', '#0b0b0d'] },
+  { tag: { pt: 'Grelha', en: 'Grid' }, colors: ['#e8e2d4', '#0b0b0d'] },
+  { tag: { pt: 'Cor', en: 'Colour' }, colors: ['#ff5c8a', '#0b0b0d'] },
+  { tag: { pt: 'Web', en: 'Web' }, colors: ['#ffc700', '#151517'] },
+  { tag: { pt: 'Ícones', en: 'Icons' }, colors: ['#7c8cff', '#151517'] },
+]
+
 export const social = [
   { label: 'Instagram', href: 'https://instagram.com' },
   { label: 'Behance', href: 'https://behance.net' },

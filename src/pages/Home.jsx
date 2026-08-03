@@ -10,6 +10,7 @@ import Counter from '../components/Counter'
 import Cover from '../components/Cover'
 import WorkCard from '../components/WorkCard'
 import Magnetic from '../components/Magnetic'
+import Exploration from '../components/Exploration'
 import PageTransition from '../components/PageTransition'
 
 function Hero() {
@@ -227,6 +228,7 @@ export default function Home() {
       <FeaturedWork />
       <ServicesPreview />
       <StatsBand />
+      <Exploration />
       <StudioTeaser />
     </PageTransition>
   )
