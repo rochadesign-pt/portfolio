@@ -9,6 +9,7 @@ import Cover from '../components/Cover'
 import ParallaxImage from '../components/ParallaxImage'
 import ChapterNav from '../components/ChapterNav'
 import PageTransition from '../components/PageTransition'
+import { useSeo } from '../lib/useSeo'
 
 export default function Project() {
   const { slug } = useParams()
@@ -39,8 +40,14 @@ export default function Project() {
   }, [zoomEntry])
 
   const index = projects.findIndex((p) => p.slug === slug)
+  const p = index === -1 ? null : projects[index]
+
+  useSeo({
+    title: p ? `${p.title} — Rocha Design Studio` : 'Rocha Design Studio',
+    description: p ? `${p.category} · ${p.tagline[lang]}` : undefined,
+  })
+
   if (index === -1) return <Navigate to="/work" replace />
-  const p = projects[index]
   const moreCases = [projects[(index + 1) % projects.length], projects[(index + 2) % projects.length]]
 
   const meta = [

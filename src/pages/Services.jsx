@@ -3,9 +3,11 @@ import { services, process } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import PageTransition from '../components/PageTransition'
+import { useSeo } from '../lib/useSeo'
 
 export default function Services() {
   const { t, lang } = useLang()
+  useSeo(t.seo.services)
 
   return (
     <PageTransition>

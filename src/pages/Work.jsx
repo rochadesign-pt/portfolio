@@ -9,10 +9,12 @@ import MaskReveal from '../components/MaskReveal'
 import WorkCard from '../components/WorkCard'
 import WorkStrip from '../components/WorkStrip'
 import PageTransition from '../components/PageTransition'
+import { useSeo } from '../lib/useSeo'
 
 export default function Work() {
   const { t } = useLang()
   const { projects } = useContent()
+  useSeo(t.seo.work)
   const [filter, setFilter] = useState('All')
 
   const filtered =
@@ -71,7 +73,7 @@ export default function Work() {
                 transition={{ duration: 0.4, ease: easeSoft }}
                 className={i % 2 === 1 ? 'md:mt-16' : ''}
               >
-                <WorkCard project={p} index={i} />
+                <WorkCard project={p} index={i} titleAs="h2" />
               </motion.div>
             ))}
           </AnimatePresence>

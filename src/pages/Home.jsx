@@ -16,6 +16,7 @@ import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
+import { useSeo } from '../lib/useSeo'
 
 function Hero() {
   const { t } = useLang()
@@ -95,7 +96,7 @@ function IntroStatement() {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
       <Reveal className="mb-8">
-        <span className="label">{t.intro.label}</span>
+        <h2 className="label">{t.intro.label}</h2>
       </Reveal>
       <Reveal y={30}>
         <p className="display max-w-5xl text-3xl leading-[1.15] md:text-5xl md:leading-[1.15]">
@@ -195,7 +196,7 @@ function StatsBand() {
     <section className="border-y border-line bg-surface/40">
       <div className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 md:py-28">
         <Reveal className="mb-14 max-w-md">
-          <span className="label mb-4 block">{t.stats.label}</span>
+          <h2 className="label mb-4 block">{t.stats.label}</h2>
           <p className="text-lg text-muted">{t.stats.body}</p>
         </Reveal>
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
@@ -228,7 +229,7 @@ function StudioTeaser() {
     <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
       <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-center">
         <Reveal>
-          <span className="label mb-6 block">{t.studioTeaser.label}</span>
+          <h2 className="label mb-6 block">{t.studioTeaser.label}</h2>
           <p className="display text-4xl leading-[1.1] md:text-6xl">{t.studioTeaser.body}</p>
           <Magnetic className="mt-10 inline-block">
             <Link
@@ -257,6 +258,8 @@ function StudioTeaser() {
 }
 
 export default function Home() {
+  const { t } = useLang()
+  useSeo(t.seo.home)
   return (
     <PageTransition>
       <Hero />

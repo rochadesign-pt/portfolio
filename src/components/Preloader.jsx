@@ -65,13 +65,14 @@ export default function Preloader() {
       </div>
 
       <div className="flex flex-1 items-center">
-        <h1 className="display text-[13vw] leading-none md:text-[8rem]" aria-label={WORD}>
+        {/* Decorative intro wordmark — not a document heading */}
+        <div className="display text-[13vw] leading-none md:text-[8rem]" role="img" aria-label={WORD}>
           {WORD.split(' ').map((w, wi) => (
             <span key={wi} className="mr-[0.25em] inline-block overflow-hidden pb-[0.08em] align-bottom">
               <span className="pl-letter inline-block translate-y-full">{w}</span>
             </span>
           ))}
-        </h1>
+        </div>
       </div>
 
       <div className="pl-meta flex items-end justify-between">

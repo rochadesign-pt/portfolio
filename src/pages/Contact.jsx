@@ -6,10 +6,12 @@ import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
 import PageTransition from '../components/PageTransition'
 import { track } from '../lib/analytics'
+import { useSeo } from '../lib/useSeo'
 
 export default function Contact() {
   const { t } = useLang()
   const [sent, setSent] = useState(false)
+  useSeo(t.seo.contact)
 
   const onSubmit = (e) => {
     e.preventDefault()

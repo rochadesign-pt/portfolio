@@ -8,11 +8,12 @@ import Reveal from './Reveal'
 import { useZoom } from '../context/Zoom'
 import { track } from '../lib/analytics'
 
-export default function WorkCard({ project, index = 0 }) {
+export default function WorkCard({ project, index = 0, titleAs = 'h3' }) {
   const { lang } = useLang()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
   const isCaseStudy = project.isCaseStudy !== false
+  const Title = titleAs
 
   const onClick = (e) => {
     track('project_open', { slug: project.slug })
@@ -57,12 +58,13 @@ export default function WorkCard({ project, index = 0 }) {
           </div>
         </div>
 
-        {/* Caption — Title / short description, with opacity differentiation */}
+        {/* Caption — Title / short description, with opacity differentiation.
+            The project name is the heading; the tagline sits inline beside it. */}
         <div className="mt-5">
-          <p className="max-w-xl text-lg leading-snug md:text-xl">
-            <span className="text-text">{project.title}</span>
+          <div className="max-w-xl text-lg leading-snug md:text-xl">
+            <Title className="inline font-normal text-text">{project.title}</Title>
             <span className="text-muted"> / {project.tagline[lang]}</span>
-          </p>
+          </div>
           <div className="mt-3 inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             <span className="text-xs uppercase tracking-[0.15em] text-muted">{project.category}</span>

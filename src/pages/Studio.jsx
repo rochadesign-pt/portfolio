@@ -5,10 +5,12 @@ import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import PageTransition from '../components/PageTransition'
 import { useContent } from '../content/ContentProvider'
+import { useSeo } from '../lib/useSeo'
 
 export default function Studio() {
   const { t, lang } = useLang()
   const { projects } = useContent()
+  useSeo(t.seo.studio)
 
   return (
     <PageTransition>
@@ -43,7 +45,7 @@ export default function Studio() {
       {/* Values */}
       <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
         <Reveal className="mb-14">
-          <span className="label">{t.studioPage.valuesLabel}</span>
+          <h2 className="label">{t.studioPage.valuesLabel}</h2>
         </Reveal>
         <div className="grid gap-x-16 gap-y-14 md:grid-cols-2">
           {values.map((v) => (
@@ -58,7 +60,7 @@ export default function Studio() {
       {/* Team */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 md:px-10">
         <Reveal className="mb-14">
-          <span className="label">{t.studioPage.teamLabel}</span>
+          <h2 className="label">{t.studioPage.teamLabel}</h2>
         </Reveal>
         <div className="grid gap-x-6 gap-y-12 md:grid-cols-4">
           {team.map((m, i) => (

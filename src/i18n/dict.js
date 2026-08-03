@@ -3,6 +3,32 @@
 
 export const dict = {
   pt: {
+    seo: {
+      home: {
+        title: 'Rocha Design Studio — Estúdio de Branding, Web e Produto',
+        description:
+          'Estúdio de design em Portugal. Branding, web e produto digital com craft e intenção, para marcas que se querem destacar.',
+      },
+      work: {
+        title: 'Trabalho — Rocha Design Studio',
+        description:
+          'Projetos de branding, web e produto digital. Uma seleção do trabalho do Rocha Design Studio para marcas exigentes.',
+      },
+      services: {
+        title: 'Serviços — Rocha Design Studio',
+        description:
+          'Estratégia, identidade e interface. Três disciplinas, uma equipa — do zero ou a partir do que já existe.',
+      },
+      studio: {
+        title: 'Estúdio — Rocha Design Studio',
+        description:
+          'Um estúdio de design pequeno, com ambições grandes. Fundado em 2025, em Portugal, a trabalhar com marcas em todo o mundo.',
+      },
+      contact: {
+        title: 'Contacto — Rocha Design Studio',
+        description: 'Tens uma marca para construir? Fala connosco. Respondemos em 24 horas úteis.',
+      },
+    },
     nav: { work: 'Trabalho', services: 'Serviços', studio: 'Estúdio', contact: 'Contacto', cta: 'Vamos falar' },
     hero: {
       eyebrow: 'Estúdio de design · Portugal',
@@ -132,6 +158,32 @@ export const dict = {
     },
   },
   en: {
+    seo: {
+      home: {
+        title: 'Rocha Design Studio — Branding, Web & Product Design',
+        description:
+          'A design studio in Portugal. Branding, web and digital product built with craft and intent, for brands that want to stand out.',
+      },
+      work: {
+        title: 'Work — Rocha Design Studio',
+        description:
+          "Branding, web and digital product projects. A selection of Rocha Design Studio's work for demanding brands.",
+      },
+      services: {
+        title: 'Services — Rocha Design Studio',
+        description:
+          'Strategy, identity and interface. Three disciplines, one team — from scratch or from what already exists.',
+      },
+      studio: {
+        title: 'Studio — Rocha Design Studio',
+        description:
+          'A small design studio with big ambitions. Founded in 2025 in Portugal, working with brands worldwide.',
+      },
+      contact: {
+        title: 'Contact — Rocha Design Studio',
+        description: 'Got a brand to build? Get in touch. We reply within 24 business hours.',
+      },
+    },
     nav: { work: 'Work', services: 'Services', studio: 'Studio', contact: 'Contact', cta: "Let's talk" },
     hero: {
       eyebrow: 'Design studio · Portugal',
