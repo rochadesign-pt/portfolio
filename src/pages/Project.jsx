@@ -5,6 +5,7 @@ import { projects } from '../data/projects'
 import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
 import Cover from '../components/Cover'
+import ParallaxImage from '../components/ParallaxImage'
 import ChapterNav from '../components/ChapterNav'
 import PageTransition from '../components/PageTransition'
 
@@ -121,9 +122,7 @@ export default function Project() {
             </div>
 
             {/* Full-width image */}
-            <Reveal y={30}>
-              <Cover colors={p.gallery[0]} className="aspect-[16/9] w-full rounded-2xl" />
-            </Reveal>
+            <ParallaxImage colors={p.gallery[0]} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Challenge */}
             <div id="ch-challenge" className="scroll-mt-28">
@@ -134,9 +133,7 @@ export default function Project() {
             </div>
 
             {/* Wide image */}
-            <Reveal y={30}>
-              <Cover colors={p.gallery[4]} className="aspect-[2/1] w-full rounded-2xl" />
-            </Reveal>
+            <ParallaxImage colors={p.gallery[4]} className="aspect-[2/1] w-full rounded-2xl" />
 
             {/* Approach */}
             <div id="ch-approach" className="scroll-mt-28">
@@ -186,9 +183,7 @@ export default function Project() {
             </div>
 
             {/* Full-width image */}
-            <Reveal y={30}>
-              <Cover colors={p.gallery[7]} className="aspect-[16/9] w-full rounded-2xl" />
-            </Reveal>
+            <ParallaxImage colors={p.gallery[7]} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Results: outcome + quote + stats */}
             <div id="ch-results" className="flex scroll-mt-28 flex-col gap-12">
@@ -225,6 +220,17 @@ export default function Project() {
               </Reveal>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Gallery band */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-24 md:px-10 md:pt-28">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {[p.gallery[0], p.gallery[2], p.gallery[5], p.gallery[1]].map((g, i) => (
+            <Reveal key={i} delay={(i % 4) * 0.05} className={i % 2 === 1 ? 'md:mt-10' : ''}>
+              <Cover colors={g} className="aspect-[3/4] w-full rounded-xl" />
+            </Reveal>
+          ))}
         </div>
       </section>
 

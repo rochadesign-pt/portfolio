@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
+import MaskText from '../components/MaskText'
 import { projects } from '../data/projects'
 import { services, stats, clients } from '../data/site'
 import { fadeUp } from '../lib/motion'
@@ -16,30 +18,53 @@ import PageTransition from '../components/PageTransition'
 function Hero() {
   const { t } = useLang()
   const reduce = useReducedMotion()
+  const [started, setStarted] = useState(false)
+
+  // Start the hero entrance when the preloader finishes (or immediately if it
+  // was skipped), with a safety fallback so content never stays hidden.
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.__rdsLoaded) {
+      setStarted(true)
+      return
+    }
+    const on = () => setStarted(true)
+    window.addEventListener('rds:loaded', on)
+    const fb = setTimeout(() => setStarted(true), 4500)
+    return () => {
+      window.removeEventListener('rds:loaded', on)
+      clearTimeout(fb)
+    }
+  }, [])
 
   return (
     <section className="relative mx-auto max-w-[1400px] px-6 pt-40 pb-24 md:px-10 md:pt-52">
-      <motion.p variants={fadeUp} initial="hidden" animate="show" className="label mb-8">
+      <motion.p
+        variants={fadeUp}
+        initial="hidden"
+        animate={started ? 'show' : 'hidden'}
+        className="label mb-8"
+      >
         {t.hero.eyebrow}
       </motion.p>
 
       <h1 className="display text-[12vw] leading-[0.92] md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
-        <motion.span custom={0} variants={fadeUp} initial="hidden" animate="show" className="block">
-          {t.hero.line1}
-        </motion.span>
-        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.08 }} className="block">
-          {t.hero.line2}
-        </motion.span>
-        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.16 }} className="block ital text-accent">
-          {t.hero.accent}
-        </motion.span>
+        <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.05} />
+        <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.14} />
+        <MaskText
+          as="span"
+          text={t.hero.accent}
+          className="block ital text-accent"
+          trigger="mount"
+          active={started}
+          delay={0.24}
+        />
       </h1>
 
       <motion.div
         variants={fadeUp}
         initial="hidden"
-        animate="show"
-        transition={{ delay: 0.28 }}
+        animate={started ? 'show' : 'hidden'}
+        transition={{ delay: 0.45 }}
         className="mt-10 flex max-w-xl flex-col gap-6 md:flex-row md:items-end md:justify-between"
       >
         <p className="max-w-md text-lg text-muted">{t.hero.sub}</p>

@@ -5,6 +5,8 @@ import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import TypePanel from './components/TypePanel'
+import Preloader from './components/Preloader'
+import Cursor from './components/Cursor'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
@@ -34,6 +36,8 @@ export default function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <Preloader />
+        <Cursor />
         <SmoothScroll>
           <Nav />
           <AnimatedRoutes />

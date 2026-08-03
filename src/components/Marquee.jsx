@@ -1,10 +1,14 @@
 import { useRef } from 'react'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(useGSAP)
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-// Continuous horizontal marquee driven by GSAP. Duplicates content for a seamless loop.
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+// Continuous horizontal marquee. Loops seamlessly and leans (skews) with scroll
+// velocity — a small signature touch.
 export default function Marquee({ items, speed = 30, separator = '·' }) {
   const track = useRef(null)
 
@@ -13,12 +17,14 @@ export default function Marquee({ items, speed = 30, separator = '·' }) {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (reduce) return
       const half = track.current.scrollWidth / 2
-      gsap.to(track.current, {
-        x: -half,
-        duration: half / speed,
-        ease: 'none',
-        repeat: -1,
+      gsap.to(track.current, { x: -half, duration: half / speed, ease: 'none', repeat: -1 })
+
+      // Scroll-velocity skew
+      const skewTo = gsap.quickTo(track.current, 'skewX', { duration: 0.5, ease: 'power3' })
+      const st = ScrollTrigger.create({
+        onUpdate: (self) => skewTo(clamp(self.getVelocity() / -220, -14, 14)),
       })
+      return () => st.kill()
     },
     { scope: track },
   )

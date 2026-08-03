@@ -106,6 +106,15 @@
   transform-origin: left;
 }
 
+@media (pointer: fine) {
+  .has-cursor,
+  .has-cursor a,
+  .has-cursor button,
+  .has-cursor [data-cursor] {
+    cursor: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
