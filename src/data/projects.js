@@ -388,4 +388,20 @@ export const projects = [
   },
 ]
 
+// Give every project a consistent 8-tile placeholder gallery derived from its
+// accent — plenty of image slots to swap for real photography later.
+for (const p of projects) {
+  const a = p.cover[0]
+  p.gallery = [
+    [a, '#0b0b0d'],
+    ['#1d1d20', '#151517'],
+    ['#0b0b0d', a],
+    ['#151517', '#1d1d20'],
+    [a, '#151517'],
+    ['#0b0b0d', '#1d1d20'],
+    ['#1d1d20', a],
+    ['#151517', '#0b0b0d'],
+  ]
+}
+
 export const disciplines = ['Branding', 'Web', 'Product']
