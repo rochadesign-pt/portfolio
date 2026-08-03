@@ -14,7 +14,7 @@ export default function Services() {
         </Reveal>
         <Reveal>
           <h1 className="display text-6xl md:text-8xl">
-            {t.servicesPage.title} <span className="italic text-accent">{t.servicesPage.titleAccent}</span>
+            {t.servicesPage.title} <span className="italic">{t.servicesPage.titleAccent}</span>
           </h1>
         </Reveal>
         <Reveal className="mt-6 max-w-xl">
@@ -26,7 +26,7 @@ export default function Services() {
         {services.map((s) => (
           <Reveal key={s.key}>
             <div className="grid gap-8 border-t border-line py-14 md:grid-cols-[80px_1.2fr_1fr] md:py-20">
-              <span className="display text-3xl text-accent">{s.n}</span>
+              <span className="display text-3xl text-text/30">{s.n}</span>
               <div>
                 <h2 className="display text-4xl md:text-6xl">{s.title[lang]}</h2>
                 <p className="mt-6 max-w-md text-lg text-muted">{s.desc[lang]}</p>
@@ -34,7 +34,7 @@ export default function Services() {
               <ul className="space-y-3 self-center border-l border-line pl-8">
                 {s.items[lang].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm">
-                    <span className="h-1 w-1 rounded-full bg-accent" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent ring-1 ring-line" />
                     {item}
                   </li>
                 ))}

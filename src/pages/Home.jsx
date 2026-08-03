@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { projects } from '../data/projects'
 import { services, stats, clients } from '../data/site'
-import { fadeUp, staggerParent, staggerItem, viewportOnce } from '../lib/motion'
+import { fadeUp } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import Marquee from '../components/Marquee'
 import Counter from '../components/Counter'
@@ -47,8 +47,8 @@ function Hero() {
         <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.08 }} className="block">
           {t.hero.line2}
         </motion.span>
-        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.16 }} className="block italic text-accent">
-          {t.hero.accent}
+        <motion.span variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.16 }} className="block italic">
+          <span className="hl">{t.hero.accent}</span>
         </motion.span>
       </h1>
 
@@ -108,7 +108,7 @@ function FeaturedWork() {
           </Reveal>
           <Reveal>
             <h2 className="display text-5xl md:text-7xl">
-              {t.work.title} <span className="italic text-accent">{t.work.titleAccent}</span>
+              {t.work.title} <span className="italic">{t.work.titleAccent}</span>
             </h2>
           </Reveal>
         </div>
@@ -146,7 +146,7 @@ function ServicesPreview() {
         </Reveal>
         <Reveal>
           <h2 className="display text-5xl md:text-7xl">
-            {t.services.title} <span className="italic text-accent">{t.services.titleAccent}</span>
+            {t.services.title} <span className="italic">{t.services.titleAccent}</span>
           </h2>
         </Reveal>
       </div>
@@ -158,7 +158,7 @@ function ServicesPreview() {
               to="/services"
               className="group grid grid-cols-[auto_1fr] items-center gap-6 border-b border-line py-8 transition-colors md:grid-cols-[80px_1fr_auto] md:py-10"
             >
-              <span className="display text-2xl text-muted transition-colors group-hover:text-accent md:text-3xl">
+              <span className="display text-2xl text-muted transition-colors group-hover:text-text md:text-3xl">
                 {s.n}
               </span>
               <div>
@@ -187,22 +187,16 @@ function StatsBand() {
           <span className="label mb-4 block">{t.stats.label}</span>
           <p className="text-lg text-muted">{t.stats.body}</p>
         </Reveal>
-        <motion.div
-          variants={staggerParent}
-          initial="hidden"
-          whileInView="show"
-          viewport={viewportOnce}
-          className="grid grid-cols-2 gap-10 md:grid-cols-4"
-        >
-          {stats.map((s) => (
-            <motion.div key={s.label.en} variants={staggerItem}>
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+          {stats.map((s, i) => (
+            <Reveal key={s.label.en} delay={i * 0.06}>
               <div className="display text-6xl md:text-7xl">
                 <Counter value={s.value} suffix={s.suffix} />
               </div>
               <p className="mt-3 text-sm text-muted">{s.label[lang]}</p>
-            </motion.div>
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

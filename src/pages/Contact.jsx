@@ -16,7 +16,7 @@ export default function Contact() {
   }
 
   const field =
-    'w-full border-b border-line bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-muted focus:border-accent'
+    'w-full border-b border-line bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-muted focus:border-text'
 
   return (
     <PageTransition>
@@ -26,7 +26,7 @@ export default function Contact() {
         </Reveal>
         <Reveal>
           <h1 className="display text-6xl leading-[0.95] md:text-8xl">
-            {t.contactPage.title} <span className="italic text-accent">{t.contactPage.titleAccent}</span>
+            {t.contactPage.title} <span className="italic">{t.contactPage.titleAccent}</span>
           </h1>
         </Reveal>
         <Reveal className="mt-6 max-w-xl">
@@ -40,7 +40,7 @@ export default function Contact() {
             {sent ? (
               <div className="flex min-h-72 items-center">
                 <p className="display text-4xl md:text-5xl">
-                  {t.contactPage.title} <span className="italic text-accent">✓</span>
+                  {t.contactPage.title} <span className="italic">✓</span>
                   <span className="mt-4 block text-lg text-muted">{t.contactPage.response}</span>
                 </p>
               </div>
@@ -64,15 +64,17 @@ export default function Contact() {
             )}
           </Reveal>
 
-          <Reveal className="space-y-10">
-            <div>
-              <p className="label mb-3">{t.contactPage.or}</p>
-              <a href={`mailto:${contact.email}`} className="link-underline text-xl md:text-2xl">
+          <Reveal className="space-y-6">
+            {/* Brand contact card — yellow */}
+            <div className="rounded-2xl bg-accent p-8 text-accent-ink">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent-ink/60">{t.contactPage.or}</p>
+              <a href={`mailto:${contact.email}`} className="block text-xl font-medium md:text-2xl">
                 {contact.email}
               </a>
+              <p className="mt-6 text-sm text-accent-ink/70">{t.contactPage.response}</p>
             </div>
-            <div>
-              <p className="label mb-3">Social</p>
+            <div className="rounded-2xl border border-line p-8">
+              <p className="label mb-4">Social</p>
               <ul className="space-y-2">
                 {social.map((s) => (
                   <li key={s.label}>
@@ -83,7 +85,6 @@ export default function Contact() {
                 ))}
               </ul>
             </div>
-            <p className="text-sm text-muted">{t.contactPage.response}</p>
           </Reveal>
         </div>
       </section>

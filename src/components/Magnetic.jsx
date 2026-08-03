@@ -26,7 +26,7 @@ export default function Magnetic({ children, strength = 0.35, className = '' }) 
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={reset}
-      style={{ x: sx, y: sy, display: 'inline-block' }}
+      style={{ x: sx, y: sy }}
       className={className}
     >
       {children}

@@ -3,24 +3,20 @@ import { motion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { easeSoft } from '../lib/motion'
 import Cover from './Cover'
+import Reveal from './Reveal'
 
 export default function WorkCard({ project, index = 0 }) {
   const { lang } = useLang()
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-8%' }}
-      transition={{ duration: 0.7, ease: easeSoft, delay: (index % 2) * 0.08 }}
-    >
+    <Reveal delay={(index % 2) * 0.06}>
       <Link to={`/work/${project.slug}`} className="group block">
         <div className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
             <Cover colors={project.cover} className="aspect-[4/3] w-full" />
           </motion.div>
-          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-bg/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-            <span className="m-5 inline-flex items-center gap-2 rounded-full bg-text px-4 py-1.5 text-xs font-medium text-bg">
+          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-bg/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            <span className="m-5 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-xs font-medium text-accent-ink">
               {lang === 'pt' ? 'Ver projeto' : 'View project'} →
             </span>
           </div>
@@ -34,6 +30,6 @@ export default function WorkCard({ project, index = 0 }) {
           <span className="text-sm text-muted">{project.year}</span>
         </div>
       </Link>
-    </motion.div>
+    </Reveal>
   )
 }
