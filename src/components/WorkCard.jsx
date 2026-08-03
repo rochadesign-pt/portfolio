@@ -12,6 +12,7 @@ export default function WorkCard({ project, index = 0 }) {
   const { lang } = useLang()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
+  const isCaseStudy = project.isCaseStudy !== false
 
   const onClick = (e) => {
     track('project_open', { slug: project.slug })
@@ -28,18 +29,39 @@ export default function WorkCard({ project, index = 0 }) {
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
             <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" />
           </motion.div>
-          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-bg/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+
+          {/* Hover tags — category + case-study marker */}
+          <div className="pointer-events-none absolute left-4 top-4 flex flex-col items-start gap-2">
+            <span className="inline-flex -translate-y-1 items-center gap-2 rounded-md bg-white px-2.5 py-1 text-xs font-medium text-[#0b0b0d] opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="h-2.5 w-2.5 rounded-[3px]" style={{ background: project.cover[0] }} />
+              {project.category}
+            </span>
+            <span
+              className={`inline-flex -translate-y-1 items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium opacity-0 transition-all delay-[60ms] duration-500 group-hover:translate-y-0 group-hover:opacity-100 ${
+                isCaseStudy ? 'bg-accent text-accent-ink' : 'bg-white/90 text-[#0b0b0d]'
+              }`}
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-[3px]"
+                style={{ background: isCaseStudy ? '#0b0b0d' : '#8f8b83' }}
+              />
+              {isCaseStudy ? 'Case study' : lang === 'pt' ? 'Projeto' : 'Project'}
+            </span>
+          </div>
+
+          {/* CTA */}
+          <div className="absolute inset-0 flex items-end justify-end bg-gradient-to-t from-bg/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             <span className="m-5 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-xs font-medium text-accent-ink">
               {lang === 'pt' ? 'Ver projeto' : 'View project'} →
             </span>
           </div>
         </div>
 
-        {/* Caption with intro line for context */}
+        {/* Caption — Title / short description, with opacity differentiation */}
         <div className="mt-5">
           <p className="max-w-xl text-lg leading-snug md:text-xl">
             <span className="text-text">{project.title}</span>
-            <span className="text-muted"> — {project.tagline[lang]}</span>
+            <span className="text-muted"> / {project.tagline[lang]}</span>
           </p>
           <div className="mt-3 inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
