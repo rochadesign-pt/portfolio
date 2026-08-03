@@ -59,6 +59,7 @@ export default function App() {
             <Analytics />
             <Preloader />
             <SmoothScroll>
+              <div className="grain" aria-hidden="true" />
               <Nav />
               <MenuPanel />
               <PageShell>
