@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 import { useLang } from '../i18n/LanguageContext'
 import { useContent } from '../content/ContentProvider'
 import { caseProcess } from '../data/site'
@@ -16,6 +17,7 @@ export default function Project() {
   const { t, lang } = useLang()
   const { projects } = useContent()
   const bodyRef = useRef(null)
+  const heroTextRef = useRef(null)
 
   // Did we arrive via the click-to-zoom transition? If so, skip the page
   // entrance and hold the header text until the overlay has "landed".
@@ -38,6 +40,29 @@ export default function Project() {
       clearTimeout(fb)
     }
   }, [zoomEntry])
+
+  // Once the zoom image has landed, choreograph the header text in as one
+  // continuous, kinetic sequence (GSAP timeline) — kicker → title → tagline →
+  // cue, each rising a touch after the last so it reads as a single move rather
+  // than a page load. Held hidden (opacity-0) until then.
+  useGSAP(
+    () => {
+      if (!landed) return
+      const els = heroTextRef.current?.querySelectorAll('[data-hero]')
+      if (!els?.length) return
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (reduce) {
+        gsap.set(els, { opacity: 1, y: 0 })
+        return
+      }
+      gsap.fromTo(
+        els,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 },
+      )
+    },
+    { dependencies: [landed], scope: heroTextRef },
+  )
 
   const index = projects.findIndex((p) => p.slug === slug)
   const p = index === -1 ? null : projects[index]
@@ -96,27 +121,36 @@ export default function Project() {
             sits over open space in the image, no gradient */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32">
-          {/* Header text is held back until the zoom has landed, then rises in */}
-          <motion.div
-            initial={{ opacity: 0, y: 26 }}
-            animate={landed ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.3, 1], delay: 0.12 }}
+        <div
+          ref={heroTextRef}
+          className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32"
+        >
+          {/* Held hidden until the zoom lands; the GSAP timeline above staggers
+              these in as one continuous, kinetic move. */}
+          <span
+            data-hero
+            className="mb-5 block text-xs font-medium uppercase tracking-[0.22em] text-text/70 opacity-0"
           >
-            <span className="mb-5 block text-xs font-medium uppercase tracking-[0.22em] text-text/70">
-              {p.category}
-            </span>
-            <h1 className="display text-7xl leading-[0.88] md:text-[9rem]">{p.title}</h1>
-            <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <p className="ital max-w-2xl text-2xl leading-snug text-text/85 md:text-3xl">{p.tagline[lang]}</p>
-              <button
-                onClick={scrollToBody}
-                className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 hover:text-text"
-              >
-                {t.project.keepReading} ↓
-              </button>
-            </div>
-          </motion.div>
+            {p.category}
+          </span>
+          <h1 data-hero className="display text-7xl leading-[0.88] opacity-0 md:text-[9rem]">
+            {p.title}
+          </h1>
+          <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <p
+              data-hero
+              className="ital max-w-2xl text-2xl leading-snug text-text/85 opacity-0 md:text-3xl"
+            >
+              {p.tagline[lang]}
+            </p>
+            <button
+              data-hero
+              onClick={scrollToBody}
+              className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 opacity-0 hover:text-text"
+            >
+              {t.project.keepReading} ↓
+            </button>
+          </div>
         </div>
       </section>
 

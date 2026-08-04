@@ -10,9 +10,10 @@ export function useZoom() {
   return useContext(ZoomContext)
 }
 
-// Soft, iOS-like curve (see animation-stack).
-const EASE = [0.32, 0.72, 0, 1]
-const EXPAND = 0.7
+// Kinetic curve: eases in slowly, then accelerates through the growth — so the
+// zoom reads as being pulled into the page rather than a page swap.
+const EASE = [0.76, 0, 0.24, 1]
+const EXPAND = 0.8
 
 // Seamless click-to-zoom.
 //
@@ -105,11 +106,10 @@ export function ZoomProvider({ children }) {
             {/* Inner `layout` node cancels the parent's scale so the image
                 grows without stretching. */}
             <motion.div layout className="h-full w-full">
-              <Cover colors={state.colors} image={state.image} className="h-full w-full" />
+              <Cover colors={state.colors} image={state.image} className="h-full w-full" objectPosition="center 22%" />
             </motion.div>
-            {/* Match the header scrims exactly so brightness is identical at the fade-out */}
+            {/* Match the header scrim exactly so brightness is identical at the fade-out */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
           </motion.div>
         )}
       </AnimatePresence>
