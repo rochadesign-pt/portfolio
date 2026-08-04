@@ -88,6 +88,10 @@ export const dict = {
       button: 'Começar um projeto',
       email: 'ou escreve para',
     },
+    bigCta: {
+      line: 'Vamos começar algo grande',
+      button: 'Vamos falar',
+    },
     footer: {
       tagline: 'Estúdio de design de branding, web e produto.',
       nav: 'Navegação',
@@ -242,6 +246,10 @@ export const dict = {
       sub: 'Tell us what you are working on. We reply within 24 hours.',
       button: 'Start a project',
       email: 'or write to',
+    },
+    bigCta: {
+      line: "Let's start something big",
+      button: "Let's talk",
     },
     footer: {
       tagline: 'A branding, web and product design studio.',

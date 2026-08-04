@@ -8,6 +8,7 @@ import { MenuProvider, useMenu } from './context/Menu'
 import SmoothScroll from './components/SmoothScroll'
 import Nav from './components/Nav'
 import MenuPanel from './components/MenuPanel'
+import CTASection from './components/CTASection'
 import Footer from './components/Footer'
 import TypePanel from './components/TypePanel'
 import Preloader from './components/Preloader'
@@ -64,6 +65,7 @@ export default function App() {
               <MenuPanel />
               <PageShell>
                 <AnimatedRoutes />
+                <CTASection />
                 <Footer />
               </PageShell>
               <TypePanel />

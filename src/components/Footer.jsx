@@ -1,26 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { social, contact } from '../data/site'
-import Reveal from './Reveal'
-import MaskReveal from './MaskReveal'
 import LiveClock from './LiveClock'
 
 export default function Footer() {
   const { t, lang } = useLang()
 
   return (
-    <footer className="relative mt-32 border-t border-line px-6 pt-20 pb-8 md:px-10">
+    <footer className="relative border-t border-line px-6 pt-16 pb-8 md:px-10">
       <div className="mx-auto max-w-[1400px]">
-        <Reveal className="mb-4">
-          <p className="label">{t.cta.label}</p>
-        </Reveal>
-        <MaskReveal>
-          <Link to="/contact" className="display block text-6xl leading-[0.9] md:text-8xl">
-            {t.cta.line} <span className="ital text-accent-text">{t.cta.lineAccent}</span>
-          </Link>
-        </MaskReveal>
-
-        <div className="mt-20 grid gap-10 border-t border-line pt-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
             <p className="mb-3 text-sm font-medium">Rocha Design Studio</p>
             <p className="max-w-xs text-sm text-muted">{t.footer.tagline}</p>
