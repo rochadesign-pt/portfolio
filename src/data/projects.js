@@ -78,7 +78,7 @@ export const projects = [
     services: ['UI/UX', 'Design system', 'Web design', 'Prototipagem'],
     cover: ['#1a5fd0', '#0b0b0d'],
     // Real cover image test — swap this file for the actual project screenshot.
-    coverImage: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.png',
+    coverImage: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.webp',
     tagline: {
       pt: 'Um produto complexo que se sente simples.',
       en: 'A complex product that feels simple.',
