@@ -1,0 +1,48 @@
+name: Sanity
+
+# Runs the Studio tasks in GitHub's cloud, so no local Node is needed.
+# Requires a repo secret SANITY_AUTH_TOKEN (Sanity Manage → API → Tokens).
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: What to run
+        type: choice
+        options: [both, seed, deploy]
+        default: both
+      replace:
+        description: 'Seed: overwrite existing docs? (off = only add missing)'
+        type: boolean
+        default: false
+
+jobs:
+  sanity:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Studio dependencies
+        run: npm install
+
+      - name: Seed dataset
+        if: ${{ inputs.task == 'both' || inputs.task == 'seed' }}
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: |
+          FLAG="--missing"
+          if [ "${{ inputs.replace }}" = "true" ]; then FLAG="--replace"; fi
+          echo "Importing seed.ndjson into production ($FLAG)…"
+          npx sanity dataset import seed.ndjson production $FLAG
+
+      - name: Deploy hosted Studio
+        if: ${{ inputs.task == 'both' || inputs.task == 'deploy' }}
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: npx sanity deploy

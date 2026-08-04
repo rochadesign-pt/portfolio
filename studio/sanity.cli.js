@@ -7,4 +7,7 @@ export default defineCliConfig({
     projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'amrp5r6y',
     dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   },
+  // Hosted Studio URL → https://<studioHost>.sanity.studio (must be globally
+  // unique). If this name is taken, change it and re-run the deploy.
+  studioHost: 'rocha-design-studio',
 })
