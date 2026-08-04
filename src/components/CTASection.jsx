@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion, useInView } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 
 // Vertical columns whose widths shrink left→right, revealed bottom-up on a
@@ -59,23 +59,44 @@ function Headline({ line, as: Tag = 'div', ...rest }) {
 }
 
 // A single revealing column: shows its vertical slice of the inverted-colour
-// headline, wiped in from the bottom.
-function Column({ progress, col, line, frozen }) {
+// headline, wiped in from the bottom. Two drive modes:
+//   • desktop — scrubbed to scroll progress (the wipe tracks the wheel)
+//   • mobile  — a timed animation fired when the section enters view, so a fast
+//     flick can't blow past a scroll-scrubbed reveal (it plays every time)
+function Column({ progress, col, line, frozen, triggered, inView }) {
   const clip = useTransform(
     progress,
     [col.start, col.end],
     ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
     { clamp: true },
   )
+  const inner = (
+    <div className="absolute inset-y-0" style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}>
+      <Headline line={line} />
+    </div>
+  )
+  const base = 'theme-invert absolute inset-y-0 overflow-hidden bg-bg'
+  const box = { left: `${col.left}%`, width: `${col.width}%` }
+
+  if (frozen) {
+    return <div className={base} style={{ ...box, clipPath: 'inset(0% 0% 0% 0%)' }}>{inner}</div>
+  }
+  if (triggered) {
+    return (
+      <motion.div
+        className={base}
+        style={box}
+        initial={false}
+        animate={{ clipPath: inView ? 'inset(0% 0% 0% 0%)' : 'inset(100% 0% 0% 0%)' }}
+        transition={{ duration: 0.55, delay: inView ? col.start * 1.1 : 0, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {inner}
+      </motion.div>
+    )
+  }
   return (
-    <motion.div
-      className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
-      style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: frozen ? 'inset(0% 0% 0% 0%)' : clip }}
-    >
-      {/* full-viewport-width inner so each slice of the headline registers 1:1 */}
-      <div className="absolute inset-y-0" style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}>
-        <Headline line={line} />
-      </div>
+    <motion.div className={base} style={{ ...box, clipPath: clip }}>
+      {inner}
     </motion.div>
   )
 }
@@ -107,6 +128,9 @@ export default function CTASection() {
   }, [])
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
+  // Mobile fires the reveal as a timed animation on entry (see Column) — this
+  // flag drives it.
+  const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' })
 
   // Content above this section (e.g. late-loading cover images) shifts the page
   // height after useScroll has measured the target, which leaves the reveal
@@ -142,7 +166,7 @@ export default function CTASection() {
       {/* Shrinking-rectangle reveal of the inverted colour */}
       <div aria-hidden="true" className="absolute inset-0">
         {columns.map((col, i) => (
-          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={reduce} />
+          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={reduce} triggered={isMobile} inView={inView} />
         ))}
       </div>
 
