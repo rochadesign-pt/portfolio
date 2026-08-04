@@ -211,15 +211,9 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Image pair — offset */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <Reveal y={30}>
-                <Cover colors={p.gallery[1]} image={gi(1)} className="aspect-[4/5] w-full rounded-2xl" />
-              </Reveal>
-              <Reveal y={30} className="md:mt-16">
-                <Cover colors={p.gallery[2]} image={gi(2)} className="aspect-[4/5] w-full rounded-2xl" />
-              </Reveal>
-            </div>
+            {/* Full-width images */}
+            <ParallaxImage colors={p.gallery[1]} image={gi(1)} className="aspect-[3/2] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[2]} image={gi(2)} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Process */}
             <div id="ch-process" className="scroll-mt-28">
@@ -237,18 +231,10 @@ export default function Project() {
               </div>
             </div>
 
-            {/* Three-up image row */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              <Reveal y={30}>
-                <Cover colors={p.gallery[5]} image={gi(5)} className="aspect-[3/4] w-full rounded-xl" />
-              </Reveal>
-              <Reveal y={30} className="md:mt-10">
-                <Cover colors={p.gallery[3]} image={gi(3)} className="aspect-[3/4] w-full rounded-xl" />
-              </Reveal>
-              <Reveal y={30} className="col-span-2 md:col-span-1 md:mt-20">
-                <Cover colors={p.gallery[6]} image={gi(6)} className="aspect-[16/10] w-full rounded-xl md:aspect-[3/4]" />
-              </Reveal>
-            </div>
+            {/* Full-width images */}
+            <ParallaxImage colors={p.gallery[5]} image={gi(5)} className="aspect-[2/1] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[3]} image={gi(3)} className="aspect-[16/9] w-full rounded-2xl" />
+            <ParallaxImage colors={p.gallery[6]} image={gi(6)} className="aspect-[21/9] w-full rounded-2xl" />
 
             {/* Full-width image */}
             <ParallaxImage colors={p.gallery[7]} image={gi(7)} className="aspect-[16/9] w-full rounded-2xl" />
@@ -290,17 +276,6 @@ export default function Project() {
               </Reveal>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Gallery band */}
-      <section className="mx-auto max-w-[1400px] px-6 pt-24 md:px-10 md:pt-28">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {[0, 2, 5, 1].map((idx, i) => (
-            <Reveal key={i} delay={(i % 4) * 0.05} className={i % 2 === 1 ? 'md:mt-10' : ''}>
-              <Cover colors={p.gallery[idx]} image={gi(idx)} className="aspect-[3/4] w-full rounded-xl" />
-            </Reveal>
-          ))}
         </div>
       </section>
 
