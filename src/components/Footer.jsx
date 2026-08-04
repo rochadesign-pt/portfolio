@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { social, contact } from '../data/site'
 import LiveClock from './LiveClock'
+import Logo from './Logo'
 
 export default function Footer() {
   const { t, lang } = useLang()
@@ -11,6 +12,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1400px]">
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
+            <Logo className="mb-5 h-9 w-9" title="Rocha Design Studio" />
             <p className="mb-3 text-sm font-medium">Rocha Design Studio</p>
             <p className="max-w-xs text-sm text-muted">{t.footer.tagline}</p>
             <p className="mt-4 text-sm text-muted">{lang === 'pt' ? contact.location : contact.locationEn}</p>

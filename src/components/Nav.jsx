@@ -5,6 +5,7 @@ import { useTheme } from '../theme/ThemeContext'
 import { useMenu } from '../context/Menu'
 import Magnetic from './Magnetic'
 import LanguageSwitcher from './LanguageSwitcher'
+import Logo from './Logo'
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme()
@@ -51,8 +52,8 @@ export default function Nav() {
       }`}
     >
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 md:px-10">
-        <Link to="/" className="group flex items-center gap-2 text-sm font-medium tracking-tight">
-          <span className="inline-block h-2 w-2 rounded-full bg-accent transition-transform duration-500 group-hover:scale-125" />
+        <Link to="/" aria-label="Rocha Design Studio — início" className="group flex items-center gap-2.5 text-sm font-medium tracking-tight">
+          <Logo className="h-5 w-5 shrink-0 transition-transform duration-500 group-hover:scale-110" />
           Rocha Design Studio
         </Link>
 

@@ -69,8 +69,10 @@ function Column({ progress, col, line, frozen }) {
   )
 }
 
-const pillClass =
-  'rounded-full bg-accent px-3.5 py-1.5 text-sm font-medium text-accent-ink shadow-md'
+// Service tags read as quiet, secondary chips so the single yellow CTA keeps
+// all the emphasis. Neutral mid-grey stays legible over both ends of the wipe.
+const tagClass = 'rounded-full border px-3.5 py-1.5 text-sm font-medium'
+const tagStyle = { color: '#7c7c7c', borderColor: 'rgba(124,124,124,0.32)', backgroundColor: 'transparent' }
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
@@ -125,8 +127,8 @@ export default function CTASection() {
               whileInView={frozen ? undefined : { opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true, margin: '-12%' }}
               transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
-              className={`absolute inline-block ${pillClass} md:text-base`}
-              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg` }}
+              className={`absolute inline-block ${tagClass}`}
+              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg`, ...tagStyle }}
             >
               {tag}
             </motion.span>
@@ -135,7 +137,7 @@ export default function CTASection() {
       </div>
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-[15%] flex flex-wrap items-center justify-center gap-2 px-6 md:hidden">
         {tags.map((tag, i) => (
-          <span key={i} className={pillClass}>
+          <span key={i} className={tagClass} style={tagStyle}>
             {tag}
           </span>
         ))}
