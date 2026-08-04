@@ -8,6 +8,11 @@ export default function PageTransition({ children, instant = false }) {
   const reduce = useReducedMotion()
 
   useEffect(() => {
+    // Reset Lenis' own scroll target, not just the window — otherwise Lenis
+    // re-applies the previous page's scroll offset on the next frame and the new
+    // page jumps down to it (e.g. arriving at a case study via the zoom).
+    const lenis = window.__lenis
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true })
     window.scrollTo(0, 0)
   }, [])
 
