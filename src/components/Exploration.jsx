@@ -11,29 +11,24 @@ import DotField from './DotField'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-// Scattered widths + vertical offsets give the row an editorial baseline (each
-// tile sits at a different height).
-const WIDTHS = [220, 168, 244, 280, 190, 208, 164, 200]
-const OFFSETS = [64, 20, 88, 4, 48, 28, 72, 12]
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 
-function Tile({ e, i, lang }) {
+// Uniform card — every tile is the same width and aspect ratio for a clean,
+// even row (à la the reference), caption sitting quietly beneath.
+function Tile({ e, lang }) {
   return (
-    <div
-      className="flex-none"
-      style={{ width: WIDTHS[i % WIDTHS.length], marginBottom: OFFSETS[i % OFFSETS.length] }}
-    >
-      <p className="mb-3 text-sm leading-snug">
-        <span className="text-text">{e.name}</span>
-        <span className="text-muted"> / {e.category[lang]}</span>
-      </p>
-      <div className="group overflow-hidden rounded-lg" style={{ aspectRatio: e.ratio }}>
+    <div className="w-[240px] flex-none md:w-[280px]">
+      <div className="group aspect-[4/5] overflow-hidden rounded-xl">
         <Cover
           colors={e.colors}
           image={e.image}
           className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.05]"
         />
       </div>
+      <p className="mt-3 truncate text-sm leading-snug">
+        <span className="text-text">{e.name}</span>
+        <span className="text-muted"> / {e.category[lang]}</span>
+      </p>
     </div>
   )
 }
@@ -165,11 +160,11 @@ export default function Exploration() {
           </div>
         </div>
 
-        {/* Scroll-driven marquee band */}
+        {/* Scroll-driven, draggable marquee band */}
         <div className="overflow-hidden">
-          <div ref={track} className="flex w-max items-end gap-8 px-6 will-change-transform md:px-10">
+          <div ref={track} className="flex w-max items-start gap-6 px-6 will-change-transform md:gap-8 md:px-10">
             {content.map((e, i) => (
-              <Tile key={i} e={e} i={i % explorations.length} lang={lang} />
+              <Tile key={i} e={e} lang={lang} />
             ))}
           </div>
         </div>
