@@ -42,7 +42,6 @@ export default function Exploration() {
   const { t, lang } = useLang()
   const { explorations } = useContent()
   const track = useRef(null)
-  const SPEED = 55 // px/s base drift
 
   useGSAP(
     () => {
@@ -51,33 +50,90 @@ export default function Exploration() {
       const half = el.scrollWidth / 2
       if (!half) return
 
-      // Seamless infinite marquee: x drifts left and wraps within one set width.
-      const loop = gsap.to(el, {
-        x: `-=${half}`,
-        ease: 'none',
-        duration: half / SPEED,
-        repeat: -1,
-        modifiers: { x: gsap.utils.unitize(gsap.utils.wrap(-half, 0)) },
-      })
-
+      const wrap = gsap.utils.wrap(-half, 0)
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (reduce) {
-        loop.progress(0.08).pause()
-        return
-      }
+      const DRIFT = 0.4 // px/frame base drift (≈24px/s) — slow and calm
 
-      // Scroll controls: the marquee surges with scroll velocity, then eases
-      // back to its calm base drift when scrolling stops.
+      const state = { pos: 0 }
+      let vel = 0
+      let dragging = false
+      let lastX = 0
+      let lastDX = 0
+      let flick = null
+
+      const render = () => {
+        el.style.transform = `translate3d(${wrap(state.pos)}px,0,0)`
+      }
+      render()
+
+      // Per-frame integrator: eases velocity back to the calm leftward drift.
+      const tick = () => {
+        if (dragging || flick?.isActive()) return
+        vel += (-DRIFT - vel) * 0.05
+        state.pos += vel
+        render()
+      }
+      if (!reduce) gsap.ticker.add(tick)
+
+      // Scroll surge — nudges velocity with scroll, then the tick settles it.
       const st = ScrollTrigger.create({
         onUpdate: (self) => {
-          const boost = clamp(Math.abs(self.getVelocity()) / 130, 0, 9)
-          loop.timeScale(1 + boost)
-          gsap.to(loop, { timeScale: 1, duration: 1, ease: 'power2.out', overwrite: true })
+          if (reduce || dragging || flick?.isActive()) return
+          vel += clamp(self.getVelocity() / -2600, -5, 5)
         },
       })
+
+      // Drag to move; on release, throw with a slightly bouncy overshoot.
+      const onDown = (e) => {
+        dragging = true
+        lastX = e.clientX
+        lastDX = 0
+        flick?.kill()
+        el.style.cursor = 'grabbing'
+        try {
+          el.setPointerCapture(e.pointerId)
+        } catch {
+          /* not all pointers are capturable */
+        }
+      }
+      const onMove = (e) => {
+        if (!dragging) return
+        const dx = e.clientX - lastX
+        lastX = e.clientX
+        lastDX = dx
+        state.pos += dx
+        render()
+      }
+      const onUp = () => {
+        if (!dragging) return
+        dragging = false
+        el.style.cursor = 'grab'
+        vel = 0
+        const dist = clamp(lastDX * 16, -1400, 1400)
+        flick = gsap.to(state, {
+          pos: state.pos + dist,
+          duration: 1.15,
+          ease: 'back.out(1.1)', // overshoots then settles — a gentle bounce
+          onUpdate: render,
+          onComplete: () => {
+            vel = -DRIFT
+          },
+        })
+      }
+
+      el.style.cursor = 'grab'
+      el.style.touchAction = 'pan-y' // let the page scroll vertically; we take horizontal drags
+      el.addEventListener('pointerdown', onDown)
+      window.addEventListener('pointermove', onMove)
+      window.addEventListener('pointerup', onUp)
+
       return () => {
+        gsap.ticker.remove(tick)
         st.kill()
-        loop.kill()
+        flick?.kill()
+        el.removeEventListener('pointerdown', onDown)
+        window.removeEventListener('pointermove', onMove)
+        window.removeEventListener('pointerup', onUp)
       }
     },
     { scope: track, dependencies: [explorations.length] },

@@ -14,6 +14,7 @@ import Cover from '../components/Cover'
 import WorkCard from '../components/WorkCard'
 import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
+import DotField from '../components/DotField'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -39,53 +40,58 @@ function Hero() {
   }, [])
 
   return (
-    <section className="relative mx-auto max-w-[1400px] px-6 pt-40 pb-24 md:px-10 md:pt-52">
-      <motion.p
-        variants={fadeUp}
-        initial="hidden"
-        animate={started ? 'show' : 'hidden'}
-        className="label mb-8"
-      >
-        {t.hero.eyebrow}
-      </motion.p>
+    <section className="relative overflow-hidden pt-40 pb-24 md:pt-52">
+      {/* Full-bleed dot field behind the hero — brightens around the cursor */}
+      <DotField />
 
-      <h1 className="display text-[12vw] leading-[0.92] md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
-        <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.05} />
-        <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.14} />
-        <MaskText
-          as="span"
-          text={t.hero.accent}
-          className="block ital text-accent-text"
-          trigger="mount"
-          active={started}
-          delay={0.24}
-        />
-      </h1>
-
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate={started ? 'show' : 'hidden'}
-        transition={{ delay: 0.45 }}
-        className="mt-10 flex max-w-xl flex-col gap-6 md:flex-row md:items-end md:justify-between"
-      >
-        <p className="max-w-md text-lg text-muted">{t.hero.sub}</p>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="mt-16 flex items-center gap-2 text-xs text-muted"
-      >
-        <motion.span
-          animate={reduce ? {} : { y: [0, 6, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+      <div className="relative mx-auto max-w-[1400px] px-6 md:px-10">
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate={started ? 'show' : 'hidden'}
+          className="label mb-8"
         >
-          ↓
-        </motion.span>
-        <span className="label">{t.hero.scroll}</span>
-      </motion.div>
+          {t.hero.eyebrow}
+        </motion.p>
+
+        <h1 className="display text-[12vw] leading-[0.92] md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
+          <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.05} />
+          <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.14} />
+          <MaskText
+            as="span"
+            text={t.hero.accent}
+            className="block ital text-accent-text"
+            trigger="mount"
+            active={started}
+            delay={0.24}
+          />
+        </h1>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={started ? 'show' : 'hidden'}
+          transition={{ delay: 0.45 }}
+          className="mt-10 flex max-w-xl flex-col gap-6 md:flex-row md:items-end md:justify-between"
+        >
+          <p className="max-w-md text-lg text-muted">{t.hero.sub}</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-16 flex items-center gap-2 text-xs text-muted"
+        >
+          <motion.span
+            animate={reduce ? {} : { y: [0, 6, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ↓
+          </motion.span>
+          <span className="label">{t.hero.scroll}</span>
+        </motion.div>
+      </div>
     </section>
   )
 }
