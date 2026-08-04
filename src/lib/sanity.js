@@ -9,10 +9,11 @@ const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 
 export const sanityConfigured = Boolean(projectId)
 
-// useCdn:false so content edits (new images, text) show up on the next refresh
-// with no CDN cache delay — the "see it live" loop while managing in the Studio.
+// useCdn:false so content edits show up on the next refresh with no CDN cache
+// delay. perspective:'published' so the public site reads only published docs
+// (independent of API-version defaults). apiVersion pinned to a current date.
 export const client = sanityConfigured
-  ? createClient({ projectId, dataset, apiVersion: '2024-01-01', useCdn: false })
+  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false, perspective: 'published' })
   : null
 
 const builder = client ? imageUrlBuilder(client) : null
