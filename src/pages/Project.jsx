@@ -9,6 +9,7 @@ import Reveal from '../components/Reveal'
 import Cover from '../components/Cover'
 import ParallaxImage from '../components/ParallaxImage'
 import ChapterNav from '../components/ChapterNav'
+import CountUp from '../components/CountUp'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -280,7 +281,7 @@ export default function Project() {
                   <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3">
                     {p.results.map((r) => (
                       <div key={r.label.en}>
-                        <p className="display text-5xl md:text-6xl">{r.value}</p>
+                        <CountUp value={r.value} className="display block text-5xl md:text-6xl" />
                         <p className="mt-2 text-sm text-muted">{r.label[lang]}</p>
                       </div>
                     ))}
@@ -303,32 +304,40 @@ export default function Project() {
         </div>
       </section>
 
-      {/* More cases */}
-      <section className="mx-auto max-w-[1400px] px-6 pt-28 md:px-10 md:pt-36">
-        <Reveal className="mb-12 border-t border-line pt-12">
-          <h2 className="display text-5xl md:text-7xl">
-            {t.project.moreCases} <span className="ital text-accent-text">{t.project.moreCasesAccent}</span>
-          </h2>
-        </Reveal>
-        <div className="grid gap-6 md:grid-cols-2">
-          {moreCases.map((c, i) => (
-            <Reveal key={c.slug} delay={i * 0.06}>
-              <Link to={`/work/${c.slug}`} className="group block overflow-hidden rounded-2xl border border-line">
-                <div className="overflow-hidden">
-                  <Cover colors={c.cover} className="aspect-[16/10] w-full transition-transform duration-700 group-hover:scale-105" />
-                </div>
-                <div className="flex items-center justify-between gap-4 p-8">
-                  <div>
-                    <h3 className="display text-3xl md:text-4xl">{c.title}</h3>
-                    <p className="mt-1 text-sm text-muted">{c.category}</p>
-                  </div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-medium text-accent-ink transition-transform duration-500 group-hover:translate-x-1">
-                    {t.project.readCase} →
-                  </span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
+      {/* Next project — full-bleed, cinematic hand-off that keeps the reading
+          flowing straight into the next case. */}
+      <section className="mt-28 md:mt-36">
+        <Link
+          to={`/work/${moreCases[0].slug}`}
+          className="group relative block h-[76svh] min-h-[460px] w-full overflow-hidden"
+        >
+          <div className="absolute inset-0 overflow-hidden">
+            <Cover
+              colors={moreCases[0].cover}
+              image={moreCases[0].coverImage}
+              objectPosition="center 22%"
+              className="h-full w-full transition-transform duration-[1400ms] ease-out group-hover:scale-[1.05]"
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/45 to-bg/10" />
+          <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-end px-6 pb-16 md:px-10 md:pb-20">
+            <span className="label mb-4 flex items-center gap-2">
+              {t.project.next}
+              <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+            </span>
+            <h2 className="display text-6xl leading-[0.9] md:text-8xl">{moreCases[0].title}</h2>
+            <p className="ital mt-4 max-w-xl text-xl text-text/85 md:text-2xl">
+              {moreCases[0].tagline[lang]}
+            </p>
+          </div>
+        </Link>
+        <div className="mx-auto max-w-[1400px] px-6 py-10 md:px-10">
+          <Link
+            to="/work"
+            className="link-underline inline-flex items-center gap-2 text-sm text-muted hover:text-text"
+          >
+            {t.project.moreCases} {t.project.moreCasesAccent} →
+          </Link>
         </div>
       </section>
     </PageTransition>

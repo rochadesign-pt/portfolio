@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import Marquee from '../components/Marquee'
+import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
 import { useContent } from '../content/ContentProvider'
 import { useSeo } from '../lib/useSeo'
@@ -87,6 +88,9 @@ export default function Studio() {
           ))}
         </div>
       </section>
+
+      {/* How the work gets made — the process, moved here from the home */}
+      <ProcessTimeline />
 
       {/* Founder-led — a one-person studio, by design */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 md:px-10">

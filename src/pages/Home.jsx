@@ -14,7 +14,6 @@ import Cover from '../components/Cover'
 import WorkCard from '../components/WorkCard'
 import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
-import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
 import ScrollBg from '../components/ScrollBg'
 import { useSeo } from '../lib/useSeo'
@@ -280,10 +279,9 @@ export default function Home() {
     <PageTransition>
       <Hero />
       <ClientsBand />
-      <IntroStatement />
       <FeaturedWork />
+      <IntroStatement />
       <ServicesPreview />
-      <ProcessTimeline />
       <StatsBand />
       <ScrollBg>
         <Exploration />
