@@ -8,9 +8,8 @@ import PageTransition from '../components/PageTransition'
 import { useContent } from '../content/ContentProvider'
 import { useSeo } from '../lib/useSeo'
 
-// Real B&W portrait goes here (e.g. '/behind-tiago.jpg' in /public, or a Sanity
-// image URL). Null shows the placeholder tile until the photo is supplied.
-const behindPhoto = null
+// B&W portrait for the "Behind it" section (in /public).
+const behindPhoto = '/tiago-rocha.avif'
 
 export default function Studio() {
   const { t, lang } = useLang()
