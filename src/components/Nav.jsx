@@ -5,7 +5,7 @@ import { useTheme } from '../theme/ThemeContext'
 import { useMenu } from '../context/Menu'
 import Magnetic from './Magnetic'
 import LanguageSwitcher from './LanguageSwitcher'
-import Logo from './Logo'
+import Wordmark from './Wordmark'
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme()
@@ -52,9 +52,8 @@ export default function Nav() {
       }`}
     >
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 md:px-10">
-        <Link to="/" aria-label="Rocha Design Studio — início" className="group flex items-center gap-2.5 text-sm font-medium tracking-tight">
-          <Logo className="h-5 w-5 shrink-0 transition-transform duration-500 group-hover:scale-110" />
-          Rocha Design Studio
+        <Link to="/" aria-label="Rocha Design Studio — início" className="group inline-block">
+          <Wordmark className="text-[17px] text-text transition-transform duration-500 group-hover:scale-[1.03]" />
         </Link>
 
         <div className="flex items-center gap-3">
