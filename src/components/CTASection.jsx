@@ -63,7 +63,6 @@ const tagClass =
   'theme-invert absolute inline-block rounded-full border border-line bg-bg px-3 py-1.5 text-sm font-medium text-text md:px-3.5'
 
 const HIDDEN = 'inset(100% 0% 0% 0%)'
-const SHOWN = 'inset(0% 0% 0% 0%)'
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
@@ -95,20 +94,13 @@ export default function CTASection() {
     const section = ref.current
     if (!section) return
 
-    // Reduced motion: show the revealed end-state, no scrubbing.
-    if (reduce) {
-      colRefs.current.forEach((n) => {
-        if (n) {
-          n.style.clipPath = SHOWN
-          n.style.webkitClipPath = SHOWN
-        }
-      })
-      return
-    }
-
-    let raf = 0
+    // Read the section's live position every animation frame while it's near
+    // the viewport and write clip-path straight onto the columns. A rAF loop
+    // (not scroll events) is the reliable driver on iOS Safari, where scroll
+    // events are throttled/suppressed during momentum scrolling — and it needs
+    // no reduced-motion branch, since the reveal is tied to the user's own
+    // scroll rather than being autonomous motion.
     const apply = () => {
-      raf = 0
       const rect = section.getBoundingClientRect()
       const vh = window.innerHeight || 1
       // 0 as the section enters from the bottom → 1 as its top nears the top.
@@ -123,25 +115,17 @@ export default function CTASection() {
         node.style.webkitClipPath = clip
       }
     }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(apply)
-    }
 
-    apply()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    window.__lenis?.on('scroll', onScroll)
-    // Late layout shifts (fonts, cover images) change rect.top — recompute.
-    const timers = [setTimeout(apply, 300), setTimeout(apply, 1200)]
+    // A single always-on rAF loop while the section is mounted. One rect read +
+    // 12 style writes per frame is trivial, and it removes every point of
+    // failure (scroll events, observers) that could leave the reveal stuck.
+    let rafId = requestAnimationFrame(function loop() {
+      apply()
+      rafId = requestAnimationFrame(loop)
+    })
 
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      window.__lenis?.off?.('scroll', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-      timers.forEach(clearTimeout)
-    }
-  }, [isContact, reduce, pathname])
+    return () => cancelAnimationFrame(rafId)
+  }, [isContact, pathname])
 
   if (isContact) return null
 
