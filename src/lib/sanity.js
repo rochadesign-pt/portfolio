@@ -6,14 +6,19 @@ import imageUrlBuilder from '@sanity/image-url'
 //   VITE_SANITY_DATASET=production   (optional, defaults to production)
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'amrp5r6y'
 const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
+// Read-only (Viewer) token. Authenticates the request so content is returned
+// regardless of dataset visibility / browser-origin filtering. Optional — the
+// client still works without it when the dataset is public.
+const token = import.meta.env.VITE_SANITY_TOKEN || undefined
 
 export const sanityConfigured = Boolean(projectId)
 
 // useCdn:false so content edits show up on the next refresh with no CDN cache
-// delay. No explicit perspective — the default reads published content the same
-// way the public query endpoint does (there are no drafts to filter out).
+// delay. token authenticates the read; withCredentials:false so it travels in
+// the Authorization header (not cookies), which is what a cross-origin fetch
+// with a token needs.
 export const client = sanityConfigured
-  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false })
+  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false, token, withCredentials: false })
   : null
 
 const builder = client ? imageUrlBuilder(client) : null
