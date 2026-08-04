@@ -1,12 +1,11 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, useScroll, useTransform, useReducedMotion, useInView } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 
 // Vertical columns whose widths shrink left→right, revealed bottom-up on a
 // per-column stagger — the "pattern of shrinking rectangles" that transitions
-// the section from the page colour to the inverted (footer) colour. Fewer
-// columns on mobile so the scrubbed reveal stays cheap.
+// the section from the page colour to the inverted (footer) colour.
 function buildColumns(n) {
   const weights = Array.from({ length: n }, (_, i) => 1.7 - i * (1.25 / n))
   const total = weights.reduce((a, b) => a + b, 0)
@@ -20,8 +19,7 @@ function buildColumns(n) {
     return { left, width, start, end: start + 0.45 }
   })
 }
-const COLUMNS_DESKTOP = buildColumns(14)
-const COLUMNS_MOBILE = buildColumns(6)
+const COLUMNS = buildColumns(12)
 
 // Scattered positions for the service tags, tuned per breakpoint. Pills sit
 // upright (no rotation) and stay out of the central band where the headline and
@@ -58,65 +56,30 @@ function Headline({ line, as: Tag = 'div', ...rest }) {
   )
 }
 
-// A single revealing column: shows its vertical slice of the inverted-colour
-// headline, wiped in from the bottom. Two drive modes:
-//   • desktop — scrubbed to scroll progress (the wipe tracks the wheel)
-//   • mobile  — a timed animation fired when the section enters view, so a fast
-//     flick can't blow past a scroll-scrubbed reveal (it plays every time)
-function Column({ progress, col, line, frozen, triggered, inView }) {
-  const clip = useTransform(
-    progress,
-    [col.start, col.end],
-    ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
-    { clamp: true },
-  )
-  const inner = (
-    <div className="absolute inset-y-0" style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}>
-      <Headline line={line} />
-    </div>
-  )
-  const base = 'theme-invert absolute inset-y-0 overflow-hidden bg-bg'
-  const box = { left: `${col.left}%`, width: `${col.width}%` }
-
-  if (frozen) {
-    return <div className={base} style={{ ...box, clipPath: 'inset(0% 0% 0% 0%)' }}>{inner}</div>
-  }
-  if (triggered) {
-    return (
-      <motion.div
-        className={base}
-        style={box}
-        initial={false}
-        animate={{ clipPath: inView ? 'inset(0% 0% 0% 0%)' : 'inset(100% 0% 0% 0%)' }}
-        transition={{ duration: 0.55, delay: inView ? col.start * 1.1 : 0, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {inner}
-      </motion.div>
-    )
-  }
-  return (
-    <motion.div className={base} style={{ ...box, clipPath: clip }}>
-      {inner}
-    </motion.div>
-  )
-}
-
 // Service tags read as quiet, secondary chips so the single yellow CTA keeps
 // the emphasis: fill matches the (revealed) background via the inverted tokens,
 // so they adapt to light/dark on their own, defined only by a hairline border.
 const tagClass =
   'theme-invert absolute inline-block rounded-full border border-line bg-bg px-3 py-1.5 text-sm font-medium text-text md:px-3.5'
 
+const HIDDEN = 'inset(100% 0% 0% 0%)'
+const SHOWN = 'inset(0% 0% 0% 0%)'
+
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
 // footer also uses — so page → CTA → footer reads as one continuous flow.
-// Scattered, floating service tags make the moment self-explanatory; a yellow
-// pill routes to the contact form. Same effect on mobile, just fewer columns.
+//
+// The reveal is driven by a plain scroll listener that reads the section's live
+// position and writes clip-path (+ -webkit-clip-path) straight onto the column
+// nodes. No framer scroll/inView hooks: it tracks native touch scroll and Lenis
+// alike, on every browser, and can't get stuck on a stale measurement.
 export default function CTASection() {
   const { t } = useLang()
   const { pathname } = useLocation()
   const ref = useRef(null)
+  const colRefs = useRef([])
   const reduce = useReducedMotion()
+  const isContact = pathname === '/contact'
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -127,32 +90,61 @@ export default function CTASection() {
     return () => mq.removeEventListener('change', on)
   }, [])
 
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
-  // Mobile fires the reveal as a timed animation on entry (see Column) — this
-  // flag drives it.
-  const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' })
-
-  // Content above this section (e.g. late-loading cover images) shifts the page
-  // height after useScroll has measured the target, which leaves the reveal
-  // mapped to the wrong scroll range — it reads as "no effect". Nudge framer to
-  // re-measure once everything has settled and whenever an image finishes.
   useEffect(() => {
-    const remeasure = () => window.dispatchEvent(new Event('resize'))
-    window.addEventListener('load', remeasure)
-    document.querySelectorAll('img').forEach((img) => {
-      if (!img.complete) img.addEventListener('load', remeasure, { once: true })
-    })
-    const timers = [setTimeout(remeasure, 250), setTimeout(remeasure, 900), setTimeout(remeasure, 2000)]
+    if (isContact) return
+    const section = ref.current
+    if (!section) return
+
+    // Reduced motion: show the revealed end-state, no scrubbing.
+    if (reduce) {
+      colRefs.current.forEach((n) => {
+        if (n) {
+          n.style.clipPath = SHOWN
+          n.style.webkitClipPath = SHOWN
+        }
+      })
+      return
+    }
+
+    let raf = 0
+    const apply = () => {
+      raf = 0
+      const rect = section.getBoundingClientRect()
+      const vh = window.innerHeight || 1
+      // 0 as the section enters from the bottom → 1 as its top nears the top.
+      const p = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.9)))
+      for (let i = 0; i < COLUMNS.length; i++) {
+        const col = COLUMNS[i]
+        const node = colRefs.current[i]
+        if (!node) continue
+        const cp = Math.min(1, Math.max(0, (p - col.start) / (col.end - col.start)))
+        const clip = `inset(${((1 - cp) * 100).toFixed(2)}% 0% 0% 0%)`
+        node.style.clipPath = clip
+        node.style.webkitClipPath = clip
+      }
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply)
+    }
+
+    apply()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    window.__lenis?.on('scroll', onScroll)
+    // Late layout shifts (fonts, cover images) change rect.top — recompute.
+    const timers = [setTimeout(apply, 300), setTimeout(apply, 1200)]
+
     return () => {
-      window.removeEventListener('load', remeasure)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      window.__lenis?.off?.('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
       timers.forEach(clearTimeout)
     }
-  }, [pathname])
+  }, [isContact, reduce, pathname])
 
-  if (pathname === '/contact') return null
+  if (isContact) return null
 
-  const columns = isMobile ? COLUMNS_MOBILE : COLUMNS_DESKTOP
-  const positions = isMobile ? TAG_POS_MOBILE : TAG_POS_DESKTOP
   const line = t.bigCta.line
   const tags = t.bigCta.tags || []
 
@@ -165,22 +157,35 @@ export default function CTASection() {
 
       {/* Shrinking-rectangle reveal of the inverted colour */}
       <div aria-hidden="true" className="absolute inset-0">
-        {columns.map((col, i) => (
-          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={reduce} triggered={isMobile} inView={inView} />
+        {COLUMNS.map((col, i) => (
+          <div
+            key={i}
+            ref={(el) => (colRefs.current[i] = el)}
+            className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
+            style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: HIDDEN, WebkitClipPath: HIDDEN }}
+          >
+            <div
+              className="absolute inset-y-0"
+              style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}
+            >
+              <Headline line={line} />
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Service tags — scattered / floating over the type */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {tags.map((tag, i) => {
+          const positions = isMobile ? TAG_POS_MOBILE : TAG_POS_DESKTOP
           const p = positions[i % positions.length]
           return (
             <motion.span
               key={i}
-              initial={reduce ? false : { opacity: 0, scale: 0.8, y: 12 }}
+              initial={reduce ? false : { opacity: 0, scale: 0.85, y: 10 }}
               whileInView={reduce ? undefined : { opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
+              viewport={{ once: true, margin: '-8%' }}
+              transition={{ duration: 0.5, delay: 0.1 + i * 0.06, ease: [0.34, 1.4, 0.64, 1] }}
               className={tagClass}
               style={{ top: p.top, left: p.left }}
             >
