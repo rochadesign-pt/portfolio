@@ -10,10 +10,10 @@ const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 export const sanityConfigured = Boolean(projectId)
 
 // useCdn:false so content edits show up on the next refresh with no CDN cache
-// delay. perspective:'published' so the public site reads only published docs
-// (independent of API-version defaults). apiVersion pinned to a current date.
+// delay. No explicit perspective — the default reads published content the same
+// way the public query endpoint does (there are no drafts to filter out).
 export const client = sanityConfigured
-  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false, perspective: 'published' })
+  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false })
   : null
 
 const builder = client ? imageUrlBuilder(client) : null
