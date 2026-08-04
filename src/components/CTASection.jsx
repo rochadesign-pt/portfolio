@@ -33,13 +33,16 @@ const TAG_POS_DESKTOP = [
   { top: '68%', left: '22%', rot: 3 },
   { top: '65%', left: '66%', rot: -3 },
 ]
+// Mobile: keep the pills at the left/right margins and out of the central
+// vertical band, where the (centred) CTA button sits — otherwise they cluster
+// on top of it.
 const TAG_POS_MOBILE = [
-  { top: '13%', left: '9%', rot: -4 },
-  { top: '25%', left: '44%', rot: 3 },
-  { top: '45%', left: '7%', rot: -3 },
-  { top: '38%', left: '48%', rot: 4 },
-  { top: '73%', left: '12%', rot: 3 },
-  { top: '82%', left: '48%', rot: -3 },
+  { top: '16%', left: '8%', rot: -4 },
+  { top: '28%', left: '45%', rot: 3 },
+  { top: '63%', left: '6%', rot: -3 },
+  { top: '38%', left: '4%', rot: 3 },
+  { top: '76%', left: '43%', rot: -3 },
+  { top: '88%', left: '20%', rot: 4 },
 ]
 
 function Headline({ line, as: Tag = 'div', ...rest }) {
