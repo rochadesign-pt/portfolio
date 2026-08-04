@@ -16,6 +16,7 @@ import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
+import ScrollBg from '../components/ScrollBg'
 import { useSeo } from '../lib/useSeo'
 
 function Hero() {
@@ -284,7 +285,9 @@ export default function Home() {
       <ServicesPreview />
       <ProcessTimeline />
       <StatsBand />
-      <Exploration />
+      <ScrollBg>
+        <Exploration />
+      </ScrollBg>
       <KeywordBand />
       <StudioTeaser />
     </PageTransition>

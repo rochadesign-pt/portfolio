@@ -70,9 +70,10 @@ function Column({ progress, col, line, frozen }) {
 }
 
 // Service tags read as quiet, secondary chips so the single yellow CTA keeps
-// the emphasis: opaque white fill with a light hairline border.
-const tagClass = 'rounded-full border px-3.5 py-1.5 text-sm font-medium'
-const tagStyle = { color: '#17140f', backgroundColor: '#ffffff', borderColor: 'rgba(23,20,15,0.10)' }
+// the emphasis: fill matches the (revealed) background via the inverted tokens,
+// so they adapt to light/dark on their own, defined only by a hairline border.
+const tagClass =
+  'theme-invert rounded-full border border-line bg-bg px-3.5 py-1.5 text-sm font-medium text-text'
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
@@ -128,7 +129,7 @@ export default function CTASection() {
               viewport={{ once: true, margin: '-12%' }}
               transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
               className={`absolute inline-block ${tagClass}`}
-              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg`, ...tagStyle }}
+              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg` }}
             >
               {tag}
             </motion.span>
@@ -137,7 +138,7 @@ export default function CTASection() {
       </div>
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-[15%] flex flex-wrap items-center justify-center gap-2 px-6 md:hidden">
         {tags.map((tag, i) => (
-          <span key={i} className={tagClass} style={tagStyle}>
+          <span key={i} className={tagClass}>
             {tag}
           </span>
         ))}
