@@ -85,10 +85,16 @@ export default function Project() {
     <PageTransition instant={zoomEntry}>
       {/* Full-bleed hero header — the zoom lands here */}
       <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
-        <ParallaxImage colors={p.cover} image={p.coverImage} className="absolute inset-0 h-full w-full" amount={6} />
-        {/* legibility scrims */}
+        <ParallaxImage
+          colors={p.cover}
+          image={p.coverImage}
+          className="absolute inset-0 h-full w-full"
+          amount={6}
+          objectPosition="center 22%"
+        />
+        {/* bottom scrim keeps the title legible; the top is left clean so the nav
+            sits over open space in the image, no gradient */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
 
         <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-between px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32">
           {/* Header text is held back until the zoom has landed, then rises in */}
