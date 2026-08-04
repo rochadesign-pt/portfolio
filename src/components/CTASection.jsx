@@ -3,13 +3,12 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 
-const N = 14
-
 // Vertical columns whose widths shrink left→right, revealed bottom-up on a
 // per-column stagger — the "pattern of shrinking rectangles" that transitions
-// the section from the page colour to the inverted (footer) colour.
-function buildColumns() {
-  const weights = Array.from({ length: N }, (_, i) => 1.7 - i * (1.25 / N))
+// the section from the page colour to the inverted (footer) colour. Fewer
+// columns on mobile so the scrubbed reveal stays cheap.
+function buildColumns(n) {
+  const weights = Array.from({ length: n }, (_, i) => 1.7 - i * (1.25 / n))
   const total = weights.reduce((a, b) => a + b, 0)
   const OV = 0.5 // overlap each side so tiles never leave a sub-pixel seam
   let acc = 0
@@ -17,21 +16,30 @@ function buildColumns() {
     const left = (acc / total) * 100 - OV
     const width = (w / total) * 100 + OV * 2
     acc += w
-    const start = (i / N) * 0.55
+    const start = (i / n) * 0.55
     return { left, width, start, end: start + 0.45 }
   })
 }
-const COLUMNS = buildColumns()
+const COLUMNS_DESKTOP = buildColumns(14)
+const COLUMNS_MOBILE = buildColumns(6)
 
-// Scattered positions for the service tags (desktop), kept clear of the centre
-// where the CTA sits.
-const TAG_POS = [
+// Scattered positions for the service tags, tuned per breakpoint (kept clear of
+// the centre where the CTA sits).
+const TAG_POS_DESKTOP = [
   { top: '24%', left: '17%', rot: -4 },
   { top: '20%', left: '63%', rot: 3 },
   { top: '42%', left: '10%', rot: -2 },
   { top: '40%', left: '76%', rot: 4 },
   { top: '68%', left: '22%', rot: 3 },
   { top: '65%', left: '66%', rot: -3 },
+]
+const TAG_POS_MOBILE = [
+  { top: '13%', left: '9%', rot: -4 },
+  { top: '25%', left: '44%', rot: 3 },
+  { top: '45%', left: '7%', rot: -3 },
+  { top: '38%', left: '48%', rot: 4 },
+  { top: '73%', left: '12%', rot: 3 },
+  { top: '82%', left: '48%', rot: -3 },
 ]
 
 function Headline({ line, as: Tag = 'div', ...rest }) {
@@ -73,13 +81,13 @@ function Column({ progress, col, line, frozen }) {
 // the emphasis: fill matches the (revealed) background via the inverted tokens,
 // so they adapt to light/dark on their own, defined only by a hairline border.
 const tagClass =
-  'theme-invert rounded-full border border-line bg-bg px-3.5 py-1.5 text-sm font-medium text-text'
+  'theme-invert absolute inline-block rounded-full border border-line bg-bg px-3 py-1.5 text-sm font-medium text-text md:px-3.5'
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
 // footer also uses — so page → CTA → footer reads as one continuous flow.
-// Scattered service tags make the moment self-explanatory; a yellow pill routes
-// to the contact form. Mobile is static (no reveal / no tag animation).
+// Scattered, floating service tags make the moment self-explanatory; a yellow
+// pill routes to the contact form. Same effect on mobile, just fewer columns.
 export default function CTASection() {
   const { t } = useLang()
   const { pathname } = useLocation()
@@ -96,15 +104,16 @@ export default function CTASection() {
   }, [])
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
-  const frozen = reduce || isMobile
 
   if (pathname === '/contact') return null
 
+  const columns = isMobile ? COLUMNS_MOBILE : COLUMNS_DESKTOP
+  const positions = isMobile ? TAG_POS_MOBILE : TAG_POS_DESKTOP
   const line = t.bigCta.line
   const tags = t.bigCta.tags || []
 
   return (
-    <section ref={ref} className="relative min-h-[72vh] overflow-hidden bg-bg md:min-h-[86vh]">
+    <section ref={ref} className="relative min-h-[82vh] overflow-hidden bg-bg md:min-h-[86vh]">
       {/* Base — page-colour headline */}
       <div className="absolute inset-0">
         <Headline as="h2" line={line} />
@@ -112,36 +121,29 @@ export default function CTASection() {
 
       {/* Shrinking-rectangle reveal of the inverted colour */}
       <div aria-hidden="true" className="absolute inset-0">
-        {COLUMNS.map((col, i) => (
-          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={frozen} />
+        {columns.map((col, i) => (
+          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={reduce} />
         ))}
       </div>
 
-      {/* Service tags — scattered on desktop, a clean centred row on mobile */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
+      {/* Service tags — scattered / floating over the type */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {tags.map((tag, i) => {
-          const p = TAG_POS[i % TAG_POS.length]
+          const p = positions[i % positions.length]
           return (
             <motion.span
               key={i}
-              initial={frozen ? false : { opacity: 0, scale: 0.8, y: 12 }}
-              whileInView={frozen ? undefined : { opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, margin: '-12%' }}
+              initial={reduce ? false : { opacity: 0, scale: 0.8, y: 12 }}
+              whileInView={reduce ? undefined : { opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10%' }}
               transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
-              className={`absolute inline-block ${tagClass}`}
+              className={tagClass}
               style={{ top: p.top, left: p.left, rotate: `${p.rot}deg` }}
             >
               {tag}
             </motion.span>
           )
         })}
-      </div>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-[15%] flex flex-wrap items-center justify-center gap-2 px-6 md:hidden">
-        {tags.map((tag, i) => (
-          <span key={i} className={tagClass}>
-            {tag}
-          </span>
-        ))}
       </div>
 
       {/* Pill CTA — centred over the type, crisp above every layer */}
