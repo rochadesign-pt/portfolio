@@ -22,14 +22,16 @@ export function ContentProvider({ children }) {
     let alive = true
     fetchProjects()
       .then((d) => {
+        console.info('[sanity] projects fetched:', d?.length ?? 'null', d?.map?.((p) => p.title))
         if (alive && d && d.length) setProjects(d)
       })
-      .catch(() => {})
+      .catch((e) => console.error('[sanity] projects fetch FAILED:', e?.message || e))
     fetchExplorations()
       .then((d) => {
+        console.info('[sanity] explorations fetched:', d?.length ?? 'null')
         if (alive && d && d.length) setExplorations(d)
       })
-      .catch(() => {})
+      .catch((e) => console.error('[sanity] explorations fetch FAILED:', e?.message || e))
     return () => {
       alive = false
     }
