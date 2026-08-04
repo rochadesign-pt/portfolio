@@ -13,20 +13,26 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 
-// Uniform card; the 3D fan is applied to it per-frame in the parent.
-function Tile({ e }) {
+// Uniform card — every tile is the same width and aspect ratio for a clean,
+// even row (à la the reference), caption sitting quietly beneath.
+function Tile({ e, lang }) {
   return (
-    <div className="w-[190px] flex-none [backface-visibility:hidden] will-change-transform md:w-[230px]">
-      <div className="aspect-[4/5] overflow-hidden rounded-xl shadow-2xl shadow-black/50">
-        <Cover colors={e.colors} image={e.image} className="h-full w-full" />
+    <div className="w-[240px] flex-none md:w-[280px]">
+      <div className="group aspect-[4/5] overflow-hidden rounded-xl">
+        <Cover
+          colors={e.colors}
+          image={e.image}
+          className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+        />
       </div>
+      <p className="mt-3 truncate text-sm leading-snug">
+        <span className="text-text">{e.name}</span>
+        <span className="text-muted"> / {e.category[lang]}</span>
+      </p>
     </div>
   )
 }
 
-// The Lab: a draggable, scroll-nudged marquee whose tiles fan into perspective —
-// small and receding at centre, larger and angled toward the edges, converging
-// on a vanishing point (à la the reference). Behind it, the cursor-lit dot field.
 export default function Exploration() {
   const { t, lang } = useLang()
   const { explorations } = useContent()
@@ -36,33 +42,12 @@ export default function Exploration() {
     () => {
       const el = track.current
       if (!el) return
-      const tiles = Array.from(el.children)
-      if (!tiles.length) return
-
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const use3D = window.matchMedia('(min-width: 768px)').matches
-      const DRIFT = 0.4
-
-      // Geometry captured pre-transform, so per-frame work is pure math (no
-      // layout reads, no transform feedback loop).
-      let half = 0
-      let baseLeft = 0
-      let bases = []
-      let wrap = (x) => x
-      const measure = () => {
-        // clear transforms to read clean layout
-        tiles.forEach((tl) => (tl.style.transform = ''))
-        el.style.transform = ''
-        half = el.scrollWidth / 2
-        wrap = gsap.utils.wrap(-half, 0)
-        baseLeft = el.getBoundingClientRect().left
-        bases = tiles.map((tl) => {
-          const r = tl.getBoundingClientRect()
-          return r.left + r.width / 2 - baseLeft
-        })
-      }
-      measure()
+      const half = el.scrollWidth / 2
       if (!half) return
+
+      const wrap = gsap.utils.wrap(-half, 0)
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const DRIFT = 0.4 // px/frame base drift (≈24px/s) — slow and calm
 
       const state = { pos: 0 }
       let vel = 0
@@ -71,26 +56,12 @@ export default function Exploration() {
       let lastDX = 0
       let flick = null
 
-      const apply3D = (tx) => {
-        const c = window.innerWidth / 2
-        for (let i = 0; i < tiles.length; i++) {
-          const cx = baseLeft + tx + bases[i]
-          const d = clamp((cx - c) / c, -1.25, 1.25)
-          const ad = Math.abs(d)
-          const rotY = -d * 40
-          const tz = ad * ad * 120
-          const scale = 0.72 + ad * 0.72 // centre recedes, edges swell → vanishing point
-          tiles[i].style.transform = `translateZ(${tz}px) rotateY(${rotY}deg) scale(${scale})`
-          tiles[i].style.zIndex = `${200 - Math.round(ad * 120)}`
-        }
-      }
       const render = () => {
-        const tx = wrap(state.pos)
-        el.style.transform = `translate3d(${tx}px,0,0)`
-        if (use3D) apply3D(tx)
+        el.style.transform = `translate3d(${wrap(state.pos)}px,0,0)`
       }
       render()
 
+      // Per-frame integrator: eases velocity back to the calm leftward drift.
       const tick = () => {
         if (dragging || flick?.isActive()) return
         vel += (-DRIFT - vel) * 0.05
@@ -99,6 +70,7 @@ export default function Exploration() {
       }
       if (!reduce) gsap.ticker.add(tick)
 
+      // Scroll surge — nudges velocity with scroll, then the tick settles it.
       const st = ScrollTrigger.create({
         onUpdate: (self) => {
           if (reduce || dragging || flick?.isActive()) return
@@ -106,7 +78,7 @@ export default function Exploration() {
         },
       })
 
-      // Drag to move; flick to throw with a gentle bouncy overshoot.
+      // Drag to move; on release, throw with a slightly bouncy overshoot.
       const onDown = (e) => {
         dragging = true
         lastX = e.clientX
@@ -116,7 +88,7 @@ export default function Exploration() {
         try {
           el.setPointerCapture(e.pointerId)
         } catch {
-          /* ignore */
+          /* not all pointers are capturable */
         }
       }
       const onMove = (e) => {
@@ -136,7 +108,7 @@ export default function Exploration() {
         flick = gsap.to(state, {
           pos: state.pos + dist,
           duration: 1.15,
-          ease: 'back.out(1.1)',
+          ease: 'back.out(1.1)', // overshoots then settles — a gentle bounce
           onUpdate: render,
           onComplete: () => {
             vel = -DRIFT
@@ -144,19 +116,11 @@ export default function Exploration() {
         })
       }
 
-      const onResize = () => {
-        const p = state.pos
-        measure()
-        state.pos = p
-        render()
-      }
-
       el.style.cursor = 'grab'
-      el.style.touchAction = 'pan-y'
+      el.style.touchAction = 'pan-y' // let the page scroll vertically; we take horizontal drags
       el.addEventListener('pointerdown', onDown)
       window.addEventListener('pointermove', onMove)
       window.addEventListener('pointerup', onUp)
-      window.addEventListener('resize', onResize)
 
       return () => {
         gsap.ticker.remove(tick)
@@ -165,7 +129,6 @@ export default function Exploration() {
         el.removeEventListener('pointerdown', onDown)
         window.removeEventListener('pointermove', onMove)
         window.removeEventListener('pointerup', onUp)
-        window.removeEventListener('resize', onResize)
       }
     },
     { scope: track, dependencies: [explorations.length] },
@@ -197,14 +160,11 @@ export default function Exploration() {
           </div>
         </div>
 
-        {/* Perspective marquee — draggable, scroll-nudged */}
-        <div className="overflow-hidden py-10 [perspective-origin:50%_50%] [perspective:1600px]">
-          <div
-            ref={track}
-            className="flex w-max items-center gap-5 px-6 [transform-style:preserve-3d] will-change-transform md:gap-8 md:px-10"
-          >
+        {/* Scroll-driven, draggable marquee band */}
+        <div className="overflow-hidden">
+          <div ref={track} className="flex w-max items-start gap-6 px-6 will-change-transform md:gap-8 md:px-10">
             {content.map((e, i) => (
-              <Tile key={i} e={e} />
+              <Tile key={i} e={e} lang={lang} />
             ))}
           </div>
         </div>
