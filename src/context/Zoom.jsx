@@ -47,9 +47,34 @@ export function ZoomProvider({ children }) {
       const announce = () => {
         if (landedRef.current) return
         landedRef.current = true
-        // Header text starts rising while the overlay fades over the identical
+        // Header text starts rising as the overlay clears over the identical
         // image, so image → text reads as one continuous move.
         window.dispatchEvent(new Event('rds:zoomlanded'))
+      }
+
+      // Grow to exactly the hero's size. The hero is `h-[100svh]`; on iOS that
+      // differs from window.innerHeight (browser chrome), which would leave a
+      // mismatched strip at the bottom on hand-off. Measure 100svh directly.
+      const probe = document.createElement('div')
+      probe.style.cssText =
+        'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none'
+      document.body.appendChild(probe)
+      const fullH = probe.offsetHeight || window.innerHeight
+      probe.remove()
+
+      // Drop the overlay only once the hero's image is actually decoded, so the
+      // instant swap can never reveal an unpainted (white) frame — the last
+      // cause of a flicker on slower/mobile decodes.
+      const drop = () => {
+        const done = () => requestAnimationFrame(() => requestAnimationFrame(() => setState(null)))
+        const src = state.image
+        if (src) {
+          const img = new Image()
+          img.src = src
+          ;(img.decode ? img.decode() : Promise.reject()).then(done).catch(done)
+        } else {
+          done()
+        }
       }
 
       gsap.set(el, {
@@ -66,17 +91,13 @@ export function ZoomProvider({ children }) {
         top: 0,
         left: 0,
         width: window.innerWidth,
-        height: window.innerHeight,
+        height: fullH,
         borderRadius: 0,
         duration: GROW,
         ease: EASE,
         onComplete: () => {
           announce()
-          // No cross-fade: the hero underneath is a pixel-identical image, so
-          // dropping the overlay in a single frame shows nothing — and it avoids
-          // any compositing shimmer from fading two layers. Wait two frames so
-          // the hero has painted underneath before the overlay is removed.
-          requestAnimationFrame(() => requestAnimationFrame(() => setState(null)))
+          drop()
         },
       })
     },
