@@ -23,26 +23,26 @@ function buildColumns(n) {
 const COLUMNS_DESKTOP = buildColumns(14)
 const COLUMNS_MOBILE = buildColumns(6)
 
-// Scattered positions for the service tags, tuned per breakpoint (kept clear of
-// the centre where the CTA sits).
+// Scattered positions for the service tags, tuned per breakpoint. Pills sit
+// upright (no rotation) and stay out of the central band where the headline and
+// the CTA button live, so nothing overlaps the type or the button.
 const TAG_POS_DESKTOP = [
-  { top: '24%', left: '17%', rot: -4 },
-  { top: '20%', left: '63%', rot: 3 },
-  { top: '42%', left: '10%', rot: -2 },
-  { top: '40%', left: '76%', rot: 4 },
-  { top: '68%', left: '22%', rot: 3 },
-  { top: '65%', left: '66%', rot: -3 },
+  { top: '18%', left: '12%' },
+  { top: '15%', left: '67%' },
+  { top: '45%', left: '6%' },
+  { top: '43%', left: '80%' },
+  { top: '76%', left: '20%' },
+  { top: '73%', left: '70%' },
 ]
-// Mobile: keep the pills at the left/right margins and out of the central
-// vertical band, where the (centred) CTA button sits — otherwise they cluster
-// on top of it.
+// Mobile: the headline + centred button fill the vertical middle, so the pills
+// live only in the top and bottom thirds, spread across the width.
 const TAG_POS_MOBILE = [
-  { top: '16%', left: '8%', rot: -4 },
-  { top: '28%', left: '45%', rot: 3 },
-  { top: '63%', left: '6%', rot: -3 },
-  { top: '38%', left: '4%', rot: 3 },
-  { top: '76%', left: '43%', rot: -3 },
-  { top: '88%', left: '20%', rot: 4 },
+  { top: '12%', left: '8%' },
+  { top: '22%', left: '46%' },
+  { top: '66%', left: '6%' },
+  { top: '80%', left: '50%' },
+  { top: '82%', left: '8%' },
+  { top: '68%', left: '58%' },
 ]
 
 function Headline({ line, as: Tag = 'div', ...rest }) {
@@ -108,6 +108,23 @@ export default function CTASection() {
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
 
+  // Content above this section (e.g. late-loading cover images) shifts the page
+  // height after useScroll has measured the target, which leaves the reveal
+  // mapped to the wrong scroll range — it reads as "no effect". Nudge framer to
+  // re-measure once everything has settled and whenever an image finishes.
+  useEffect(() => {
+    const remeasure = () => window.dispatchEvent(new Event('resize'))
+    window.addEventListener('load', remeasure)
+    document.querySelectorAll('img').forEach((img) => {
+      if (!img.complete) img.addEventListener('load', remeasure, { once: true })
+    })
+    const timers = [setTimeout(remeasure, 250), setTimeout(remeasure, 900), setTimeout(remeasure, 2000)]
+    return () => {
+      window.removeEventListener('load', remeasure)
+      timers.forEach(clearTimeout)
+    }
+  }, [pathname])
+
   if (pathname === '/contact') return null
 
   const columns = isMobile ? COLUMNS_MOBILE : COLUMNS_DESKTOP
@@ -141,7 +158,7 @@ export default function CTASection() {
               viewport={{ once: true, margin: '-10%' }}
               transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
               className={tagClass}
-              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg` }}
+              style={{ top: p.top, left: p.left }}
             >
               {tag}
             </motion.span>
