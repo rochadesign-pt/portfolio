@@ -76,9 +76,9 @@ export const projects = [
     country: 'Reino Unido',
     year: '2025',
     services: ['UI/UX', 'Design system', 'Web design', 'Prototipagem'],
-    cover: ['#7c8cff', '#0b0b0d'],
+    cover: ['#1a5fd0', '#0b0b0d'],
     // Real cover image test — swap this file for the actual project screenshot.
-    coverImage: '/work/zoko-queue.svg',
+    coverImage: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.png',
     tagline: {
       pt: 'Um produto complexo que se sente simples.',
       en: 'A complex product that feels simple.',
