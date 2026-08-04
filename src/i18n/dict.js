@@ -147,6 +147,12 @@ export const dict = {
       valuesLabel: 'Aquilo em que acreditamos',
       teamLabel: 'As pessoas',
     },
+    behind: {
+      label: 'Por trás disto',
+      title: 'A juntar design, código e estratégia hoje, para construir as experiências digitais de amanhã.',
+      body1: 'No Rocha Design Studio, design, código e estratégia nunca são tratados como disciplinas separadas. Cada projeto é abordado como um todo — onde estética, tecnologia e pensamento trabalham juntos desde o primeiro dia.',
+      body2: 'O objetivo é sempre o mesmo: experiências digitais claras, funcionais e feitas para crescer. Não só bonitas, mas com propósito. Não só entregues, mas desenhadas para durar.',
+    },
     contactPage: {
       eyebrow: 'Contacto',
       title: 'Vamos',
@@ -305,6 +311,12 @@ export const dict = {
       sub: 'Founded in 2025, in Portugal. We work with brands anywhere in the world.',
       valuesLabel: 'What we believe',
       teamLabel: 'The people',
+    },
+    behind: {
+      label: 'Behind it',
+      title: 'Blending design, code and strategy today, to build the digital experiences of tomorrow.',
+      body1: 'At Rocha Design Studio, design, code and strategy are never treated as separate disciplines. Every project is approached as a whole — where aesthetics, technology and thinking work together from day one.',
+      body2: 'The goal is always the same: digital experiences that are clear, functional and built to grow. Not just beautiful, but purposeful. Not just delivered, but designed to last.',
     },
     contactPage: {
       eyebrow: 'Contact',

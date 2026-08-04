@@ -7,7 +7,7 @@ export default function Footer() {
   const { t, lang } = useLang()
 
   return (
-    <footer className="relative border-t border-line px-6 pt-16 pb-8 md:px-10">
+    <footer className="theme-invert relative bg-bg px-6 pt-16 pb-8 text-text md:px-10">
       <div className="mx-auto max-w-[1400px]">
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>

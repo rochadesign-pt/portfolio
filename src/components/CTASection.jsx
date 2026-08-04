@@ -3,17 +3,31 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 
-// Deliberate branded moment — fixed colors so it reads the same in both themes.
-const INK = '#0b0b0d'
-const PAPER = '#efeadf'
-const CHALK = '#f2efe9'
+const N = 14
 
-function Headline({ line, color, as: Tag = 'div', ...rest }) {
+// Vertical columns whose widths shrink left→right, revealed bottom-up on a
+// per-column stagger — the "pattern of shrinking rectangles" that transitions
+// the section from the page colour to the inverted (footer) colour.
+function buildColumns() {
+  const weights = Array.from({ length: N }, (_, i) => 1.7 - i * (1.25 / N))
+  const total = weights.reduce((a, b) => a + b, 0)
+  const OV = 0.5 // overlap each side so tiles never leave a sub-pixel seam
+  let acc = 0
+  return weights.map((w, i) => {
+    const left = (acc / total) * 100 - OV
+    const width = (w / total) * 100 + OV * 2
+    acc += w
+    const start = (i / N) * 0.55
+    return { left, width, start, end: start + 0.45 }
+  })
+}
+const COLUMNS = buildColumns()
+
+function Headline({ line, as: Tag = 'div', ...rest }) {
   return (
     <div className="mx-auto flex h-full max-w-[1500px] items-center px-6 md:px-10">
       <Tag
-        className="display w-full text-center uppercase leading-[0.9] tracking-tight text-[15vw] md:text-[10.5rem]"
-        style={{ color }}
+        className="display w-full text-center uppercase leading-[0.9] tracking-tight text-text text-[15vw] md:text-[10.5rem]"
         {...rest}
       >
         {line}
@@ -22,9 +36,32 @@ function Headline({ line, color, as: Tag = 'div', ...rest }) {
   )
 }
 
-// Closing CTA. As the section scrolls through the viewport a paper-coloured
-// panel wipes up from the bottom, turning it black → light and inverting the
-// headline; a yellow pill (always crisp on top) routes to the contact form.
+// A single revealing column: shows its vertical slice of the inverted-colour
+// headline, wiped in from the bottom.
+function Column({ progress, col, line, reduce }) {
+  const clip = useTransform(
+    progress,
+    [col.start, col.end],
+    ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+    { clamp: true },
+  )
+  return (
+    <motion.div
+      className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
+      style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: reduce ? 'inset(0% 0% 0% 0%)' : clip }}
+    >
+      {/* full-viewport-width inner so each slice of the headline registers 1:1 */}
+      <div className="absolute inset-y-0" style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}>
+        <Headline line={line} />
+      </div>
+    </motion.div>
+  )
+}
+
+// Closing CTA. Starts in the page colour (continuous with the section above),
+// then a shrinking-rectangle pattern reveals the inverted colour, which the
+// footer also uses — so page → CTA → footer reads as one continuous flow. A
+// yellow pill (crisp on top) routes to the contact form.
 export default function CTASection() {
   const { t } = useLang()
   const { pathname } = useLocation()
@@ -32,32 +69,24 @@ export default function CTASection() {
   const reduce = useReducedMotion()
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
-  const clipPath = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
-  )
 
-  // Already on the contact page — no need to send them there again.
   if (pathname === '/contact') return null
 
   const line = t.bigCta.line
 
   return (
-    <section ref={ref} className="relative min-h-[82vh] overflow-hidden" style={{ backgroundColor: INK }}>
-      {/* Base — light headline on ink */}
+    <section ref={ref} className="relative min-h-[82vh] overflow-hidden bg-bg">
+      {/* Base — page-colour headline */}
       <div className="absolute inset-0">
-        <Headline as="h2" line={line} color={CHALK} />
+        <Headline as="h2" line={line} />
       </div>
 
-      {/* Paper layer wipes up, inverting the headline to ink */}
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{ backgroundColor: PAPER, clipPath: reduce ? 'inset(0% 0% 0% 0%)' : clipPath }}
-      >
-        <Headline line={line} color={INK} />
-      </motion.div>
+      {/* Shrinking-rectangle reveal of the inverted colour */}
+      <div aria-hidden="true" className="absolute inset-0">
+        {COLUMNS.map((col, i) => (
+          <Column key={i} progress={scrollYProgress} col={col} line={line} reduce={reduce} />
+        ))}
+      </div>
 
       {/* Pill CTA — centred over the type, crisp above both layers */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

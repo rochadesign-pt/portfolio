@@ -8,6 +8,10 @@ import PageTransition from '../components/PageTransition'
 import { useContent } from '../content/ContentProvider'
 import { useSeo } from '../lib/useSeo'
 
+// Real B&W portrait goes here (e.g. '/behind-tiago.jpg' in /public, or a Sanity
+// image URL). Null shows the placeholder tile until the photo is supplied.
+const behindPhoto = null
+
 export default function Studio() {
   const { t, lang } = useLang()
   const { projects } = useContent()
@@ -41,6 +45,37 @@ export default function Studio() {
             />
           ))}
         </Reveal>
+      </section>
+
+      {/* Behind it — manifesto + portrait */}
+      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <div className="grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-start md:gap-16">
+          <Reveal y={30}>
+            {/* Swap the placeholder for a real B&W portrait: pass image="/…". */}
+            <Cover
+              colors={['#3a3a3d', '#0d0d0f']}
+              image={behindPhoto}
+              label="Tiago Rocha"
+              className="aspect-[3/4] w-full rounded-2xl grayscale"
+            />
+          </Reveal>
+          <div>
+            <Reveal className="mb-6">
+              <span className="label">{t.behind.label}</span>
+            </Reveal>
+            <MaskReveal>
+              <h2 className="display text-3xl leading-[1.14] md:text-5xl md:leading-[1.1]">{t.behind.title}</h2>
+            </MaskReveal>
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
+              <Reveal>
+                <p className="leading-relaxed text-muted">{t.behind.body1}</p>
+              </Reveal>
+              <Reveal>
+                <p className="leading-relaxed text-muted">{t.behind.body2}</p>
+              </Reveal>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Values */}

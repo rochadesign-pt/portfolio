@@ -182,6 +182,34 @@
   -webkit-text-stroke: 1.5px var(--color-text);
 }
 
+/* Inverted palette — flips the tokens to the OPPOSITE theme within a subtree.
+   Used so the closing CTA lands on, and the footer sits in, the reverse colour
+   (light footer in dark mode and vice-versa) for a continuous CTA→footer flow. */
+.theme-invert {
+  color-scheme: light;
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-surface-2: #ececec;
+  --color-text: #17140f;
+  --color-muted: #6b6862;
+  --color-line: rgba(23, 20, 15, 0.14);
+  --color-accent-text: #17140f;
+  --color-paper: #ffffff;
+  --hatch-line: rgba(23, 20, 15, 0.07);
+}
+:root[data-theme='light'] .theme-invert {
+  color-scheme: dark;
+  --color-bg: #0b0b0d;
+  --color-surface: #151517;
+  --color-surface-2: #1d1d20;
+  --color-text: #f2efe9;
+  --color-muted: #8f8b83;
+  --color-line: rgba(242, 239, 233, 0.12);
+  --color-accent-text: #ffc700;
+  --color-paper: #efeadf;
+  --hatch-line: rgba(242, 239, 233, 0.05);
+}
+
 /* Salient "Signal"-style menu: the page shell slides aside to reveal the
    MenuPanel behind it. No transform when closed, so position: fixed/sticky
    inside pages behave normally. */
