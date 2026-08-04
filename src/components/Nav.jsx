@@ -53,7 +53,7 @@ export default function Nav() {
     >
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 md:px-10">
         <Link to="/" aria-label="Rocha Design Studio — início" className="group inline-block">
-          <Wordmark className="text-[17px] text-text transition-transform duration-500 group-hover:scale-[1.03]" />
+          <Wordmark className="h-[26px] w-auto text-text transition-transform duration-500 group-hover:scale-[1.03]" />
         </Link>
 
         <div className="flex items-center gap-3">

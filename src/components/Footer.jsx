@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1400px]">
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <Wordmark className="mb-5 text-[26px] text-text" />
+            <Wordmark className="mb-5 h-10 w-auto text-text" />
             <p className="max-w-xs text-sm text-muted">{t.footer.tagline}</p>
             <p className="mt-4 text-sm text-muted">{lang === 'pt' ? contact.location : contact.locationEn}</p>
           </div>

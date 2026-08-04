@@ -70,9 +70,9 @@ function Column({ progress, col, line, frozen }) {
 }
 
 // Service tags read as quiet, secondary chips so the single yellow CTA keeps
-// all the emphasis. Neutral mid-grey stays legible over both ends of the wipe.
+// the emphasis: opaque white fill with a light hairline border.
 const tagClass = 'rounded-full border px-3.5 py-1.5 text-sm font-medium'
-const tagStyle = { color: '#7c7c7c', borderColor: 'rgba(124,124,124,0.32)', backgroundColor: 'transparent' }
+const tagStyle = { color: '#17140f', backgroundColor: '#ffffff', borderColor: 'rgba(23,20,15,0.10)' }
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
