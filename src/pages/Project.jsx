@@ -110,13 +110,15 @@ export default function Project() {
     <PageTransition instant={zoomEntry}>
       {/* Full-bleed hero header — the zoom lands here */}
       <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
-        <ParallaxImage
-          colors={p.cover}
-          image={p.coverImage}
-          className="absolute inset-0 h-full w-full"
-          amount={6}
-          objectPosition="center 22%"
-        />
+        {/* Plain Cover (not ParallaxImage) so the hero renders the image
+            identically to the zoom overlay — same object-cover framing, no
+            parallax scale/offset — so the overlay fades over an identical image
+            (no position jump, no flash). Same src as the overlay, so it paints
+            from cache. Wrapped in an absolute layer because Cover sets its own
+            `relative` (which would otherwise take it out of full-bleed). */}
+        <div className="absolute inset-0">
+          <Cover colors={p.cover} image={p.coverImage} className="h-full w-full" objectPosition="center 22%" />
+        </div>
         {/* bottom scrim keeps the title legible; the top is left clean so the nav
             sits over open space in the image, no gradient */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />

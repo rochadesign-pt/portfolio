@@ -1,7 +1,7 @@
 // Cover surface. Renders a real image when `image` is provided, otherwise a
 // duotone gradient placeholder. Same API everywhere, so swapping placeholders
 // for real photography is a one-field change in the project data.
-export default function Cover({ colors = ['#c6ff3a', '#0a0a0b'], image, className = '', label, objectPosition }) {
+export default function Cover({ colors = ['#c6ff3a', '#0a0a0b'], image, className = '', label, objectPosition, eager = false }) {
   const [a, b] = colors
 
   if (image) {
@@ -10,7 +10,9 @@ export default function Cover({ colors = ['#c6ff3a', '#0a0a0b'], image, classNam
         <img
           src={image}
           alt={label || ''}
-          loading="lazy"
+          loading={eager ? 'eager' : 'lazy'}
+          fetchPriority={eager ? 'high' : undefined}
+          decoding="async"
           className="h-full w-full object-cover"
           style={objectPosition ? { objectPosition } : undefined}
         />
