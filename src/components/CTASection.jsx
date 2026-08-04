@@ -23,6 +23,17 @@ function buildColumns() {
 }
 const COLUMNS = buildColumns()
 
+// Scattered positions for the service tags (desktop), kept clear of the centre
+// where the CTA sits.
+const TAG_POS = [
+  { top: '24%', left: '17%', rot: -4 },
+  { top: '20%', left: '63%', rot: 3 },
+  { top: '42%', left: '10%', rot: -2 },
+  { top: '40%', left: '76%', rot: 4 },
+  { top: '68%', left: '22%', rot: 3 },
+  { top: '65%', left: '66%', rot: -3 },
+]
+
 function Headline({ line, as: Tag = 'div', ...rest }) {
   return (
     <div className="mx-auto flex h-full max-w-[1500px] items-center px-6 md:px-10">
@@ -58,10 +69,14 @@ function Column({ progress, col, line, frozen }) {
   )
 }
 
+const pillClass =
+  'rounded-full bg-accent px-3.5 py-1.5 text-sm font-medium text-accent-ink shadow-md'
+
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
-// footer also uses — so page → CTA → footer reads as one continuous flow. A
-// yellow pill (crisp on top) routes to the contact form.
+// footer also uses — so page → CTA → footer reads as one continuous flow.
+// Scattered service tags make the moment self-explanatory; a yellow pill routes
+// to the contact form. Mobile is static (no reveal / no tag animation).
 export default function CTASection() {
   const { t } = useLang()
   const { pathname } = useLocation()
@@ -69,9 +84,6 @@ export default function CTASection() {
   const reduce = useReducedMotion()
   const [isMobile, setIsMobile] = useState(false)
 
-  // Scroll-scrubbing 14 clipped columns is too heavy on phones — freeze the
-  // reveal there and show the resolved (inverted) colour, so the CTA still
-  // flows continuously into the footer without the jank.
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
     const on = () => setIsMobile(mq.matches)
@@ -86,9 +98,10 @@ export default function CTASection() {
   if (pathname === '/contact') return null
 
   const line = t.bigCta.line
+  const tags = t.bigCta.tags || []
 
   return (
-    <section ref={ref} className="relative min-h-[68vh] overflow-hidden bg-bg md:min-h-[82vh]">
+    <section ref={ref} className="relative min-h-[72vh] overflow-hidden bg-bg md:min-h-[86vh]">
       {/* Base — page-colour headline */}
       <div className="absolute inset-0">
         <Headline as="h2" line={line} />
@@ -101,15 +114,47 @@ export default function CTASection() {
         ))}
       </div>
 
-      {/* Pill CTA — centred over the type, crisp above both layers */}
+      {/* Service tags — scattered on desktop, a clean centred row on mobile */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
+        {tags.map((tag, i) => {
+          const p = TAG_POS[i % TAG_POS.length]
+          return (
+            <motion.span
+              key={i}
+              initial={frozen ? false : { opacity: 0, scale: 0.8, y: 12 }}
+              whileInView={frozen ? undefined : { opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, margin: '-12%' }}
+              transition={{ duration: 0.5, delay: 0.15 + i * 0.07, ease: [0.34, 1.4, 0.64, 1] }}
+              className={`absolute inline-block ${pillClass} md:text-base`}
+              style={{ top: p.top, left: p.left, rotate: `${p.rot}deg` }}
+            >
+              {tag}
+            </motion.span>
+          )
+        })}
+      </div>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-[15%] flex flex-wrap items-center justify-center gap-2 px-6 md:hidden">
+        {tags.map((tag, i) => (
+          <span key={i} className={pillClass}>
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Pill CTA — centred over the type, crisp above every layer */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <Link
           to="/contact"
-          className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-medium text-accent-ink shadow-xl transition-transform duration-300 hover:scale-105 md:text-lg"
+          className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-medium text-accent-ink shadow-xl ring-4 ring-accent/20 transition-transform duration-300 hover:scale-105 md:text-lg"
         >
           {t.bigCta.button}
           <span aria-hidden="true">↗</span>
         </Link>
+      </div>
+
+      {/* Signature tagline — sits in the revealed (inverted) zone */}
+      <div className="theme-invert pointer-events-none absolute inset-x-0 bottom-6 text-center">
+        <span className="label text-muted">{t.bigCta.tagline}</span>
       </div>
     </section>
   )

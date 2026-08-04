@@ -91,6 +91,8 @@ export const dict = {
     bigCta: {
       line: 'Vamos começar algo grande',
       button: 'Vamos falar',
+      tagline: 'Design impossível de ignorar',
+      tags: ['Branding', 'Identidade visual', 'Web design', 'Reposicionamento', 'Produto digital', 'Motion'],
     },
     footer: {
       tagline: 'Estúdio de design de branding, web e produto.',
@@ -256,6 +258,8 @@ export const dict = {
     bigCta: {
       line: "Let's start something big",
       button: "Let's talk",
+      tagline: 'Design impossible to ignore',
+      tags: ['Branding', 'Visual identity', 'Web design', 'Repositioning', 'Digital product', 'Motion'],
     },
     footer: {
       tagline: 'A branding, web and product design studio.',
