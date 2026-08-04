@@ -49,6 +49,14 @@ function PageShell({ children }) {
   )
 }
 
+// Remount the closing CTA on each route so its scroll-driven reveal re-measures
+// against the new page height (otherwise useScroll keeps stale offsets and the
+// effect can fail to fire after an SPA navigation).
+function RoutedCTA() {
+  const { pathname } = useLocation()
+  return <CTASection key={pathname} />
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -65,7 +73,7 @@ export default function App() {
               <MenuPanel />
               <PageShell>
                 <AnimatedRoutes />
-                <CTASection />
+                <RoutedCTA />
                 <Footer />
               </PageShell>
               <TypePanel />
