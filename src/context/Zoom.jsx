@@ -1,7 +1,10 @@
-import { createContext, useContext, useCallback, useState, useRef, useLayoutEffect } from 'react'
+import { createContext, useContext, useCallback, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 import Cover from '../components/Cover'
+
+gsap.registerPlugin(useGSAP)
 
 const ZoomContext = createContext(null)
 
@@ -10,50 +13,70 @@ export function useZoom() {
   return useContext(ZoomContext)
 }
 
-// Kinetic curve: eases in slowly, then accelerates through the growth — so the
-// zoom reads as being pulled into the page rather than a page swap.
-const EASE = [0.76, 0, 0.24, 1]
-const EXPAND = 0.8
+// Kinetic growth: eases in slowly, then accelerates — reads as being pulled
+// into the page rather than a page swap.
+const GROW = 0.85
+const EASE = 'power3.inOut'
 
 // Seamless click-to-zoom.
 //
-// The clicked cover grows from its on-screen position to a full-viewport
-// takeover while the project mounts underneath (entrance skipped, header text
-// held back). When the overlay reaches full size it exactly matches the
-// project's full-bleed header, so it fades out over the identical image — no
-// visible swap; only then does the header text rise in.
+// The clicked cover grows from its on-screen box to a full-viewport takeover
+// while the project mounts underneath (entrance skipped, header text held back).
+// At full size it matches the project's full-bleed header, so it fades over the
+// identical image — no visible swap; only then does the header text rise in.
 //
-// Reliability comes from two choices:
-//  1. Framer Motion `layout` drives the growth via *transform* (compositor),
-//     not top/left/width/height (which thrash layout every frame). It stays
-//     smooth even while React is unmounting Home / mounting Project on the main
-//     thread, and the inner `layout` node cancels the scale so the image never
-//     stretches.
-//  2. The handoff is state-driven — `onLayoutAnimationComplete` — not a
-//     setTimeout racing the animation. It lands exactly when the growth ends.
+// The overlay is a SINGLE box whose image is `object-cover`, animated by GSAP
+// (position/size/radius). Because the image *is* the box, frame and image can
+// never desync as the aspect ratio morphs from card (4:3) to hero (portrait) —
+// object-cover simply re-crops smoothly the whole way. GSAP gives full control
+// of the kinetic curve.
 export function ZoomProvider({ children }) {
   const navigate = useNavigate()
   const [state, setState] = useState(null) // { colors, image, rect }
-  const [expanded, setExpanded] = useState(false)
-  const fallback = useRef(null)
+  const overlayRef = useRef(null)
+  const landedRef = useRef(false)
 
-  // Paint one frame at the card's box, then flip to full — Framer Motion sees
-  // the layout delta and animates transform between the two.
-  useLayoutEffect(() => {
-    if (!state) return
-    const id = requestAnimationFrame(() => setExpanded(true))
-    return () => cancelAnimationFrame(id)
-  }, [state])
+  useGSAP(
+    () => {
+      if (!state) return
+      const el = overlayRef.current
+      if (!el) return
+      const { rect } = state
+      landedRef.current = false
 
-  const land = useCallback(() => {
-    if (fallback.current) {
-      clearTimeout(fallback.current)
-      fallback.current = null
-    }
-    window.dispatchEvent(new Event('rds:zoomlanded'))
-    setState(null)
-    setExpanded(false)
-  }, [])
+      const announce = () => {
+        if (landedRef.current) return
+        landedRef.current = true
+        // Header text starts rising while the overlay fades over the identical
+        // image, so image → text reads as one continuous move.
+        window.dispatchEvent(new Event('rds:zoomlanded'))
+      }
+
+      gsap.set(el, {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+        borderRadius: 12,
+        opacity: 1,
+      })
+
+      const tl = gsap.timeline()
+      tl.to(el, {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        borderRadius: 0,
+        duration: GROW,
+        ease: EASE,
+      })
+        .add(announce)
+        .to(el, { opacity: 0, duration: 0.32, ease: 'power1.out' }, '>-0.02')
+        .add(() => setState(null))
+    },
+    { dependencies: [state], scope: overlayRef },
+  )
 
   const zoom = useCallback(
     (slug, colors, image, rect) => {
@@ -64,55 +87,33 @@ export function ZoomProvider({ children }) {
       }
       window.__zoomEntry = true
       setState({ colors, image, rect })
-      // Mount the project immediately underneath the overlay; the overlay
-      // covers the home→project swap for its whole growth.
+      // Mount the project immediately underneath the overlay; the overlay covers
+      // the home → project swap for its whole growth.
       navigate(`/work/${slug}`)
-      // Safety net in case the layout-complete callback never fires.
-      if (fallback.current) clearTimeout(fallback.current)
-      fallback.current = setTimeout(land, (EXPAND + 0.25) * 1000)
     },
-    [navigate, land],
+    [navigate],
   )
 
   return (
     <ZoomContext.Provider value={{ zoom }}>
       {children}
-      <AnimatePresence>
-        {state && (
-          <motion.div
-            key="zoom"
-            layout
-            className="fixed z-[95] overflow-hidden"
-            style={
-              expanded
-                ? { top: 0, left: 0, right: 0, bottom: 0, borderRadius: 0 }
-                : {
-                    top: state.rect.top,
-                    left: state.rect.left,
-                    width: state.rect.width,
-                    height: state.rect.height,
-                    borderRadius: 12,
-                  }
-            }
-            transition={{
-              layout: { duration: EXPAND, ease: EASE },
-              opacity: { duration: 0.28, ease: 'easeInOut' },
-            }}
-            onLayoutAnimationComplete={() => {
-              if (expanded) land()
-            }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Inner `layout` node cancels the parent's scale so the image
-                grows without stretching. */}
-            <motion.div layout className="h-full w-full">
-              <Cover colors={state.colors} image={state.image} className="h-full w-full" objectPosition="center 22%" />
-            </motion.div>
-            {/* Match the header scrim exactly so brightness is identical at the fade-out */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {state && (
+        <div
+          ref={overlayRef}
+          className="fixed z-[95] overflow-hidden"
+          style={{
+            top: state.rect.top,
+            left: state.rect.left,
+            width: state.rect.width,
+            height: state.rect.height,
+            borderRadius: 12,
+          }}
+        >
+          <Cover colors={state.colors} image={state.image} className="h-full w-full" objectPosition="center 22%" />
+          {/* Match the header scrim so brightness is identical at the fade-out */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
+        </div>
+      )}
     </ZoomContext.Provider>
   )
 }
