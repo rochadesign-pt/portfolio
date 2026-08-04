@@ -176,6 +176,34 @@
   100% { transform: translate(1%, -1.5%); }
 }
 
+/* Dot field — a whisper-faint grid that brightens in a circle around the cursor
+   (see DotField.jsx). Base grid is always on; the ::after layer holds brighter
+   dots revealed only through a radial mask centred on the pointer. */
+.dotfield {
+  --mx: 50%;
+  --my: 50%;
+  --on: 0;
+  --dot: rgba(255, 255, 255, 0.05);
+  --dot-strong: rgba(255, 255, 255, 0.16);
+  background-image: radial-gradient(circle, var(--dot) 1.1px, transparent 1.4px);
+  background-size: 26px 26px;
+}
+.dotfield::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--dot-strong) 1.1px, transparent 1.4px);
+  background-size: 26px 26px;
+  opacity: var(--on);
+  transition: opacity 0.5s ease;
+  -webkit-mask-image: radial-gradient(circle 200px at var(--mx) var(--my), #000 0%, transparent 68%);
+  mask-image: radial-gradient(circle 200px at var(--mx) var(--my), #000 0%, transparent 68%);
+}
+:root[data-theme='light'] .dotfield {
+  --dot: rgba(0, 0, 0, 0.055);
+  --dot-strong: rgba(0, 0, 0, 0.16);
+}
+
 /* Hollow / outlined display text — a graphic accent for oversized words. */
 .text-outline {
   color: transparent;

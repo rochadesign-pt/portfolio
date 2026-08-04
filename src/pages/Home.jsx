@@ -15,7 +15,6 @@ import WorkCard from '../components/WorkCard'
 import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
 import PageTransition from '../components/PageTransition'
-import ScrollBg from '../components/ScrollBg'
 import { useSeo } from '../lib/useSeo'
 
 function Hero() {
@@ -283,9 +282,7 @@ export default function Home() {
       <IntroStatement />
       <ServicesPreview />
       <StatsBand />
-      <ScrollBg>
-        <Exploration />
-      </ScrollBg>
+      <Exploration />
       <KeywordBand />
       <StudioTeaser />
     </PageTransition>
