@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
@@ -38,7 +38,7 @@ function Headline({ line, as: Tag = 'div', ...rest }) {
 
 // A single revealing column: shows its vertical slice of the inverted-colour
 // headline, wiped in from the bottom.
-function Column({ progress, col, line, reduce }) {
+function Column({ progress, col, line, frozen }) {
   const clip = useTransform(
     progress,
     [col.start, col.end],
@@ -48,7 +48,7 @@ function Column({ progress, col, line, reduce }) {
   return (
     <motion.div
       className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
-      style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: reduce ? 'inset(0% 0% 0% 0%)' : clip }}
+      style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: frozen ? 'inset(0% 0% 0% 0%)' : clip }}
     >
       {/* full-viewport-width inner so each slice of the headline registers 1:1 */}
       <div className="absolute inset-y-0" style={{ left: `${-(col.left / col.width) * 100}%`, width: `${10000 / col.width}%` }}>
@@ -67,15 +67,28 @@ export default function CTASection() {
   const { pathname } = useLocation()
   const ref = useRef(null)
   const reduce = useReducedMotion()
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Scroll-scrubbing 14 clipped columns is too heavy on phones — freeze the
+  // reveal there and show the resolved (inverted) colour, so the CTA still
+  // flows continuously into the footer without the jank.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const on = () => setIsMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 85%', 'end 55%'] })
+  const frozen = reduce || isMobile
 
   if (pathname === '/contact') return null
 
   const line = t.bigCta.line
 
   return (
-    <section ref={ref} className="relative min-h-[82vh] overflow-hidden bg-bg">
+    <section ref={ref} className="relative min-h-[68vh] overflow-hidden bg-bg md:min-h-[82vh]">
       {/* Base — page-colour headline */}
       <div className="absolute inset-0">
         <Headline as="h2" line={line} />
@@ -84,7 +97,7 @@ export default function CTASection() {
       {/* Shrinking-rectangle reveal of the inverted colour */}
       <div aria-hidden="true" className="absolute inset-0">
         {COLUMNS.map((col, i) => (
-          <Column key={i} progress={scrollYProgress} col={col} line={line} reduce={reduce} />
+          <Column key={i} progress={scrollYProgress} col={col} line={line} frozen={frozen} />
         ))}
       </div>
 
