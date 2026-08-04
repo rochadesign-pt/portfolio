@@ -103,11 +103,13 @@ export function ZoomProvider({ children }) {
             exit={{ opacity: 0 }}
           >
             {/* Inner `layout` node cancels the parent's scale so the image
-                grows without stretching. The image lands clean — the header's
-                solid text panel slides in afterwards (no scrims to match). */}
+                grows without stretching. */}
             <motion.div layout className="h-full w-full">
               <Cover colors={state.colors} image={state.image} className="h-full w-full" />
             </motion.div>
+            {/* Match the header scrims exactly so brightness is identical at the fade-out */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
           </motion.div>
         )}
       </AnimatePresence>

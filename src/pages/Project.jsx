@@ -83,35 +83,45 @@ export default function Project() {
 
   return (
     <PageTransition instant={zoomEntry}>
-      {/* Full-bleed hero header — the zoom lands here, then a solid text panel
-          slides in beside the clean image (Significa-style). No gradients. */}
+      {/* Full-bleed hero header — the zoom lands here */}
       <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
         <ParallaxImage colors={p.cover} image={p.coverImage} className="absolute inset-0 h-full w-full" amount={6} />
+        {/* legibility scrims */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg via-bg/25 to-bg/10" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
 
-        <motion.aside
-          initial={{ opacity: 0, x: zoomEntry ? -40 : 0, y: zoomEntry ? 0 : 24 }}
-          animate={landed ? { opacity: 1, x: 0, y: 0 } : { opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.3, 1], delay: 0.05 }}
-          className="absolute inset-x-0 bottom-0 z-10 flex h-[56%] flex-col justify-between border-t border-line bg-bg px-6 pb-12 pt-8 md:inset-y-0 md:right-auto md:h-full md:w-[44%] md:border-r md:border-t-0 md:px-10 md:pb-16 md:pt-32"
-        >
-          <Link to="/work" className="link-underline w-fit text-sm text-text/80 hover:text-text">
-            ← {t.project.back}
-          </Link>
+        <div className="relative z-10 mx-auto flex h-full max-w-[1400px] flex-col justify-between px-6 pb-14 pt-28 md:px-10 md:pb-16 md:pt-32">
+          {/* Header text is held back until the zoom has landed, then rises in */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: landed ? 1 : 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <Link to="/work" className="link-underline text-sm text-text/80 hover:text-text">
+              ← {t.project.back}
+            </Link>
+          </motion.div>
 
-          <div>
-            <span className="mb-4 block text-xs font-medium uppercase tracking-[0.22em] text-accent-text">
+          <motion.div
+            initial={{ opacity: 0, y: 26 }}
+            animate={landed ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.3, 1], delay: 0.12 }}
+          >
+            <span className="mb-5 block text-xs font-medium uppercase tracking-[0.22em] text-text/70">
               {p.category}
             </span>
-            <h1 className="display text-5xl leading-[0.95] md:text-6xl lg:text-7xl">{p.title}</h1>
-            <p className="ital mt-5 max-w-md text-xl leading-snug text-text/85 md:text-2xl">{p.tagline[lang]}</p>
-            <button
-              onClick={scrollToBody}
-              className="link-underline mt-8 inline-flex items-center gap-2 text-sm text-text/80 hover:text-text"
-            >
-              {t.project.keepReading} ↓
-            </button>
-          </div>
-        </motion.aside>
+            <h1 className="display text-7xl leading-[0.88] md:text-[9rem]">{p.title}</h1>
+            <div className="mt-7 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <p className="ital max-w-2xl text-2xl leading-snug text-text/85 md:text-3xl">{p.tagline[lang]}</p>
+              <button
+                onClick={scrollToBody}
+                className="link-underline flex shrink-0 items-center gap-2 text-sm text-text/80 hover:text-text"
+              >
+                {t.project.keepReading} ↓
+              </button>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Meta bar */}
