@@ -70,18 +70,25 @@ export function ZoomProvider({ children }) {
         borderRadius: 0,
         duration: GROW,
         ease: EASE,
+        onComplete: () => {
+          announce()
+          // No cross-fade: the hero underneath is a pixel-identical image, so
+          // dropping the overlay in a single frame shows nothing — and it avoids
+          // any compositing shimmer from fading two layers. Wait two frames so
+          // the hero has painted underneath before the overlay is removed.
+          requestAnimationFrame(() => requestAnimationFrame(() => setState(null)))
+        },
       })
-        .add(announce)
-        .to(el, { opacity: 0, duration: 0.32, ease: 'power1.out' }, '>-0.02')
-        .add(() => setState(null))
     },
     { dependencies: [state], scope: overlayRef },
   )
 
   const zoom = useCallback(
     (slug, colors, image, rect) => {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (reduce || !rect) {
+      // No reduced-motion skip: the zoom is a tap-driven, core interaction and
+      // plays for everyone (consistent with the CTA). Only bail if we somehow
+      // have no source rect to grow from.
+      if (!rect) {
         navigate(`/work/${slug}`)
         return
       }

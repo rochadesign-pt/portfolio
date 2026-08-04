@@ -18,7 +18,8 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3' }) {
   const onClick = (e) => {
     track('project_open', { slug: project.slug })
     if (!zoomCtx || !coverRef.current) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // The zoom is tied to the user's own tap and is core to the experience, so
+    // it plays regardless of the reduced-motion setting (like the CTA reveal).
     e.preventDefault()
     zoomCtx.zoom(project.slug, project.cover, project.coverImage, coverRef.current.getBoundingClientRect())
   }

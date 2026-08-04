@@ -50,11 +50,8 @@ export default function Project() {
       if (!landed) return
       const els = heroTextRef.current?.querySelectorAll('[data-hero]')
       if (!els?.length) return
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (reduce) {
-        gsap.set(els, { opacity: 1, y: 0 })
-        return
-      }
+      // Plays regardless of reduced motion, to match the zoom (both are part of
+      // the one continuous open sequence).
       gsap.fromTo(
         els,
         { opacity: 0, y: 40 },
