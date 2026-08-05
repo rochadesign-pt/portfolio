@@ -82,42 +82,6 @@ export const process = [
   },
 ]
 
-// Compact process shown inside each case study (kept generic — fits any project).
-export const caseProcess = [
-  {
-    n: '01',
-    title: { pt: 'Imersão', en: 'Immersion' },
-    desc: {
-      pt: 'Mergulhamos no negócio, no mercado e nas pessoas. Boas perguntas antes de qualquer pixel.',
-      en: 'We dive into the business, the market and the people. Good questions before any pixel.',
-    },
-  },
-  {
-    n: '02',
-    title: { pt: 'Direção', en: 'Direction' },
-    desc: {
-      pt: 'Traduzimos o que descobrimos em território, estratégia e critérios de sucesso.',
-      en: 'We translate what we found into territory, strategy and success criteria.',
-    },
-  },
-  {
-    n: '03',
-    title: { pt: 'Craft', en: 'Craft' },
-    desc: {
-      pt: 'Onde acontece o trabalho. Iteramos rápido, mostramos cedo e refinamos até estar certo.',
-      en: 'Where the work happens. We iterate fast, show early and refine until it is right.',
-    },
-  },
-  {
-    n: '04',
-    title: { pt: 'Entrega', en: 'Delivery' },
-    desc: {
-      pt: 'Ficheiros impecáveis, sistemas documentados e um handoff que a equipa agradece.',
-      en: 'Immaculate files, documented systems and a handoff the team will thank us for.',
-    },
-  },
-]
-
 export const values = [
   {
     title: { pt: 'Detalhe é tudo', en: 'Detail is everything' },

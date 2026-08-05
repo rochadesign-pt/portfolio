@@ -4,7 +4,6 @@ import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { useLang } from '../i18n/LanguageContext'
 import { useContent } from '../content/ContentProvider'
-import { caseProcess } from '../data/site'
 import Reveal from '../components/Reveal'
 import Cover from '../components/Cover'
 import ParallaxImage from '../components/ParallaxImage'
@@ -84,7 +83,6 @@ export default function Project() {
     { id: 'ch-context', label: t.project.context },
     { id: 'ch-challenge', label: t.project.challenge },
     { id: 'ch-approach', label: t.project.approach },
-    { id: 'ch-process', label: t.project.process },
     { id: 'ch-results', label: t.project.results },
   ]
 
@@ -214,24 +212,6 @@ export default function Project() {
             {/* Full-width images */}
             <ParallaxImage colors={p.gallery[1]} image={gi(1)} className="aspect-[3/2] w-full rounded-2xl" />
             <ParallaxImage colors={p.gallery[2]} image={gi(2)} className="aspect-[16/9] w-full rounded-2xl" />
-
-            {/* Process */}
-            <div id="ch-process" className="scroll-mt-28">
-              <Reveal className="mb-8">
-                <Heading>{t.project.process}</Heading>
-              </Reveal>
-              <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-                {caseProcess.map((step) => (
-                  <Reveal key={step.n} className="bg-bg p-6 md:p-8">
-                    <span className="display text-3xl text-accent-text">{step.n}</span>
-                    <h3 className="mt-6 text-xl">{step.title[lang]}</h3>
-                    <p className="mt-2 text-sm text-muted">{step.desc[lang]}</p>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-
-            {/* Full-width images */}
             <ParallaxImage colors={p.gallery[5]} image={gi(5)} className="aspect-[2/1] w-full rounded-2xl" />
             <ParallaxImage colors={p.gallery[3]} image={gi(3)} className="aspect-[16/9] w-full rounded-2xl" />
             <ParallaxImage colors={p.gallery[6]} image={gi(6)} className="aspect-[21/9] w-full rounded-2xl" />
