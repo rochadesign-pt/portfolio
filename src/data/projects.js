@@ -131,6 +131,34 @@ export const projects = [
       { value: '60+', label: { pt: 'Componentes no sistema', en: 'Components in the system' } },
     ],
     gallery: [['#7c8cff', '#0b0b0d'], ['#151517', '#1d1d20'], ['#0b0b0d', '#7c8cff'], ['#1d1d20', '#151517']],
+    // Example captioned gallery — placeholder notes so the reading rhythm is
+    // visible before real Sanity content exists. Replace via the Studio.
+    galleryImages: [
+      {
+        url: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.webp',
+        heading: { pt: 'Um sistema, todos os ecrãs', en: 'One system, every screen' },
+        caption: {
+          pt: 'Em vez de desenhar ecrã a ecrã, ligámos os tokens diretamente ao código — uma decisão de design propaga-se sozinha por todo o produto. Foi o que manteve tudo coerente enquanto a equipa crescia depressa.',
+          en: 'Instead of designing screen by screen, we wired tokens straight to code — one design decision propagates across the whole product on its own. That is what kept everything coherent as the team scaled fast.',
+        },
+      },
+      {
+        url: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.webp',
+        heading: { pt: 'Primeiro sucesso em segundos', en: 'First win in seconds' },
+        caption: {
+          pt: 'Reescrevemos o onboarding à volta do momento mais curto possível entre entrar e sentir valor. Cortámos passos e adiámos a complexidade para depois da primeira vitória — a ativação mais do que duplicou.',
+          en: 'We rewrote onboarding around the shortest possible moment between signing in and feeling value. We cut steps and deferred complexity until after the first win — activation more than doubled.',
+        },
+      },
+      {
+        url: '/ecoxperience-sustainable-detergents-ecommerce-uiuxdesign.webp',
+        heading: { pt: 'Documentação que a equipa usa', en: 'Docs the team actually uses' },
+        caption: {
+          pt: 'Cada componente traz exemplos, do-and-don’t e código pronto a copiar. A documentação deixou de ser um PDF parado para ser uma ferramenta viva — os pedidos de suporte sobre onboarding caíram quase para metade.',
+          en: 'Every component ships with examples, do-and-don’t, and copy-ready code. Documentation stopped being a static PDF and became a living tool — onboarding support tickets dropped by almost half.',
+        },
+      },
+    ],
   },
   {
     slug: 'ferve',
