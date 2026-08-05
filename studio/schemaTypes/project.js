@@ -77,7 +77,35 @@ export default defineType({
       ],
     }),
 
-    defineField({ name: 'gallery', title: 'Gallery', type: 'array', of: [{ type: 'image', options: { hotspot: true } }] }),
+    defineField({
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      description: 'Case-study images, in order. Give each one a note explaining the decision behind it.',
+      of: [
+        {
+          type: 'object',
+          name: 'captionedImage',
+          title: 'Image + note',
+          fields: [
+            { name: 'image', title: 'Image', type: 'image', options: { hotspot: true } },
+            {
+              name: 'heading',
+              title: 'Note heading (optional, short)',
+              type: 'localeString',
+              description: 'A short lead, e.g. "One system, every screen".',
+            },
+            {
+              name: 'caption',
+              title: 'Note — the decision (optional)',
+              type: 'localeText',
+              description: 'Explain what we are looking at and why. This is what turns a slideshow into a story.',
+            },
+          ],
+          preview: { select: { title: 'heading.en', subtitle: 'caption.en', media: 'image' } },
+        },
+      ],
+    }),
     defineField({ name: 'order', title: 'Order', type: 'number', description: 'Lower shows first.' }),
   ],
   orderings: [{ title: 'Manual order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],

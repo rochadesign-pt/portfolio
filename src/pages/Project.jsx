@@ -99,8 +99,37 @@ export default function Project() {
   )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  // Gallery image (from Sanity) for slot i, if any — else the duotone shows.
+  // Gallery item (from Sanity) for slot i: { url, heading, caption } — or
+  // undefined, in which case the duotone fallback colour shows.
   const gi = (i) => p.galleryImages?.[i]
+
+  // An image with its editorial note. The caption is where the decision behind
+  // the image gets explained — so the case study reads as a story, not a
+  // slideshow. Note shows only when there's something to say.
+  const Figure = ({ i, className }) => {
+    const g = gi(i)
+    const heading = g?.heading?.[lang]
+    const caption = g?.caption?.[lang]
+    return (
+      <figure className="flex flex-col gap-4">
+        <ParallaxImage colors={p.gallery[i % p.gallery.length]} image={g?.url} className={className} />
+        {(heading || caption) && (
+          <figcaption className="max-w-2xl">
+            {heading && <span className="label mb-2 block text-accent-text">{heading}</span>}
+            {caption && <p className="text-base leading-relaxed text-muted">{caption}</p>}
+          </figcaption>
+        )}
+      </figure>
+    )
+  }
+
+  // Showcase after the Approach: every real gallery image beyond the two anchors,
+  // each with its note. With no real images yet, a few duotone slots keep the
+  // layout full so the placeholder state still reads.
+  const realCount = p.galleryImages?.length || 0
+  const showcase =
+    realCount > 2 ? Array.from({ length: realCount - 2 }, (_, k) => 2 + k) : realCount === 0 ? [2, 3, 4] : []
+  const ratios = ['aspect-[3/2]', 'aspect-[16/9]', 'aspect-[2/1]', 'aspect-[21/9]']
 
   return (
     <PageTransition instant={zoomEntry}>
@@ -187,8 +216,8 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Full-width image */}
-            <ParallaxImage colors={p.gallery[0]} image={gi(0)} className="aspect-[16/9] w-full rounded-2xl" />
+            {/* Establishing image */}
+            <Figure i={0} className="aspect-[16/9] w-full rounded-2xl" />
 
             {/* Challenge */}
             <div id="ch-challenge" className="scroll-mt-28">
@@ -198,8 +227,8 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Wide image */}
-            <ParallaxImage colors={p.gallery[4]} image={gi(4)} className="aspect-[2/1] w-full rounded-2xl" />
+            {/* Figure */}
+            <Figure i={1} className="aspect-[2/1] w-full rounded-2xl" />
 
             {/* Approach */}
             <div id="ch-approach" className="scroll-mt-28">
@@ -209,15 +238,10 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Full-width images */}
-            <ParallaxImage colors={p.gallery[1]} image={gi(1)} className="aspect-[3/2] w-full rounded-2xl" />
-            <ParallaxImage colors={p.gallery[2]} image={gi(2)} className="aspect-[16/9] w-full rounded-2xl" />
-            <ParallaxImage colors={p.gallery[5]} image={gi(5)} className="aspect-[2/1] w-full rounded-2xl" />
-            <ParallaxImage colors={p.gallery[3]} image={gi(3)} className="aspect-[16/9] w-full rounded-2xl" />
-            <ParallaxImage colors={p.gallery[6]} image={gi(6)} className="aspect-[21/9] w-full rounded-2xl" />
-
-            {/* Full-width image */}
-            <ParallaxImage colors={p.gallery[7]} image={gi(7)} className="aspect-[16/9] w-full rounded-2xl" />
+            {/* Showcase — each image with the decision behind it */}
+            {showcase.map((i, k) => (
+              <Figure key={i} i={i} className={`${ratios[k % ratios.length]} w-full rounded-2xl`} />
+            ))}
 
             {/* Results: outcome + quote + stats */}
             <div id="ch-results" className="flex scroll-mt-28 flex-col gap-12">

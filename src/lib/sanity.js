@@ -71,8 +71,11 @@ function mapProject(p) {
       ? { text: p.quote.text || { pt: '', en: '' }, author: p.quote.author || '', role: p.quote.role || { pt: '', en: '' } }
       : null,
     results: p.results || [],
-    // Real gallery images (URLs). Rendering with images is wired at integration time.
-    galleryImages: (p.gallery || []).map((g) => imgUrl(g, 1400)).filter(Boolean),
+    // Real gallery images with their editorial note. Each item:
+    // { url, heading, caption } — heading/caption are bilingual or null.
+    galleryImages: (p.gallery || [])
+      .map((g) => ({ url: imgUrl(g?.image, 1400), heading: g?.heading || null, caption: g?.caption || null }))
+      .filter((g) => g.url),
   }
 }
 
