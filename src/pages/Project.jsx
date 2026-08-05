@@ -110,15 +110,18 @@ export default function Project() {
     const g = gi(i)
     const heading = g?.heading?.[lang]
     const caption = g?.caption?.[lang]
+    // The note leads INTO the image — "here's the decision" then "here's the
+    // result" — so the page reads text → image → text → image, a light rhythm
+    // rather than a stack of silent pictures.
     return (
-      <figure className="flex flex-col gap-4">
-        <ParallaxImage colors={p.gallery[i % p.gallery.length]} image={g?.url} className={className} />
+      <figure className="flex flex-col gap-6">
         {(heading || caption) && (
           <figcaption className="max-w-2xl">
-            {heading && <span className="label mb-2 block text-accent-text">{heading}</span>}
-            {caption && <p className="text-base leading-relaxed text-muted">{caption}</p>}
+            {heading && <span className="label mb-3 block text-accent-text">{heading}</span>}
+            {caption && <p className="text-lg leading-relaxed text-text/80">{caption}</p>}
           </figcaption>
         )}
+        <ParallaxImage colors={p.gallery[i % p.gallery.length]} image={g?.url} className={className} />
       </figure>
     )
   }
@@ -266,13 +269,13 @@ export default function Project() {
               )}
 
               <Reveal>
-                <div className="border-t-2 border-accent pt-8">
+                <div className="border-t border-line pt-8">
                   <span className="label mb-8 block">{t.project.results}</span>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3">
+                  <div className="flex flex-wrap gap-x-14 gap-y-8">
                     {p.results.map((r) => (
                       <div key={r.label.en}>
-                        <CountUp value={r.value} className="display block text-5xl md:text-6xl" />
-                        <p className="mt-2 text-sm text-muted">{r.label[lang]}</p>
+                        <CountUp value={r.value} className="display block text-3xl md:text-4xl" />
+                        <p className="mt-1.5 text-sm text-muted">{r.label[lang]}</p>
                       </div>
                     ))}
                   </div>
