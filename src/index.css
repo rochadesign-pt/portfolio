@@ -1,10 +1,27 @@
 @import 'tailwindcss';
 
+/* Season Mix (trial) — self-hosted accent face. Regular for the accent words,
+   Medium available if we ever want a heavier accent. */
+@font-face {
+  font-family: 'Season Mix';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/SeasonMix-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Season Mix';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/SeasonMix-Medium.otf') format('opentype');
+}
+
 @theme {
-  /* Switzer for display + body; serif for italic accents */
+  /* Switzer for display + body; Season Mix for the accent words */
   --font-sans: 'Switzer', 'Inter', system-ui, sans-serif;
   --font-display: 'Switzer', 'Inter', system-ui, sans-serif;
-  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-accent: 'Season Mix', var(--font-display), sans-serif;
 
   --color-bg: #0b0b0d;
   --color-surface: #151517;
@@ -108,12 +125,13 @@
   );
 }
 
-/* Serif italic — brand accent words inside grotesk headings */
+/* Brand accent words inside headings — Season Mix, upright (no italic).
+   Only the accent colour + face set it apart from the surrounding Switzer. */
 @utility ital {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-accent);
+  font-style: normal;
   font-weight: 400;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
 }
 
 /* Reusable link underline that grows on hover */

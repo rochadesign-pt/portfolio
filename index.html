@@ -94,27 +94,19 @@
       }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-    <!-- The two families the site uses: Switzer (Fontshare) for display + body,
-         Instrument Serif (Google) for italic accents. Loaded without blocking
-         first paint; font-display: swap paints text immediately in the fallback. -->
+    <!-- Switzer (Fontshare) for display + body; Season Mix (self-hosted) for the
+         accent words. Loaded without blocking first paint; font-display: swap
+         paints text immediately in the fallback. -->
     <link
       rel="preload"
       as="style"
       href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/SeasonMix-Regular.ttf" crossorigin />
     <noscript>
       <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" />
     </noscript>
   </head>
   <body>
