@@ -108,12 +108,12 @@
   );
 }
 
-/* Brand accent words inside headings — Switzer (sans), upright, no serif.
-   Weight and tracking inherit from the surrounding display heading so the
-   accent blends and only the accent colour sets it apart. */
+/* Serif italic — brand accent words inside grotesk headings */
 @utility ital {
-  font-family: var(--font-display);
-  font-style: normal;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.035em;
 }
 
 /* Reusable link underline that grows on hover */

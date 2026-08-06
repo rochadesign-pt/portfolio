@@ -30,19 +30,17 @@ export default function Work() {
           <Reveal className="mb-4">
             <span className="label">{t.workPage.eyebrow}</span>
           </Reveal>
-          <Reveal>
-            <h1 className="max-w-5xl text-4xl font-medium leading-[1.12] tracking-[-0.02em] md:text-[3.5rem] md:leading-[1.08]">
-              {t.workPage.statement.map((seg, i) => (
-                <span
-                  key={i}
-                  className={seg.em ? 'wk-hl font-semibold text-accent-text' : 'font-normal text-text/45'}
-                >
-                  {seg.t}
-                </span>
-              ))}
+          <MaskReveal>
+            <h1 className="display text-6xl md:text-8xl">
+              {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
             </h1>
+          </MaskReveal>
+          <Reveal className="mt-8 max-w-3xl md:mt-10">
+            <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
+              {t.workPage.lead}
+            </p>
           </Reveal>
-          <Reveal className="mt-8 max-w-xl">
+          <Reveal className="mt-6 max-w-xl">
             <p className="text-sm text-muted">{t.workPage.sub}</p>
           </Reveal>
         </div>
