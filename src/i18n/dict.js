@@ -107,11 +107,13 @@ export const dict = {
     },
     workPage: {
       eyebrow: 'Portfólio',
-      // The statement is the title: Switzer throughout, the emphasised opener at
-      // full strength and the rest dimmed (no serif accent).
+      // Short, bold anchor for power; the statement lives underneath as dimmed
+      // support (opener at full strength, the rest at ~55%).
+      title: 'Feito com',
+      titleAccent: 'intenção',
       headline: [
         { t: 'Não desenhamos para preencher portefólio.', em: true },
-        { t: ' Cada marca, cada site e cada produto nasceu de um problema real e foi construído com intenção — do primeiro esboço ao último pixel.', em: false },
+        { t: ' Cada marca, cada site e cada produto nasceu de um problema real — do primeiro esboço ao último pixel.', em: false },
       ],
       sub: 'Branding, web e produto digital. Filtra por disciplina.',
       filterAll: 'Tudo',
@@ -283,9 +285,11 @@ export const dict = {
     },
     workPage: {
       eyebrow: 'Portfolio',
+      title: 'Made with',
+      titleAccent: 'intent',
       headline: [
         { t: 'We don’t design to fill a portfolio.', em: true },
-        { t: ' Every brand, every site and every product started from a real problem and was built with intent — from the first sketch to the last pixel.', em: false },
+        { t: ' Every brand, every site and every product started from a real problem — from the first sketch to the last pixel.', em: false },
       ],
       sub: 'Branding, web and digital product. Filter by discipline.',
       filterAll: 'All',
