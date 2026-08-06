@@ -56,8 +56,14 @@ function PageShell({ children }) {
 // Remount the closing CTA on each route so its scroll-driven reveal re-measures
 // against the new page height (otherwise useScroll keeps stale offsets and the
 // effect can fail to fire after an SPA navigation).
+//
+// The homepage is the exception: there the CTA is rendered inside the page as
+// the second half of a sticky stack (the "lab" pins and the CTA rises over it),
+// so it must be a DOM sibling of that section — Home renders its own copy and we
+// skip the global one here to avoid a duplicate.
 function RoutedCTA() {
   const { pathname } = useLocation()
+  if (pathname === '/') return null
   return <CTASection key={pathname} />
 }
 

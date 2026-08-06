@@ -15,6 +15,7 @@ import Marquee from '../components/Marquee'
 import Counter from '../components/Counter'
 import WorkCard from '../components/WorkCard'
 import Exploration from '../components/Exploration'
+import CTASection from '../components/CTASection'
 import DotField from '../components/DotField'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
@@ -340,19 +341,6 @@ function ClientsBand() {
   )
 }
 
-function KeywordBand() {
-  const { lang } = useLang()
-  const words =
-    lang === 'pt'
-      ? ['Branding', 'Web', 'Produto', 'Estratégia', 'Identidade', 'Motion']
-      : ['Branding', 'Web', 'Product', 'Strategy', 'Identity', 'Motion']
-  return (
-    <section className="py-8 md:py-12">
-      <Marquee items={words} separator="✳" outline speed={50} textClass="text-[12vw] leading-none md:text-[7.5rem]" />
-    </section>
-  )
-}
-
 export default function Home() {
   const { t } = useLang()
   useSeo(t.seo.home)
@@ -363,8 +351,18 @@ export default function Home() {
       <FeaturedWork />
       <ManifestoStats />
       <ServicesPreview />
-      <Exploration />
-      <KeywordBand />
+
+      {/* Sticky stack — the "lab" pins to the viewport while the closing CTA
+          scrolls up and over it, so the two sections read as one continuous
+          move. The lab sits on z-0; the CTA is opaque (bg-bg) on z-10 and rises
+          to cover it. Both are DOM siblings so the sticky travel spans the CTA's
+          full height (the lab stays pinned until the CTA has swept past). */}
+      <div className="sticky top-0 z-0">
+        <Exploration />
+      </div>
+      <div className="relative z-10">
+        <CTASection />
+      </div>
     </PageTransition>
   )
 }
