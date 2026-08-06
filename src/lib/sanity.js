@@ -44,15 +44,15 @@ const paras = (locale) => ({
   en: (locale?.en || '').split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean),
 })
 
-const PROJECT_QUERY = `*[_type == "project"] | order(order asc){
+export const PROJECT_QUERY = `*[_type == "project"] | order(order asc){
   "slug": slug.current, title, isCaseStudy, category, disciplines, industry, country, year, services,
   coverColors, coverImage, tagline, intro, challenge, approach, outcome, quote, results, gallery
 }`
 
-const EXPLORATION_QUERY = `*[_type == "exploration"] | order(order asc){ name, category, image, ratio }`
+export const EXPLORATION_QUERY = `*[_type == "exploration"] | order(order asc){ name, category, image, ratio }`
 
 // Map a Sanity project doc to the shape the site components expect.
-function mapProject(p) {
+export function mapProject(p) {
   const cover = p.coverColors?.length === 2 ? p.coverColors : ['#ffc700', '#0b0b0d']
   const a = cover[0]
   const gallery = [
@@ -101,13 +101,17 @@ export async function fetchProjects() {
   return docs.map(mapProject)
 }
 
-export async function fetchExplorations() {
-  if (!client) return null
-  const docs = await client.fetch(EXPLORATION_QUERY)
-  return docs.map((e) => ({
+export function mapExploration(e) {
+  return {
     name: e.name,
     category: e.category || { pt: '', en: '' },
     image: imgUrl(e.image, 900),
     ratio: (e.ratio || '3/4').replace('/', ' / '),
-  }))
+  }
+}
+
+export async function fetchExplorations() {
+  if (!client) return null
+  const docs = await client.fetch(EXPLORATION_QUERY)
+  return docs.map(mapExploration)
 }

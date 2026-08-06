@@ -1,10 +1,15 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, lazy, Suspense } from 'react'
 import { projects as localProjects } from '../data/projects'
 import { explorations as localExplorations } from '../data/site'
 
+// Live draft preview — lazy, and only mounted inside the Studio's Presentation
+// iframe, so react-loader never reaches the bundle normal visitors download.
+const LiveContent = lazy(() => import('./LiveContent'))
+const inPresentationFrame = typeof window !== 'undefined' && window.self !== window.top
+
 // Serves content to the app. Starts with the bundled local data (so the site
-// renders instantly and never breaks), then hydrates from Sanity when it's
-// configured and returns content. Any Sanity error keeps the local fallback.
+// renders instantly and never breaks), then hydrates from Sanity: published
+// content normally, or live drafts when editing inside Presentation.
 const ContentContext = createContext({ projects: localProjects, explorations: localExplorations })
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -13,24 +18,25 @@ export function useContent() {
 }
 
 export function ContentProvider({ children }) {
-  const [projects, setProjects] = useState(localProjects)
-  const [explorations, setExplorations] = useState(localExplorations)
+  const [content, setContent] = useState({ projects: localProjects, explorations: localExplorations })
 
   useEffect(() => {
+    // Inside Presentation, LiveContent drives the content (live drafts). Anywhere
+    // else, fetch published content once — Sanity is imported lazily so its
+    // libraries stay off the initial critical path.
+    if (inPresentationFrame) return
     let alive = true
-    // Load the Sanity client lazily (dynamic import) so its libraries stay out
-    // of the initial bundle — the site already renders from local data.
     import('../lib/sanity')
       .then(({ sanityConfigured, fetchProjects, fetchExplorations }) => {
         if (!sanityConfigured || !alive) return
         fetchProjects()
           .then((d) => {
-            if (alive && d && d.length) setProjects(d)
+            if (alive && d && d.length) setContent((c) => ({ ...c, projects: d }))
           })
           .catch((e) => console.error('[sanity] projects fetch FAILED:', e?.message || e))
         fetchExplorations()
           .then((d) => {
-            if (alive && d && d.length) setExplorations(d)
+            if (alive && d && d.length) setContent((c) => ({ ...c, explorations: d }))
           })
           .catch((e) => console.error('[sanity] explorations fetch FAILED:', e?.message || e))
       })
@@ -40,5 +46,14 @@ export function ContentProvider({ children }) {
     }
   }, [])
 
-  return <ContentContext.Provider value={{ projects, explorations }}>{children}</ContentContext.Provider>
+  return (
+    <ContentContext.Provider value={content}>
+      {inPresentationFrame && (
+        <Suspense fallback={null}>
+          <LiveContent onContent={setContent} />
+        </Suspense>
+      )}
+      {children}
+    </ContentContext.Provider>
+  )
 }
