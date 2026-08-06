@@ -5,7 +5,6 @@ import { disciplines } from '../data/projects'
 import { useContent } from '../content/ContentProvider'
 import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
-import MaskReveal from '../components/MaskReveal'
 import WorkCard from '../components/WorkCard'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
@@ -30,17 +29,16 @@ export default function Work() {
           <Reveal className="mb-4">
             <span className="label">{t.workPage.eyebrow}</span>
           </Reveal>
-          <MaskReveal>
-            <h1 className="display text-6xl md:text-8xl">
-              {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
+          <Reveal>
+            <h1 className="display max-w-5xl text-[2rem] leading-[1.12] md:text-[3.5rem] md:leading-[1.07]">
+              {t.workPage.headline.map((seg, i) => (
+                <span key={i} className={seg.em ? 'text-text' : 'text-text/55'}>
+                  {seg.t}
+                </span>
+              ))}
             </h1>
-          </MaskReveal>
-          <Reveal className="mt-8 max-w-3xl md:mt-10">
-            <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
-              {t.workPage.lead}
-            </p>
           </Reveal>
-          <Reveal className="mt-6 max-w-xl">
+          <Reveal className="mt-8 max-w-xl">
             <p className="text-sm text-muted">{t.workPage.sub}</p>
           </Reveal>
         </div>
