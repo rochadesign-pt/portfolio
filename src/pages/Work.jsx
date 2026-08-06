@@ -35,8 +35,13 @@ export default function Work() {
               {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
             </h1>
           </MaskReveal>
+          <Reveal className="mt-8 max-w-3xl md:mt-10">
+            <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
+              {t.workPage.lead}
+            </p>
+          </Reveal>
           <Reveal className="mt-6 max-w-xl">
-            <p className="text-lg text-muted">{t.workPage.sub}</p>
+            <p className="text-sm text-muted">{t.workPage.sub}</p>
           </Reveal>
         </div>
 

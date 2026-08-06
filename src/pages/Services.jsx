@@ -1,7 +1,8 @@
 import { useLang } from '../i18n/LanguageContext'
-import { services, process } from '../data/site'
+import { process } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
+import ServiceColumns from '../components/ServiceColumns'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -26,25 +27,7 @@ export default function Services() {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
-        {services.map((s) => (
-          <Reveal key={s.key}>
-            <div className="grid gap-8 border-t border-line py-14 md:grid-cols-[80px_1.2fr_1fr] md:py-20">
-              <span className="display text-3xl text-accent-text">{s.n}</span>
-              <div>
-                <h2 className="display text-4xl md:text-6xl">{s.title[lang]}</h2>
-                <p className="mt-6 max-w-md text-lg text-muted">{s.desc[lang]}</p>
-              </div>
-              <ul className="space-y-3 self-center border-l border-line pl-8">
-                {s.items[lang].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent ring-1 ring-line" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        ))}
+        <ServiceColumns headingAs="h2" />
       </section>
 
       {/* Process */}
