@@ -352,16 +352,21 @@ export default function Home() {
       <ManifestoStats />
       <ServicesPreview />
 
-      {/* Sticky stack — the "lab" pins to the viewport while the closing CTA
-          scrolls up and over it, so the two sections read as one continuous
-          move. The lab sits on z-0; the CTA is opaque (bg-bg) on z-10 and rises
-          to cover it. Both are DOM siblings so the sticky travel spans the CTA's
-          full height (the lab stays pinned until the CTA has swept past). */}
+      {/* Closing sticky stack, in two sequenced stages:
+          1. The "lab" pins to the viewport (z-0).
+          2. The CTA — a tall wrapper (z-10) whose inner layer is itself sticky —
+             rises as a solid dark block up and over the pinned lab, then pins at
+             the top. Only while it's pinned do the curtains open (the reveal is
+             gated on this wrapper's progress inside CTASection). The extra
+             wrapper height beyond one viewport is the scroll room the curtains
+             sweep across, so the block-rise and the reveal never overlap. */}
       <div className="sticky top-0 z-0">
         <Exploration />
       </div>
-      <div className="relative z-10">
-        <CTASection stacked />
+      <div data-cta-stack className="relative z-10 h-[180vh]">
+        <div className="sticky top-0 h-screen overflow-hidden">
+          <CTASection stacked />
+        </div>
       </div>
     </PageTransition>
   )

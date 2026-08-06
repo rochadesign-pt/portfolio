@@ -63,7 +63,6 @@ const tagClass =
   'theme-invert absolute inline-block rounded-full border border-line bg-bg px-3 py-1.5 text-sm font-medium text-text md:px-3.5'
 
 const HIDDEN = 'inset(100% 0% 0% 0%)'
-const SHOWN = 'inset(0% 0% 0% 0%)'
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
@@ -73,10 +72,10 @@ const SHOWN = 'inset(0% 0% 0% 0%)'
 // position and writes clip-path (+ -webkit-clip-path) straight onto the column
 // nodes. No framer scroll/inView hooks: it tracks native touch scroll and Lenis
 // alike, on every browser, and can't get stuck on a stale measurement.
-// `stacked` (homepage): the CTA is the second half of a sticky stack — it slides
-// up and over the pinned "lab", so the slide itself is the reveal. Running the
-// columnar clip-path on top of that motion reads as a blocky staircase, so in
-// this mode the CTA arrives already solid (fully inverted) and just glides up.
+// `stacked` (homepage): the CTA is the second half of a sticky stack. It rises
+// as a solid dark block over the pinned "lab" and then pins itself, and only
+// then do the curtains open — the reveal is gated on the pinned wrapper's
+// progress (see the effect), so the two moves are sequenced, not simultaneous.
 export default function CTASection({ stacked = false }) {
   const { t } = useLang()
   const { pathname } = useLocation()
@@ -85,7 +84,6 @@ export default function CTASection({ stacked = false }) {
   const reduce = useReducedMotion()
   const isContact = pathname === '/contact'
   const [isMobile, setIsMobile] = useState(false)
-  const initialClip = stacked ? SHOWN : HIDDEN
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
@@ -96,23 +94,34 @@ export default function CTASection({ stacked = false }) {
   }, [])
 
   useEffect(() => {
-    // In stacked mode the columns stay fully shown (solid), so there's no reveal
-    // loop to run — the rise over the lab carries the motion instead.
-    if (isContact || stacked) return
+    if (isContact) return
     const section = ref.current
     if (!section) return
+    // In the homepage stack the reveal is gated on the pinned wrapper's progress
+    // (section.closest('[data-cta-stack]')): the dark block rises fully first,
+    // then — once pinned — the curtains open. Elsewhere it tracks the section's
+    // own entrance from the bottom.
+    const wrap = stacked ? section.closest('[data-cta-stack]') : null
 
-    // Read the section's live position every animation frame while it's near
-    // the viewport and write clip-path straight onto the columns. A rAF loop
-    // (not scroll events) is the reliable driver on iOS Safari, where scroll
-    // events are throttled/suppressed during momentum scrolling — and it needs
-    // no reduced-motion branch, since the reveal is tied to the user's own
-    // scroll rather than being autonomous motion.
+    // Read the live position every animation frame and write clip-path straight
+    // onto the columns. A rAF loop (not scroll events) is the reliable driver on
+    // iOS Safari, where scroll events are throttled/suppressed during momentum
+    // scrolling — and it needs no reduced-motion branch, since the reveal is
+    // tied to the user's own scroll rather than being autonomous motion.
     const apply = () => {
-      const rect = section.getBoundingClientRect()
       const vh = window.innerHeight || 1
-      // 0 as the section enters from the bottom → 1 as its top nears the top.
-      const p = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.9)))
+      let p
+      if (wrap) {
+        // Wrapper top: +vh→0 while the block rises (p pinned at 0), then 0→−travel
+        // while it's pinned and the curtains sweep open (p 0→1).
+        const r = wrap.getBoundingClientRect()
+        const travel = wrap.offsetHeight - vh
+        p = Math.min(1, Math.max(0, -r.top / (travel || 1)))
+      } else {
+        // 0 as the section enters from the bottom → 1 as its top nears the top.
+        const rect = section.getBoundingClientRect()
+        p = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.9)))
+      }
       for (let i = 0; i < COLUMNS.length; i++) {
         const col = COLUMNS[i]
         const node = colRefs.current[i]
@@ -141,7 +150,10 @@ export default function CTASection({ stacked = false }) {
   const tags = t.bigCta.tags || []
 
   return (
-    <section ref={ref} className="relative min-h-[82vh] overflow-hidden bg-bg md:min-h-[86vh]">
+    <section
+      ref={ref}
+      className={`relative overflow-hidden bg-bg ${stacked ? 'min-h-screen' : 'min-h-[82vh] md:min-h-[86vh]'}`}
+    >
       {/* Base — page-colour headline */}
       <div className="absolute inset-0">
         <Headline as="h2" line={line} />
@@ -154,7 +166,7 @@ export default function CTASection({ stacked = false }) {
             key={i}
             ref={(el) => (colRefs.current[i] = el)}
             className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
-            style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: initialClip, WebkitClipPath: initialClip }}
+            style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: HIDDEN, WebkitClipPath: HIDDEN }}
           >
             <div
               className="absolute inset-y-0"
