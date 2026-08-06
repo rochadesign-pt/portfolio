@@ -8,7 +8,7 @@ import Reveal from './Reveal'
 import { useZoom } from '../context/Zoom'
 import { track } from '../lib/analytics'
 
-export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = false }) {
+export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = false, immediate = false }) {
   const { lang } = useLang()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
@@ -25,7 +25,7 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
   }
 
   return (
-    <Reveal delay={(index % 2) * 0.06}>
+    <Reveal delay={(index % 2) * 0.06} immediate={immediate}>
       <Link to={`/work/${project.slug}`} onClick={onClick} className="group block">
         <div ref={coverRef} className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>

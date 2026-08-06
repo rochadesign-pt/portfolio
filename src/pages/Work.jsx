@@ -25,7 +25,7 @@ export default function Work() {
     <PageTransition>
       {/* Title hero — sized so only a sliver of the first projects peeks below
           the fold, inviting the scroll. */}
-      <section className="mx-auto flex min-h-[84svh] max-w-[1400px] flex-col px-6 pt-40 pb-10 md:px-10 md:pt-52">
+      <section className="mx-auto flex min-h-[80svh] max-w-[1400px] flex-col px-6 pt-40 pb-10 md:px-10 md:pt-52">
         <div>
           <Reveal className="mb-4">
             <span className="label">{t.workPage.eyebrow}</span>
@@ -68,9 +68,9 @@ export default function Work() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.4, ease: easeSoft }}
-                className={i % 2 === 1 && i !== 1 ? 'md:mt-16' : ''}
+                className={i % 2 === 1 ? 'md:mt-16' : ''}
               >
-                <WorkCard project={p} index={i} titleAs="h2" eager={i < 2} />
+                <WorkCard project={p} index={i} titleAs="h2" eager={i < 2} immediate={i < 2} />
               </motion.div>
             ))}
           </AnimatePresence>

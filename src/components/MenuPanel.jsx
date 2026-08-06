@@ -49,7 +49,7 @@ export default function MenuPanel() {
               to={l.to}
               tabIndex={open ? 0 : -1}
               style={{ transitionDelay: open ? `${0.24 + i * 0.05}s` : '0s' }}
-              className={`group w-fit text-4xl leading-[1.35] transition-all duration-500 md:text-5xl ${
+              className={`group w-fit text-4xl leading-[1.35] tracking-[-0.03em] transition-all duration-500 md:text-5xl ${
                 open ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
               } ${active ? 'text-text' : 'text-text/70 hover:text-text'}`}
             >
