@@ -62,7 +62,7 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
         {/* Caption — Title / short description, with opacity differentiation.
             The project name is the heading; the tagline sits inline beside it. */}
         <div className="mt-5">
-          <div className="max-w-xl text-lg leading-snug md:text-xl">
+          <div className="max-w-xl text-lg leading-snug tracking-[-0.02em] md:text-xl">
             <Title className="inline font-normal text-text">{project.title}</Title>
             <span className="text-muted"> / {project.tagline[lang]}</span>
           </div>

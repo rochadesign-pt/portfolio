@@ -15,6 +15,8 @@ export default function Marquee({
   separator = '·',
   outline = false,
   textClass = 'text-4xl md:text-6xl',
+  renderItem,
+  gapClass = 'gap-8',
 }) {
   const track = useRef(null)
 
@@ -36,14 +38,19 @@ export default function Marquee({
   )
 
   const content = [...items, ...items]
+  const render =
+    renderItem ||
+    ((item) => (
+      <span className={`display ${textClass} ${outline ? 'text-outline' : 'text-text/90'}`}>{item}</span>
+    ))
 
   return (
     <div className="overflow-hidden py-6 border-y border-line">
-      <div ref={track} className="flex w-max items-center gap-8 whitespace-nowrap will-change-transform">
+      <div ref={track} className={`flex w-max items-center ${gapClass} whitespace-nowrap will-change-transform`}>
         {content.map((item, i) => (
-          <span key={i} className="flex items-center gap-8">
-            <span className={`display ${textClass} ${outline ? 'text-outline' : 'text-text/90'}`}>{item}</span>
-            <span className="text-accent-text text-3xl md:text-5xl">{separator}</span>
+          <span key={i} className={`flex items-center ${gapClass}`}>
+            {render(item, i)}
+            {separator ? <span className="text-accent-text text-3xl md:text-5xl">{separator}</span> : null}
           </span>
         ))}
       </div>

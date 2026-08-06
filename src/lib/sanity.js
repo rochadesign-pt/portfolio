@@ -51,6 +51,9 @@ export const PROJECT_QUERY = `*[_type == "project"] | order(order asc){
 
 export const EXPLORATION_QUERY = `*[_type == "exploration"] | order(order asc){ name, category, image, ratio }`
 
+// Direct asset URL for the logo so SVGs stay vector and aren't re-encoded.
+export const CLIENTS_QUERY = `*[_type == "client"] | order(order asc){ name, "logo": logo.asset->url, url }`
+
 // Map a Sanity project doc to the shape the site components expect.
 export function mapProject(p) {
   const cover = p.coverColors?.length === 2 ? p.coverColors : ['#ffc700', '#0b0b0d']
@@ -114,4 +117,14 @@ export async function fetchExplorations() {
   if (!client) return null
   const docs = await client.fetch(EXPLORATION_QUERY)
   return docs.map(mapExploration)
+}
+
+export function mapClient(c) {
+  return { name: c.name, logo: c.logo || null, url: c.url || null }
+}
+
+export async function fetchClients() {
+  if (!client) return null
+  const docs = await client.fetch(CLIENTS_QUERY)
+  return docs.map(mapClient)
 }

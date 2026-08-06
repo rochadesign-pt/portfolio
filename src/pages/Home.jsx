@@ -5,7 +5,7 @@ import { useLang } from '../i18n/LanguageContext'
 import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
 import { useContent } from '../content/ContentProvider'
-import { services, stats, clients } from '../data/site'
+import { services, stats } from '../data/site'
 import { fadeUp } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import Marquee from '../components/Marquee'
@@ -220,9 +220,28 @@ function StatsBand() {
 }
 
 function ClientsBand() {
+  const { clients } = useContent()
   return (
     <section className="py-12">
-      <Marquee items={clients} separator="✳" speed={40} />
+      <Marquee
+        items={clients}
+        separator={null}
+        speed={40}
+        gapClass="gap-12 md:gap-20"
+        renderItem={(c) =>
+          c.logo ? (
+            <img
+              src={c.logo}
+              alt={c.name}
+              loading="lazy"
+              decoding="async"
+              className="h-6 w-auto max-w-[150px] object-contain opacity-55 grayscale transition duration-300 hover:opacity-100 md:h-7"
+            />
+          ) : (
+            <span className="display text-2xl text-text/50 md:text-3xl">{c.name}</span>
+          )
+        }
+      />
     </section>
   )
 }

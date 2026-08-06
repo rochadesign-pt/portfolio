@@ -1,6 +1,14 @@
 import { useEffect } from 'react'
 import { useQuery, useLiveMode } from '../lib/sanityLoader'
-import { client, PROJECT_QUERY, EXPLORATION_QUERY, mapProject, mapExploration } from '../lib/sanity'
+import {
+  client,
+  PROJECT_QUERY,
+  EXPLORATION_QUERY,
+  CLIENTS_QUERY,
+  mapProject,
+  mapExploration,
+  mapClient,
+} from '../lib/sanity'
 
 // Live draft preview. Mounted ONLY inside the Studio's Presentation iframe.
 // useLiveMode streams draft updates from the Studio over its channel (no token),
@@ -11,6 +19,7 @@ export default function LiveContent({ onContent }) {
 
   const { data: projectDocs } = useQuery(PROJECT_QUERY)
   const { data: explorationDocs } = useQuery(EXPLORATION_QUERY)
+  const { data: clientDocs } = useQuery(CLIENTS_QUERY)
 
   useEffect(() => {
     onContent((prev) => ({
@@ -20,8 +29,10 @@ export default function LiveContent({ onContent }) {
         Array.isArray(explorationDocs) && explorationDocs.length
           ? explorationDocs.map(mapExploration)
           : prev.explorations,
+      clients:
+        Array.isArray(clientDocs) && clientDocs.length ? clientDocs.map(mapClient) : prev.clients,
     }))
-  }, [projectDocs, explorationDocs, onContent])
+  }, [projectDocs, explorationDocs, clientDocs, onContent])
 
   return null
 }
