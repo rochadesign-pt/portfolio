@@ -361,7 +361,7 @@ export default function Home() {
         <Exploration />
       </div>
       <div className="relative z-10">
-        <CTASection />
+        <CTASection stacked />
       </div>
     </PageTransition>
   )

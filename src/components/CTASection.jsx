@@ -63,6 +63,7 @@ const tagClass =
   'theme-invert absolute inline-block rounded-full border border-line bg-bg px-3 py-1.5 text-sm font-medium text-text md:px-3.5'
 
 const HIDDEN = 'inset(100% 0% 0% 0%)'
+const SHOWN = 'inset(0% 0% 0% 0%)'
 
 // Closing CTA. Starts in the page colour (continuous with the section above),
 // then a shrinking-rectangle pattern reveals the inverted colour, which the
@@ -72,7 +73,11 @@ const HIDDEN = 'inset(100% 0% 0% 0%)'
 // position and writes clip-path (+ -webkit-clip-path) straight onto the column
 // nodes. No framer scroll/inView hooks: it tracks native touch scroll and Lenis
 // alike, on every browser, and can't get stuck on a stale measurement.
-export default function CTASection() {
+// `stacked` (homepage): the CTA is the second half of a sticky stack — it slides
+// up and over the pinned "lab", so the slide itself is the reveal. Running the
+// columnar clip-path on top of that motion reads as a blocky staircase, so in
+// this mode the CTA arrives already solid (fully inverted) and just glides up.
+export default function CTASection({ stacked = false }) {
   const { t } = useLang()
   const { pathname } = useLocation()
   const ref = useRef(null)
@@ -80,6 +85,7 @@ export default function CTASection() {
   const reduce = useReducedMotion()
   const isContact = pathname === '/contact'
   const [isMobile, setIsMobile] = useState(false)
+  const initialClip = stacked ? SHOWN : HIDDEN
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
@@ -90,7 +96,9 @@ export default function CTASection() {
   }, [])
 
   useEffect(() => {
-    if (isContact) return
+    // In stacked mode the columns stay fully shown (solid), so there's no reveal
+    // loop to run — the rise over the lab carries the motion instead.
+    if (isContact || stacked) return
     const section = ref.current
     if (!section) return
 
@@ -125,7 +133,7 @@ export default function CTASection() {
     })
 
     return () => cancelAnimationFrame(rafId)
-  }, [isContact, pathname])
+  }, [isContact, pathname, stacked])
 
   if (isContact) return null
 
@@ -146,7 +154,7 @@ export default function CTASection() {
             key={i}
             ref={(el) => (colRefs.current[i] = el)}
             className="theme-invert absolute inset-y-0 overflow-hidden bg-bg"
-            style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: HIDDEN, WebkitClipPath: HIDDEN }}
+            style={{ left: `${col.left}%`, width: `${col.width}%`, clipPath: initialClip, WebkitClipPath: initialClip }}
           >
             <div
               className="absolute inset-y-0"
