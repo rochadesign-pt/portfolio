@@ -7,7 +7,6 @@ import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import WorkCard from '../components/WorkCard'
-import WorkStrip from '../components/WorkStrip'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -24,29 +23,24 @@ export default function Work() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[1400px] px-6 pt-40 pb-16 md:px-10 md:pt-52">
-        <Reveal className="mb-4">
-          <span className="label">{t.workPage.eyebrow}</span>
-        </Reveal>
-        <MaskReveal>
-          <h1 className="display text-6xl md:text-8xl">
-            {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
-          </h1>
-        </MaskReveal>
-        <Reveal className="mt-6 max-w-xl">
-          <p className="text-lg text-muted">{t.workPage.sub}</p>
-        </Reveal>
-      </section>
+      {/* Title hero — sized so only a sliver of the first projects peeks below
+          the fold, inviting the scroll. */}
+      <section className="mx-auto flex min-h-[84svh] max-w-[1400px] flex-col px-6 pt-40 pb-10 md:px-10 md:pt-52">
+        <div>
+          <Reveal className="mb-4">
+            <span className="label">{t.workPage.eyebrow}</span>
+          </Reveal>
+          <MaskReveal>
+            <h1 className="display text-6xl md:text-8xl">
+              {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
+            </h1>
+          </MaskReveal>
+          <Reveal className="mt-6 max-w-xl">
+            <p className="text-lg text-muted">{t.workPage.sub}</p>
+          </Reveal>
+        </div>
 
-      {/* Full-bleed work showcase strip */}
-      <section className="mb-8 pl-6 md:pl-10">
-        <Reveal>
-          <WorkStrip projects={projects} />
-        </Reveal>
-      </section>
-
-      <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
-        <Reveal className="mb-12 flex flex-wrap gap-2">
+        <Reveal className="mt-auto flex flex-wrap gap-2 pt-16">
           {filters.map((f) => (
             <button
               key={f}
@@ -61,6 +55,9 @@ export default function Work() {
             </button>
           ))}
         </Reveal>
+      </section>
+
+      <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
         <motion.div layout className="grid gap-x-6 gap-y-14 md:grid-cols-2">
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (
@@ -71,9 +68,9 @@ export default function Work() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.4, ease: easeSoft }}
-                className={i % 2 === 1 ? 'md:mt-16' : ''}
+                className={i % 2 === 1 && i !== 1 ? 'md:mt-16' : ''}
               >
-                <WorkCard project={p} index={i} titleAs="h2" />
+                <WorkCard project={p} index={i} titleAs="h2" eager={i < 2} />
               </motion.div>
             ))}
           </AnimatePresence>

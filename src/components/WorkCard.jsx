@@ -8,7 +8,7 @@ import Reveal from './Reveal'
 import { useZoom } from '../context/Zoom'
 import { track } from '../lib/analytics'
 
-export default function WorkCard({ project, index = 0, titleAs = 'h3' }) {
+export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = false }) {
   const { lang } = useLang()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
@@ -29,7 +29,7 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3' }) {
       <Link to={`/work/${project.slug}`} onClick={onClick} className="group block">
         <div ref={coverRef} className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
-            <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" />
+            <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" eager={eager} />
           </motion.div>
 
           {/* Hover tags — category + case-study marker */}
