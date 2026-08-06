@@ -208,7 +208,6 @@ function ServicesPreview() {
               <span className="mt-8 block text-text/60 transition-colors duration-500 group-hover:text-text" aria-hidden="true">
                 {serviceIcons[s.key]}
               </span>
-              <p className="mt-6 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
 
               {/* Title pinned to the bottom (where the arrow sits). On hover it
                   rises and the breakdown + arrow open below it — kinetic height
