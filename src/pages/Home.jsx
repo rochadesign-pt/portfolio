@@ -153,6 +153,34 @@ function FeaturedWork() {
   )
 }
 
+// Minimal line-art marks per service — abstract, on-brand, stroke = currentColor.
+const serviceIcons = {
+  branding: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.25" className="h-11 w-11">
+      <circle cx="19" cy="20" r="10.5" />
+      <circle cx="29" cy="20" r="10.5" />
+      <circle cx="24" cy="29" r="10.5" />
+    </svg>
+  ),
+  web: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" className="h-11 w-11">
+      <rect x="9" y="12" width="30" height="21" rx="1.5" />
+      <path d="M9 18h30" />
+      <path d="M12.5 15.2h.01M15 15.2h.01M17.5 15.2h.01" />
+      <path d="M19 40h10M24 33v7" />
+    </svg>
+  ),
+  product: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" className="h-11 w-11">
+      <circle cx="14" cy="16" r="3" />
+      <circle cx="34" cy="14" r="3" />
+      <circle cx="23" cy="31" r="3" />
+      <circle cx="35" cy="33" r="3" />
+      <path d="M16.6 17.6l4 11M31.2 15.2l-5.6 13.2M25.8 30.6l6.4 2" />
+    </svg>
+  ),
+}
+
 function ServicesPreview() {
   const { t, lang } = useLang()
   return (
@@ -168,23 +196,32 @@ function ServicesPreview() {
         </MaskReveal>
       </div>
 
-      <div className="border-t border-line">
-        {services.map((s) => (
-          <Reveal key={s.key}>
-            <Link
-              to="/services"
-              className="group grid grid-cols-[auto_1fr] items-center gap-6 border-b border-line py-8 transition-colors md:grid-cols-[80px_1fr_auto] md:py-10"
-            >
-              <span className="display text-2xl text-muted transition-colors group-hover:text-accent-text md:text-3xl">
-                {s.n}
+      <div className="grid border-t border-line md:grid-cols-3">
+        {services.map((s, i) => (
+          <Reveal
+            key={s.key}
+            delay={i * 0.06}
+            className="border-b border-line md:border-b-0 md:border-l md:first:border-l-0"
+          >
+            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[380px] md:px-8 md:py-10">
+              <span className="label text-muted transition-colors duration-500 group-hover:text-text">{s.n}</span>
+              <span className="mt-8 block text-text/60 transition-colors duration-500 group-hover:text-text" aria-hidden="true">
+                {serviceIcons[s.key]}
               </span>
-              <div>
-                <h3 className="display text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">
-                  {s.title[lang]}
-                </h3>
-                <p className="mt-2 max-w-xl text-sm text-muted md:text-base">{s.desc[lang]}</p>
-              </div>
-              <span className="hidden text-2xl text-muted transition-all duration-500 group-hover:translate-x-2 group-hover:text-text md:block">
+              <h3 className="display mt-8 text-2xl md:text-3xl">{s.title[lang]}</h3>
+              <p className="mt-3 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
+
+              {/* Service breakdown — bullets appear on hover (always shown on touch). */}
+              <ul className="mt-6 space-y-2 opacity-100 transition-all duration-500 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                {s.items[lang].map((it) => (
+                  <li key={it} className="flex items-center gap-2.5 text-sm text-text/75">
+                    <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
+                    {it}
+                  </li>
+                ))}
+              </ul>
+
+              <span className="mt-auto pt-8 text-xl text-muted transition-all duration-500 group-hover:translate-x-1 group-hover:text-text">
                 →
               </span>
             </Link>
