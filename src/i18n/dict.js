@@ -107,9 +107,17 @@ export const dict = {
     },
     workPage: {
       eyebrow: 'Portfólio',
-      title: 'Todo o',
-      titleAccent: 'trabalho',
-      lead: 'Não desenhamos para preencher portefólio. Cada marca, cada site, cada produto aqui nasceu de um problema real e foi construído com intenção — do primeiro esboço ao último pixel.',
+      // Statement-as-hero: all Switzer (no serif), body dimmed with scattered
+      // key phrases at full strength — the emphasis carries the message.
+      statement: [
+        { t: 'Não desenhamos para preencher portefólio. Cada marca, cada site, cada produto nasceu de um ' },
+        { t: 'problema real', em: true },
+        { t: ', construído com ' },
+        { t: 'intenção', em: true },
+        { t: ' — do primeiro esboço ao ' },
+        { t: 'último pixel', em: true },
+        { t: '.' },
+      ],
       sub: 'Branding, web e produto digital. Filtra por disciplina.',
       filterAll: 'Tudo',
     },
@@ -280,9 +288,15 @@ export const dict = {
     },
     workPage: {
       eyebrow: 'Portfolio',
-      title: 'All',
-      titleAccent: 'work',
-      lead: 'We don’t design to fill a portfolio. Every brand, every site, every product here started from a real problem and was built with intent — from the first sketch to the last pixel.',
+      statement: [
+        { t: 'We don’t design to fill a portfolio. Every brand, every site, every product started from a ' },
+        { t: 'real problem', em: true },
+        { t: ', built with ' },
+        { t: 'intent', em: true },
+        { t: ' — from the first sketch to the ' },
+        { t: 'last pixel', em: true },
+        { t: '.' },
+      ],
       sub: 'Branding, web and digital product. Filter by discipline.',
       filterAll: 'All',
     },
