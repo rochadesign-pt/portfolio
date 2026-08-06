@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Serif accent — teste de fontes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Fraunces:ital,wght@1,400&family=Playfair+Display:ital@1&family=Cormorant:ital,wght@1,500&family=Newsreader:ital,opsz@1,6..72&family=DM+Serif+Display:ital@1&family=Bodoni+Moda:ital,opsz@1,6..96&display=swap" />
+<style>
+  :root { --bg:#0b0b0d; --text:#f2efe9; --muted:#8f8b83; --line:#26262a; --acc:#ffc700; }
+  :root[data-theme="light"] { --bg:#f2efe9; --text:#17140f; --muted:#6f6b63; --line:#dcd8cf; --acc:#17140f; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Switzer',system-ui,sans-serif;
+         padding:clamp(28px,5vw,72px); -webkit-font-smoothing:antialiased; transition:background .3s,color .3s; }
+  header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:48px; }
+  .head { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .sub { font-size:14px; color:var(--muted); margin-top:6px; max-width:52ch; }
+  button { font-family:inherit; font-size:13px; color:var(--text); background:transparent;
+           border:1px solid var(--line); border-radius:999px; padding:8px 16px; cursor:pointer; }
+  .row { border-top:1px solid var(--line); padding:clamp(22px,3vw,36px) 0; }
+  .name { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+  .name b { color:var(--acc); }
+  .line { font-weight:300; font-size:clamp(28px,5.4vw,52px); line-height:1.06; letter-spacing:-0.045em; }
+  .acc { font-style:italic; font-weight:400; letter-spacing:-0.035em; color:var(--acc); }
+  .f-instrument .acc { font-family:'Instrument Serif',serif; }
+  .f-fraunces   .acc { font-family:'Fraunces',serif; }
+  .f-playfair   .acc { font-family:'Playfair Display',serif; }
+  .f-cormorant  .acc { font-family:'Cormorant',serif; font-weight:500; }
+  .f-newsreader .acc { font-family:'Newsreader',serif; }
+  .f-dmserif    .acc { font-family:'DM Serif Display',serif; }
+  .f-bodoni     .acc { font-family:'Bodoni Moda',serif; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="head">Serif accent — opções Google Fonts</div>
+      <div class="sub">Switzer light + accent italic. A atual é a Instrument Serif (nº1). Diz-me o número da que queres aplicar no site.</div>
+    </div>
+    <button id="toggle">☀︎ / ☾ tema</button>
+  </header>
+
+  <div class="row f-instrument"><div class="name"><b>1 · Instrument Serif</b> (atual)</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-fraunces"><div class="name">2 · Fraunces</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-playfair"><div class="name">3 · Playfair Display</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-cormorant"><div class="name">4 · Cormorant</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-newsreader"><div class="name">5 · Newsreader</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-dmserif"><div class="name">6 · DM Serif Display</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+  <div class="row f-bodoni"><div class="name">7 · Bodoni Moda</div><div class="line">Desenhamos marcas e produtos digitais com <span class="acc">craft e intenção.</span></div></div>
+
+  <script>
+    document.getElementById('toggle').addEventListener('click', function () {
+      var r = document.documentElement
+      r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark'
+    })
+  </script>
+</body>
+</html>
