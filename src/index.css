@@ -113,7 +113,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.035em;
 }
 
 /* Reusable link underline that grows on hover */
