@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from './theme/ThemeContext'
@@ -14,26 +15,30 @@ import Preloader from './components/Preloader'
 import Analytics from './components/Analytics'
 // TypePanel (type playground) removed — typography locked to Switzer Light.
 import Home from './pages/Home'
-import Work from './pages/Work'
-import Project from './pages/Project'
-import Services from './pages/Services'
-import Studio from './pages/Studio'
-import Contact from './pages/Contact'
-import NotFound from './pages/NotFound'
+// Secondary routes are split out of the initial bundle — the landing (Home)
+// loads only its own code; other pages load on navigation.
+const Work = lazy(() => import('./pages/Work'))
+const Project = lazy(() => import('./pages/Project'))
+const Services = lazy(() => import('./pages/Services'))
+const Studio = lazy(() => import('./pages/Studio'))
+const Contact = lazy(() => import('./pages/Contact'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function AnimatedRoutes() {
   const location = useLocation()
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/work" element={<Work />} />
-        <Route path="/work/:slug" element={<Project />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/studio" element={<Studio />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/work" element={<Work />} />
+          <Route path="/work/:slug" element={<Project />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/studio" element={<Studio />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </AnimatePresence>
   )
 }

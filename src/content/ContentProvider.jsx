@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { projects as localProjects } from '../data/projects'
 import { explorations as localExplorations } from '../data/site'
-import { sanityConfigured, fetchProjects, fetchExplorations } from '../lib/sanity'
 
 // Serves content to the app. Starts with the bundled local data (so the site
 // renders instantly and never breaks), then hydrates from Sanity when it's
@@ -18,20 +17,24 @@ export function ContentProvider({ children }) {
   const [explorations, setExplorations] = useState(localExplorations)
 
   useEffect(() => {
-    if (!sanityConfigured) return
     let alive = true
-    fetchProjects()
-      .then((d) => {
-        console.info('[sanity] projects fetched:', d?.length ?? 'null', d?.map?.((p) => p.title))
-        if (alive && d && d.length) setProjects(d)
+    // Load the Sanity client lazily (dynamic import) so its libraries stay out
+    // of the initial bundle — the site already renders from local data.
+    import('../lib/sanity')
+      .then(({ sanityConfigured, fetchProjects, fetchExplorations }) => {
+        if (!sanityConfigured || !alive) return
+        fetchProjects()
+          .then((d) => {
+            if (alive && d && d.length) setProjects(d)
+          })
+          .catch((e) => console.error('[sanity] projects fetch FAILED:', e?.message || e))
+        fetchExplorations()
+          .then((d) => {
+            if (alive && d && d.length) setExplorations(d)
+          })
+          .catch((e) => console.error('[sanity] explorations fetch FAILED:', e?.message || e))
       })
-      .catch((e) => console.error('[sanity] projects fetch FAILED:', e?.message || e))
-    fetchExplorations()
-      .then((d) => {
-        console.info('[sanity] explorations fetched:', d?.length ?? 'null')
-        if (alive && d && d.length) setExplorations(d)
-      })
-      .catch((e) => console.error('[sanity] explorations fetch FAILED:', e?.message || e))
+      .catch(() => {})
     return () => {
       alive = false
     }
