@@ -35,13 +35,9 @@ export default function Work() {
               {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
             </h1>
           </MaskReveal>
-          <Reveal className="mt-8 max-w-3xl">
-            <p className="text-xl leading-[1.4] md:text-2xl md:leading-[1.35]">
-              {t.workPage.headline.map((seg, i) => (
-                <span key={i} className={seg.em ? 'text-text' : 'text-text/55'}>
-                  {seg.t}
-                </span>
-              ))}
+          <Reveal className="mt-8 max-w-3xl md:mt-10">
+            <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
+              {t.workPage.lead}
             </p>
           </Reveal>
           <Reveal className="mt-6 max-w-xl">
