@@ -213,7 +213,7 @@ function ServicesPreview() {
                   rise as one and the breakdown + arrow open below — kinetic height
                   (grid-rows 0fr→1fr) with an accelerating curve, plus a staggered
                   fade so items arrive one after another. Always open on touch. */}
-              <div className="mt-auto">
+              <div className="mt-16 md:mt-auto">
                 <h3 className="display text-2xl md:text-3xl">{s.title[lang]}</h3>
                 <p className="mt-3 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
                 <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-[650ms] [transition-timing-function:cubic-bezier(0.65,0,0.1,1)] md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr]">
@@ -266,11 +266,11 @@ function StatsBand() {
               <Counter
                 value={s.value}
                 suffix={s.suffix}
-                className="display block text-6xl leading-none tabular-nums md:text-7xl"
+                className="display block text-7xl leading-[0.85] tabular-nums md:text-[6.5rem]"
               />
-              <p className="mt-5 flex items-center gap-2 text-sm text-muted">
+              <p className="mt-6 flex items-center gap-2">
                 <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
-                {s.label[lang]}
+                <span className="label">{s.label[lang]}</span>
               </p>
             </Reveal>
           ))}
