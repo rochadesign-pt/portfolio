@@ -203,27 +203,37 @@ function ServicesPreview() {
             delay={i * 0.06}
             className="border-b border-line md:border-b-0 md:border-l md:first:border-l-0"
           >
-            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[380px] md:px-8 md:py-10">
-              <span className="label text-muted transition-colors duration-500 group-hover:text-text">{s.n}</span>
+            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[440px] md:px-8 md:py-10">
+              <div className="flex items-center justify-between">
+                <span className="label text-muted transition-colors duration-500 group-hover:text-text">{s.n}</span>
+                <span className="text-lg text-muted transition-all duration-500 group-hover:translate-x-1 group-hover:text-text">
+                  →
+                </span>
+              </div>
               <span className="mt-8 block text-text/60 transition-colors duration-500 group-hover:text-text" aria-hidden="true">
                 {serviceIcons[s.key]}
               </span>
-              <h3 className="display mt-8 text-2xl md:text-3xl">{s.title[lang]}</h3>
-              <p className="mt-3 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
+              <p className="mt-6 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
 
-              {/* Service breakdown — bullets appear on hover (always shown on touch). */}
-              <ul className="mt-6 space-y-2 opacity-100 transition-all duration-500 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                {s.items[lang].map((it) => (
-                  <li key={it} className="flex items-center gap-2.5 text-sm text-text/75">
-                    <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
-                    {it}
-                  </li>
-                ))}
-              </ul>
-
-              <span className="mt-auto pt-8 text-xl text-muted transition-all duration-500 group-hover:translate-x-1 group-hover:text-text">
-                →
-              </span>
+              {/* Name pinned to the bottom. On hover it rises (kinetic, with
+                  acceleration) as the breakdown opens in the space below it.
+                  grid-rows 0fr→1fr animates the height fluidly; always open on touch. */}
+              <div className="mt-auto">
+                <h3 className="display text-2xl md:text-3xl">{s.title[lang]}</h3>
+                <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-[600ms] [transition-timing-function:cubic-bezier(0.7,0,0.2,1)] md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr]">
+                  <ul className="overflow-hidden opacity-100 transition-opacity duration-[600ms] md:opacity-0 md:group-hover:opacity-100">
+                    {s.items[lang].map((it, idx) => (
+                      <li
+                        key={it}
+                        className={`flex items-center gap-2.5 text-sm text-text/75 ${idx === 0 ? 'pt-5' : 'pt-2'}`}
+                      >
+                        <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </Link>
           </Reveal>
         ))}
