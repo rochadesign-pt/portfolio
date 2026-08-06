@@ -272,9 +272,13 @@ function StatsBand() {
 }
 
 function ClientsBand() {
+  const { t } = useLang()
   const { clients } = useContent()
   return (
-    <section className="py-12">
+    <section className="py-14 md:py-16">
+      <Reveal className="mx-auto mb-8 max-w-[1400px] px-6 md:px-10">
+        <span className="label">{t.clients.label}</span>
+      </Reveal>
       <Marquee
         items={clients}
         separator={null}

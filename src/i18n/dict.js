@@ -66,6 +66,9 @@ export const dict = {
       label: 'Em números',
       body: 'Números não fazem bom design. Mas dão contexto ao que construímos.',
     },
+    clients: {
+      label: 'Confiam em nós',
+    },
     studioTeaser: {
       label: 'O estúdio',
       body: 'Pequenos por escolha. Trabalhamos em poucos projetos de cada vez para nos entregarmos a sério a cada um.',
@@ -234,6 +237,9 @@ export const dict = {
     stats: {
       label: 'By the numbers',
       body: 'Numbers do not make good design. But they give context to what we build.',
+    },
+    clients: {
+      label: 'Trusted by',
     },
     studioTeaser: {
       label: 'The studio',
