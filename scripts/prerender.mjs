@@ -1,10 +1,11 @@
-// Static prerender. After the client and SSR bundles are built, render each
-// route to HTML in Node, patch the <head> with that route's SEO (title,
-// description, canonical, OG/Twitter) — since useSeo runs client-side only —
-// and inline the app HTML into the built index.html template, writing
-// dist/<route>/index.html. No browser involved — Vercel-friendly.
+// Per-route <head> prerender. After `vite build`, write dist/<route>/index.html
+// for every route with that route's SEO baked into the <head> (title,
+// description, canonical, Open Graph, Twitter) — so social scrapers and crawlers
+// that don't run JS get the correct per-page metadata. The <body> stays the
+// empty SPA shell: the client boots normally (createRoot), so there is no double
+// render and no hydration mismatch from the localStorage-based language/theme.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import { dict } from '../src/i18n/dict.js'
 import { projects } from '../src/data/projects.js'
@@ -32,39 +33,35 @@ for (const p of projects) {
   }
 }
 
-const routes = Object.keys(routeMeta)
+// Match a <meta> tag by one of its attributes, tolerant of multi-line
+// formatting and attribute order ([^>] spans newlines but stops at the tag's >).
+const metaRe = (attr, value) => new RegExp(`<meta\\b[^>]*\\b${attr}="${value}"[^>]*>`)
+const CANONICAL_RE = /<link\b[^>]*\brel="canonical"[^>]*>/
 
-// Rewrite the head tags that are route-specific. Regexes tolerate the
-// multi-line attribute formatting used in index.html.
+// Rewrite the head tags that are route-specific.
 function patchHead(html, { title, description, url }) {
   const t = esc(title)
   const d = esc(description)
   return html
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`)
-    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`)
-    .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${url}" />`)
-    .replace(/<meta name="description"[\s\S]*?>/, `<meta name="description" content="${d}" />`)
-    .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${t}" />`)
-    .replace(/<meta property="og:description"[\s\S]*?>/, `<meta property="og:description" content="${d}" />`)
-    .replace(/<meta name="twitter:title"[^>]*>/, `<meta name="twitter:title" content="${t}" />`)
-    .replace(/<meta name="twitter:description"[\s\S]*?>/, `<meta name="twitter:description" content="${d}" />`)
+    .replace(CANONICAL_RE, `<link rel="canonical" href="${url}" />`)
+    .replace(metaRe('property', 'og:url'), `<meta property="og:url" content="${url}" />`)
+    .replace(metaRe('name', 'description'), `<meta name="description" content="${d}" />`)
+    .replace(metaRe('property', 'og:title'), `<meta property="og:title" content="${t}" />`)
+    .replace(metaRe('property', 'og:description'), `<meta property="og:description" content="${d}" />`)
+    .replace(metaRe('name', 'twitter:title'), `<meta name="twitter:title" content="${t}" />`)
+    .replace(metaRe('name', 'twitter:description'), `<meta name="twitter:description" content="${d}" />`)
 }
 
 const template = readFileSync(resolve(root, 'dist/index.html'), 'utf8')
-if (!template.includes('<div id="root"></div>')) {
-  throw new Error('prerender: could not find <div id="root"></div> in template')
+if (!metaRe('name', 'description').test(template) || !CANONICAL_RE.test(template)) {
+  throw new Error('prerender: description meta or canonical link not found in built index.html')
 }
-const { render } = await import(pathToFileURL(resolve(root, 'dist-server/entry-server.js')).href)
 
 let ok = 0
-for (const route of routes) {
-  const meta = routeMeta[route]
+for (const [route, meta] of Object.entries(routeMeta)) {
   const url = route === '/' ? `${SITE}/` : `${SITE}${route}`
-  const appHtml = render(route)
-  const html = patchHead(template, { ...meta, url }).replace(
-    '<div id="root"></div>',
-    `<div id="root">${appHtml}</div>`,
-  )
+  const html = patchHead(template, { ...meta, url })
   const outPath =
     route === '/' ? resolve(root, 'dist/index.html') : resolve(root, `dist${route}/index.html`)
   mkdirSync(dirname(outPath), { recursive: true })
@@ -72,4 +69,4 @@ for (const route of routes) {
   ok++
 }
 
-console.log(`[prerender] wrote ${ok} html pages`)
+console.log(`[prerender] wrote per-route <head> for ${ok} pages`)
