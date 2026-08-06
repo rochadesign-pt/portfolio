@@ -203,7 +203,7 @@ function ServicesPreview() {
             delay={i * 0.06}
             className="border-b border-line md:border-b-0 md:border-l md:first:border-l-0"
           >
-            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[480px] md:px-8 md:py-10">
+            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[520px] md:px-8 md:py-10">
               <span className="label text-muted transition-colors duration-500 group-hover:text-text">{s.n}</span>
               <span className="mt-8 block text-text/60 transition-colors duration-500 group-hover:text-text" aria-hidden="true">
                 {serviceIcons[s.key]}
