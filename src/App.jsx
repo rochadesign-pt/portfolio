@@ -57,32 +57,47 @@ function RoutedCTA() {
   return <CTASection key={pathname} />
 }
 
-export default function App() {
+// App-wide providers, router-agnostic. Shared by the client entry (wrapped in
+// BrowserRouter) and the prerender entry (wrapped in StaticRouter).
+export function Providers({ children }) {
   return (
     <ThemeProvider>
       <LanguageProvider>
-      <ContentProvider>
-      <BrowserRouter>
-        <ZoomProvider>
-          <MenuProvider>
-            <Analytics />
-            <Preloader />
-            <SmoothScroll>
-              <div className="grain" aria-hidden="true" />
-              <Nav />
-              <MenuPanel />
-              <PageShell>
-                <AnimatedRoutes />
-                <RoutedCTA />
-                <Footer />
-              </PageShell>
-              <TypePanel />
-            </SmoothScroll>
-          </MenuProvider>
-        </ZoomProvider>
-      </BrowserRouter>
-      </ContentProvider>
+        <ContentProvider>{children}</ContentProvider>
       </LanguageProvider>
     </ThemeProvider>
+  )
+}
+
+// Everything that lives inside the router — the interactive shell and routes.
+export function Shell() {
+  return (
+    <ZoomProvider>
+      <MenuProvider>
+        <Analytics />
+        <Preloader />
+        <SmoothScroll>
+          <div className="grain" aria-hidden="true" />
+          <Nav />
+          <MenuPanel />
+          <PageShell>
+            <AnimatedRoutes />
+            <RoutedCTA />
+            <Footer />
+          </PageShell>
+          <TypePanel />
+        </SmoothScroll>
+      </MenuProvider>
+    </ZoomProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <Providers>
+      <BrowserRouter>
+        <Shell />
+      </BrowserRouter>
+    </Providers>
   )
 }
