@@ -22,7 +22,7 @@ export default function Counter({ value, suffix = '', className = '' }) {
         n: value,
         duration: 1.4,
         ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        scrollTrigger: { trigger: el, start: 'top 75%', once: true },
         onUpdate: () => {
           el.textContent = `${Math.round(obj.n)}${suffix}`
         },

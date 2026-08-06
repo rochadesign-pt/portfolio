@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLang } from '../i18n/LanguageContext'
 import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
@@ -15,6 +18,8 @@ import Exploration from '../components/Exploration'
 import DotField from '../components/DotField'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
+
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 function Hero() {
   const { t } = useLang()
@@ -94,23 +99,34 @@ function Hero() {
   )
 }
 
-// One word of the manifesto — its opacity is driven by the section's scroll
-// progress, so the sentence "lights up" word by word as you scroll. Rendered
-// inline with real spaces, so the text stays intact for SEO / screen readers.
-function ManifestoWord({ children, progress, range }) {
-  const opacity = useTransform(progress, range, [0.16, 1])
-  return <motion.span style={{ opacity }}>{children}</motion.span>
-}
-
-// Manifesto + metrics in one section: the statement illuminates on scroll while
-// the numbers count up as they enter view.
+// Manifesto + metrics in one section: the statement illuminates character by
+// character as you scroll (GSAP scrub over the section), while the numbers count
+// up as they enter view. Each word is kept whole for wrapping and real spaces
+// are preserved between them, so the copy stays intact for SEO / screen readers.
 function ManifestoStats() {
   const { t, lang } = useLang()
   const reduce = useReducedMotion()
   const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.55'] })
   const words = t.intro.body.split(' ')
-  const n = words.length
+
+  useGSAP(
+    () => {
+      const chars = ref.current.querySelectorAll('.mf-char')
+      if (reduce) {
+        gsap.set(chars, { opacity: 1 })
+        return
+      }
+      gsap.set(chars, { opacity: 0.16 })
+      gsap.to(chars, {
+        opacity: 1,
+        ease: 'none',
+        duration: 0.6,
+        stagger: 0.15,
+        scrollTrigger: { trigger: ref.current, start: 'top 80%', end: 'top 30%', scrub: 0.4 },
+      })
+    },
+    { scope: ref, dependencies: [t.intro.body, reduce] },
+  )
 
   return (
     <section ref={ref} className="border-y border-line bg-surface/40">
@@ -120,15 +136,18 @@ function ManifestoStats() {
         </Reveal>
 
         <p className="display max-w-5xl text-3xl leading-[1.22] md:text-5xl md:leading-[1.25]">
-          {words.map((w, i) =>
-            reduce ? (
-              <span key={i}>{w + ' '}</span>
-            ) : (
-              <ManifestoWord key={i} progress={scrollYProgress} range={[i / n, (i + 1) / n]}>
-                {w + ' '}
-              </ManifestoWord>
-            ),
-          )}
+          {words.map((w, wi) => (
+            <Fragment key={wi}>
+              <span className="inline-block">
+                {[...w].map((ch, ci) => (
+                  <span key={ci} className="mf-char">
+                    {ch}
+                  </span>
+                ))}
+              </span>
+              {wi < words.length - 1 ? ' ' : ''}
+            </Fragment>
+          ))}
         </p>
 
         <div className="mt-16 grid grid-cols-2 border-t border-line md:mt-24 md:grid-cols-4">
