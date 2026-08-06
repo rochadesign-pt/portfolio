@@ -203,18 +203,19 @@ function ServicesPreview() {
             delay={i * 0.06}
             className="border-b border-line md:border-b-0 md:border-l md:first:border-l-0"
           >
-            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[460px] md:px-8 md:py-10">
+            <Link to="/services" className="group flex h-full flex-col py-8 md:min-h-[480px] md:px-8 md:py-10">
               <span className="label text-muted transition-colors duration-500 group-hover:text-text">{s.n}</span>
               <span className="mt-8 block text-text/60 transition-colors duration-500 group-hover:text-text" aria-hidden="true">
                 {serviceIcons[s.key]}
               </span>
 
-              {/* Title pinned to the bottom (where the arrow sits). On hover it
-                  rises and the breakdown + arrow open below it — kinetic height
+              {/* Title + description sit together at the bottom. On hover they
+                  rise as one and the breakdown + arrow open below — kinetic height
                   (grid-rows 0fr→1fr) with an accelerating curve, plus a staggered
                   fade so items arrive one after another. Always open on touch. */}
               <div className="mt-auto">
                 <h3 className="display text-2xl md:text-3xl">{s.title[lang]}</h3>
+                <p className="mt-3 max-w-xs text-sm text-muted">{s.desc[lang]}</p>
                 <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-[650ms] [transition-timing-function:cubic-bezier(0.65,0,0.1,1)] md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr]">
                   <div className="overflow-hidden">
                     <ul className="pt-6">
