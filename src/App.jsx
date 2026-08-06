@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from './theme/ThemeContext'
@@ -15,33 +14,30 @@ import Preloader from './components/Preloader'
 import Analytics from './components/Analytics'
 import VisualEditing from './components/VisualEditing'
 // TypePanel (type playground) removed — typography locked to Switzer Light.
+// All routes are eager: the page-transition choreography (AnimatePresence) and
+// the click-to-zoom (which mounts the destination underneath a growing overlay)
+// depend on routes being present synchronously — lazy chunks broke the zoom.
 import Home from './pages/Home'
-// Project stays eager: the click-to-zoom transition grows an overlay while the
-// project page mounts underneath, so the destination must be ready synchronously
-// (a lazy chunk would reveal a blank frame when the overlay clears).
+import Work from './pages/Work'
 import Project from './pages/Project'
-// Other secondary routes are split out of the initial bundle and load on nav.
-const Work = lazy(() => import('./pages/Work'))
-const Services = lazy(() => import('./pages/Services'))
-const Studio = lazy(() => import('./pages/Studio'))
-const Contact = lazy(() => import('./pages/Contact'))
-const NotFound = lazy(() => import('./pages/NotFound'))
+import Services from './pages/Services'
+import Studio from './pages/Studio'
+import Contact from './pages/Contact'
+import NotFound from './pages/NotFound'
 
 function AnimatedRoutes() {
   const location = useLocation()
   return (
     <AnimatePresence mode="wait">
-      <Suspense fallback={null}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/work/:slug" element={<Project />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/studio" element={<Studio />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Home />} />
+        <Route path="/work" element={<Work />} />
+        <Route path="/work/:slug" element={<Project />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/studio" element={<Studio />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </AnimatePresence>
   )
 }
