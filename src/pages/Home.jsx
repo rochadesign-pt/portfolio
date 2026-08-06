@@ -256,13 +256,22 @@ function StatsBand() {
           <h2 className="label mb-4 block">{t.stats.label}</h2>
           <p className="text-lg text-muted">{t.stats.body}</p>
         </Reveal>
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+        <div className="grid grid-cols-2 border-t border-line md:grid-cols-4">
           {stats.map((s, i) => (
-            <Reveal key={s.label.en} delay={i * 0.06}>
-              <div className="display text-6xl md:text-7xl">
-                <Counter value={s.value} suffix={s.suffix} />
-              </div>
-              <p className="mt-3 text-sm text-muted">{s.label[lang]}</p>
+            <Reveal
+              key={s.label.en}
+              delay={i * 0.06}
+              className="border-b border-line py-8 md:border-b-0 md:border-l md:pl-8 md:first:border-l-0 md:first:pl-0"
+            >
+              <Counter
+                value={s.value}
+                suffix={s.suffix}
+                className="display block text-6xl leading-none tabular-nums md:text-7xl"
+              />
+              <p className="mt-5 flex items-center gap-2 text-sm text-muted">
+                <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
+                {s.label[lang]}
+              </p>
             </Reveal>
           ))}
         </div>
