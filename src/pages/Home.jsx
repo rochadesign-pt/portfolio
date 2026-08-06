@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
@@ -94,19 +94,62 @@ function Hero() {
   )
 }
 
-function IntroStatement() {
-  const { t } = useLang()
+// One word of the manifesto — its opacity is driven by the section's scroll
+// progress, so the sentence "lights up" word by word as you scroll. Rendered
+// inline with real spaces, so the text stays intact for SEO / screen readers.
+function ManifestoWord({ children, progress, range }) {
+  const opacity = useTransform(progress, range, [0.16, 1])
+  return <motion.span style={{ opacity }}>{children}</motion.span>
+}
+
+// Manifesto + metrics in one section: the statement illuminates on scroll while
+// the numbers count up as they enter view.
+function ManifestoStats() {
+  const { t, lang } = useLang()
+  const reduce = useReducedMotion()
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.55'] })
+  const words = t.intro.body.split(' ')
+  const n = words.length
+
   return (
-    <section className="border-y border-line bg-surface/40">
+    <section ref={ref} className="border-y border-line bg-surface/40">
       <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-8">
-          <h2 className="label">{t.intro.label}</h2>
+        <Reveal className="mb-10">
+          <span className="label">{t.intro.label}</span>
         </Reveal>
-        <Reveal y={30}>
-          <p className="display max-w-5xl text-3xl leading-[1.15] md:text-5xl md:leading-[1.15]">
-            {t.intro.body}
-          </p>
-        </Reveal>
+
+        <p className="display max-w-5xl text-3xl leading-[1.22] md:text-5xl md:leading-[1.25]">
+          {words.map((w, i) =>
+            reduce ? (
+              <span key={i}>{w + ' '}</span>
+            ) : (
+              <ManifestoWord key={i} progress={scrollYProgress} range={[i / n, (i + 1) / n]}>
+                {w + ' '}
+              </ManifestoWord>
+            ),
+          )}
+        </p>
+
+        <div className="mt-16 grid grid-cols-2 border-t border-line md:mt-24 md:grid-cols-4">
+          {stats.map((s, i) => (
+            <Reveal
+              key={s.label.en}
+              delay={i * 0.06}
+              className="border-b border-line py-8 md:border-b-0 md:border-l md:pl-8 md:first:border-l-0 md:first:pl-0"
+            >
+              <Counter
+                value={s.value}
+                suffix={s.suffix}
+                className="display block text-6xl leading-[0.85] tabular-nums md:text-[5.5rem]"
+              />
+              <p className="mt-6 flex items-center gap-2">
+                <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
+                <span className="label">{s.label[lang]}</span>
+              </p>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -247,39 +290,6 @@ function ServicesPreview() {
   )
 }
 
-function StatsBand() {
-  const { t, lang } = useLang()
-  return (
-    <section className="border-y border-line bg-surface/40">
-      <div className="mx-auto max-w-[1400px] px-6 py-20 md:px-10 md:py-28">
-        <Reveal className="mb-14 max-w-md">
-          <h2 className="label mb-4 block">{t.stats.label}</h2>
-          <p className="text-lg text-muted">{t.stats.body}</p>
-        </Reveal>
-        <div className="grid grid-cols-2 border-t border-line md:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal
-              key={s.label.en}
-              delay={i * 0.06}
-              className="border-b border-line py-8 md:border-b-0 md:border-l md:pl-8 md:first:border-l-0 md:first:pl-0"
-            >
-              <Counter
-                value={s.value}
-                suffix={s.suffix}
-                className="display block text-7xl leading-[0.85] tabular-nums md:text-[6.5rem]"
-              />
-              <p className="mt-6 flex items-center gap-2">
-                <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
-                <span className="label">{s.label[lang]}</span>
-              </p>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function ClientsBand() {
   const { t } = useLang()
   const { clients } = useContent()
@@ -332,9 +342,8 @@ export default function Home() {
       <Hero />
       <ClientsBand />
       <FeaturedWork />
-      <IntroStatement />
+      <ManifestoStats />
       <ServicesPreview />
-      <StatsBand />
       <Exploration />
       <KeywordBand />
     </PageTransition>
