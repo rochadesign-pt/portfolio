@@ -10,9 +10,9 @@ import Nav from './components/Nav'
 import MenuPanel from './components/MenuPanel'
 import CTASection from './components/CTASection'
 import Footer from './components/Footer'
-import TypePanel from './components/TypePanel'
 import Preloader from './components/Preloader'
 import Analytics from './components/Analytics'
+// TypePanel (type playground) removed — typography locked to Switzer Light.
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Project from './pages/Project'
@@ -85,7 +85,6 @@ export function Shell() {
             <RoutedCTA />
             <Footer />
           </PageShell>
-          <TypePanel />
         </SmoothScroll>
       </MenuProvider>
     </ZoomProvider>

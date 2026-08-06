@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Grotesk (Neue Montreal–style) for display + body; serif for italic accents */
-  --font-sans: 'Geist', 'Neue Montreal', 'Inter', system-ui, sans-serif;
-  --font-display: 'Geist', 'Neue Montreal', 'Inter', system-ui, sans-serif;
+  /* Switzer for display + body; serif for italic accents */
+  --font-sans: 'Switzer', 'Inter', system-ui, sans-serif;
+  --font-display: 'Switzer', 'Inter', system-ui, sans-serif;
   --font-serif: 'Instrument Serif', Georgia, serif;
 
   --color-bg: #0b0b0d;
@@ -89,12 +89,12 @@
   font-weight: 500;
 }
 
-/* Grotesk display — headline treatment. Weight + tracking are live-tweakable. */
+/* Switzer display — headline treatment. Locked to the chosen Switzer Light. */
 @utility display {
   font-family: var(--font-display);
-  font-weight: var(--display-weight, 500);
+  font-weight: var(--display-weight, 300);
   line-height: 0.98;
-  letter-spacing: var(--display-tracking, -0.035em);
+  letter-spacing: var(--display-tracking, -0.045em);
 }
 
 /* Diagonal hatch fill for the "empty" process cells */

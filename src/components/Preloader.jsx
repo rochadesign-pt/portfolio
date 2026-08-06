@@ -34,12 +34,12 @@ export default function Preloader() {
       const counter = { v: 0 }
       const tl = gsap.timeline({ onComplete: finish })
 
-      tl.to('.pl-letter', { y: '0%', duration: 0.9, stagger: 0.03, ease: 'power3.out' }, 0.1)
+      tl.to('.pl-letter', { y: '0%', duration: 0.7, stagger: 0.025, ease: 'power3.out' }, 0.1)
         .to(
           counter,
           {
             v: 100,
-            duration: 2.1,
+            duration: 1.1,
             ease: 'power2.inOut',
             onUpdate: () => {
               if (countRef.current) countRef.current.textContent = String(Math.round(counter.v)).padStart(3, '0')
@@ -47,10 +47,10 @@ export default function Preloader() {
           },
           0,
         )
-        .to('.pl-bar', { scaleX: 1, duration: 2.1, ease: 'power2.inOut' }, 0)
-        .to('.pl-letter', { y: '-110%', duration: 0.6, stagger: 0.02, ease: 'power3.in' }, '+=0.2')
+        .to('.pl-bar', { scaleX: 1, duration: 1.1, ease: 'power2.inOut' }, 0)
+        .to('.pl-letter', { y: '-110%', duration: 0.5, stagger: 0.02, ease: 'power3.in' }, '+=0.15')
         .to('.pl-meta', { opacity: 0, duration: 0.3 }, '<')
-        .to(root.current, { yPercent: -100, duration: 0.9, ease: 'power4.inOut' }, '-=0.2')
+        .to(root.current, { yPercent: -100, duration: 0.7, ease: 'power4.inOut' }, '-=0.2')
     },
     { scope: root },
   )
