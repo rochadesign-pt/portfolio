@@ -67,6 +67,7 @@ export default function Project() {
   useSeo({
     title: p ? `${p.title} — Rocha Design Studio` : 'Rocha Design Studio',
     description: p ? `${p.category} · ${p.tagline[lang]}` : undefined,
+    image: p?.coverImage,
   })
 
   if (index === -1) return <Navigate to="/work" replace />
