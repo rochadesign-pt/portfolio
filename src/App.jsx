@@ -16,10 +16,12 @@ import Analytics from './components/Analytics'
 import VisualEditing from './components/VisualEditing'
 // TypePanel (type playground) removed — typography locked to Switzer Light.
 import Home from './pages/Home'
-// Secondary routes are split out of the initial bundle — the landing (Home)
-// loads only its own code; other pages load on navigation.
+// Project stays eager: the click-to-zoom transition grows an overlay while the
+// project page mounts underneath, so the destination must be ready synchronously
+// (a lazy chunk would reveal a blank frame when the overlay clears).
+import Project from './pages/Project'
+// Other secondary routes are split out of the initial bundle and load on nav.
 const Work = lazy(() => import('./pages/Work'))
-const Project = lazy(() => import('./pages/Project'))
 const Services = lazy(() => import('./pages/Services'))
 const Studio = lazy(() => import('./pages/Studio'))
 const Contact = lazy(() => import('./pages/Contact'))
