@@ -13,6 +13,7 @@ import CTASection from './components/CTASection'
 import Footer from './components/Footer'
 import Preloader from './components/Preloader'
 import Analytics from './components/Analytics'
+import VisualEditing from './components/VisualEditing'
 // TypePanel (type playground) removed — typography locked to Switzer Light.
 import Home from './pages/Home'
 // Secondary routes are split out of the initial bundle — the landing (Home)
@@ -80,6 +81,7 @@ export function Shell() {
     <ZoomProvider>
       <MenuProvider>
         <Analytics />
+        <VisualEditing />
         <Preloader />
         <SmoothScroll>
           <div className="grain" aria-hidden="true" />

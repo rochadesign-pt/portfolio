@@ -9,12 +9,28 @@ const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 
 export const sanityConfigured = Boolean(projectId)
 
+// Deployed Studio URL — where click-to-edit overlays send the editor.
+const studioUrl = import.meta.env.VITE_SANITY_STUDIO_URL || 'https://rocha-design-studio.sanity.studio'
+
+// Visual editing is active ONLY when the site runs inside the Studio's
+// Presentation iframe. Normal visitors are always the top window, so stega
+// stays disabled for them (no invisible characters in the rendered copy).
+export const isVisualEditing = typeof window !== 'undefined' && window.self !== window.top
+
 // No token: published content on a public dataset is read anonymously. This
 // only works when document _ids have no dots — a dotted _id is treated as a
 // sub-path and is hidden from unauthenticated reads (see fix-sanity-ids.mjs).
 // useCdn:false so content edits show up on the next refresh without CDN delay.
 export const client = sanityConfigured
-  ? createClient({ projectId, dataset, apiVersion: '2025-06-01', useCdn: false })
+  ? createClient({
+      projectId,
+      dataset,
+      apiVersion: '2025-06-01',
+      useCdn: false,
+      // stega encodes invisible source pointers into strings so the overlay can
+      // map rendered text back to its field. Enabled only inside Presentation.
+      stega: { studioUrl, enabled: isVisualEditing },
+    })
   : null
 
 const builder = client ? imageUrlBuilder(client) : null
