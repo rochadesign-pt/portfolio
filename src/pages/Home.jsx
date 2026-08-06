@@ -11,7 +11,6 @@ import Reveal from '../components/Reveal'
 import Marquee from '../components/Marquee'
 import Counter from '../components/Counter'
 import WorkCard from '../components/WorkCard'
-import Magnetic from '../components/Magnetic'
 import Exploration from '../components/Exploration'
 import DotField from '../components/DotField'
 import PageTransition from '../components/PageTransition'
@@ -241,45 +240,6 @@ function KeywordBand() {
   )
 }
 
-function StudioTeaser() {
-  const { t } = useLang()
-  return (
-    <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-      <Reveal y={30}>
-        <div className="relative isolate overflow-hidden rounded-2xl bg-black">
-          {/* Portrait, mirrored — Tiago sits on the right, the empty dark side on
-              the left holds the copy. `scale-x-[-1]` flips it without touching
-              the asset. */}
-          <img
-            src="/tiago-rocha.avif"
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 -z-10 h-full w-full scale-x-[-1] object-cover grayscale"
-            style={{ objectPosition: 'left center' }}
-          />
-          {/* Left-to-right scrim so the copy stays legible over the photo. */}
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/70 to-black/10" />
-
-          <div className="flex min-h-[440px] max-w-xl flex-col justify-center px-8 py-16 md:min-h-[580px] md:px-14 md:py-24">
-            <h2 className="label mb-6 block text-white/60">{t.studioTeaser.label}</h2>
-            <p className="display text-4xl leading-[1.1] text-white md:text-6xl">{t.studioTeaser.body}</p>
-            <Magnetic className="mt-10 inline-block">
-              <Link
-                to="/studio"
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm text-white transition-colors hover:border-white"
-              >
-                {t.studioTeaser.cta} →
-              </Link>
-            </Magnetic>
-          </div>
-        </div>
-      </Reveal>
-    </section>
-  )
-}
-
 export default function Home() {
   const { t } = useLang()
   useSeo(t.seo.home)
@@ -293,7 +253,6 @@ export default function Home() {
       <StatsBand />
       <Exploration />
       <KeywordBand />
-      <StudioTeaser />
     </PageTransition>
   )
 }
