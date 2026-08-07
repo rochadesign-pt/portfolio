@@ -4,6 +4,7 @@ import { contact, social } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
+import ContactTimeline from '../components/ContactTimeline'
 import PageTransition from '../components/PageTransition'
 import { track } from '../lib/analytics'
 import { useSeo } from '../lib/useSeo'
@@ -307,19 +308,7 @@ export default function Contact() {
           </MaskReveal>
         </div>
 
-        <div className="grid border-t border-line md:grid-cols-4">
-          {c.next.steps.map((step, i) => (
-            <Reveal
-              key={step.n}
-              delay={i * 0.06}
-              className="border-b border-line py-8 md:border-b-0 md:border-l md:px-8 md:py-10 md:first:border-l-0 md:first:pl-0"
-            >
-              <span className="display block text-5xl leading-none text-muted md:text-6xl">{step.n}</span>
-              <h3 className="mt-8 text-xl md:text-2xl">{step.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{step.desc}</p>
-            </Reveal>
-          ))}
-        </div>
+        <ContactTimeline steps={c.next.steps} />
       </section>
     </PageTransition>
   )
