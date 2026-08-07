@@ -6,7 +6,6 @@ import Cover from '../components/Cover'
 import Marquee from '../components/Marquee'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
-import { useContent } from '../content/ContentProvider'
 import { useSeo } from '../lib/useSeo'
 
 // B&W portrait for the "Behind it" section (in /public).
@@ -14,7 +13,6 @@ const behindPhoto = '/tiago-rocha.avif'
 
 export default function Studio() {
   const { t, lang } = useLang()
-  const { projects } = useContent()
   useSeo(t.seo.studio)
 
   return (
@@ -33,44 +31,36 @@ export default function Studio() {
         </Reveal>
       </section>
 
-      {/* Imagery band */}
-      <section className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <Reveal y={30} className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {projects.slice(0, 4).map((p, i) => (
-            <Cover
-              key={p.slug}
-              colors={p.cover}
-              image={p.coverImage}
-              className={`aspect-[3/4] rounded-xl ${i % 2 === 1 ? 'md:mt-10' : ''}`}
-            />
-          ))}
-        </Reveal>
-      </section>
-
-      {/* Behind it — manifesto + portrait */}
-      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-6">
-          <span className="label">{t.behind.label}</span>
-        </Reveal>
-        <MaskReveal>
-          <h2 className="display max-w-4xl text-3xl leading-[1.14] md:text-5xl md:leading-[1.08]">{t.behind.title}</h2>
-        </MaskReveal>
-        <div className="mt-12 grid gap-10 md:grid-cols-[1.5fr_1fr] md:items-end md:gap-16">
-          <Reveal y={30}>
-            <Cover
-              colors={['#3a3a3d', '#0d0d0f']}
-              image={behindPhoto}
-              className="aspect-[16/9] w-full rounded-2xl grayscale"
-            />
-          </Reveal>
-          <div className="flex flex-col gap-8">
-            <Reveal>
-              <p className="leading-relaxed text-muted">{t.behind.body1}</p>
-            </Reveal>
-            <Reveal>
-              <p className="leading-relaxed text-muted">{t.behind.body2}</p>
-            </Reveal>
+      {/* Behind it — full-bleed portrait carrying the manifesto, body below */}
+      <section className="py-16 md:py-24">
+        <Reveal y={30} className="relative w-full overflow-hidden">
+          <Cover
+            colors={['#3a3a3d', '#0d0d0f']}
+            image={behindPhoto}
+            objectPosition="center 22%"
+            className="h-[64vh] min-h-[440px] w-full grayscale md:h-[84vh]"
+          />
+          {/* scrim so the heading stays legible over the photo */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0">
+            <div className="mx-auto max-w-[1400px] px-6 pb-10 md:px-10 md:pb-16">
+              <span className="label mb-4 block text-white/60">{t.behind.label}</span>
+              <MaskReveal>
+                <h2 className="display max-w-4xl text-3xl leading-[1.12] text-white md:text-5xl md:leading-[1.08]">
+                  {t.behind.title}
+                </h2>
+              </MaskReveal>
+            </div>
           </div>
+        </Reveal>
+
+        <div className="mx-auto mt-12 grid max-w-[1400px] gap-8 px-6 md:mt-16 md:grid-cols-2 md:gap-16 md:px-10">
+          <Reveal>
+            <p className="leading-relaxed text-muted">{t.behind.body1}</p>
+          </Reveal>
+          <Reveal>
+            <p className="leading-relaxed text-muted">{t.behind.body2}</p>
+          </Reveal>
         </div>
       </section>
 
