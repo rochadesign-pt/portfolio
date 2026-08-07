@@ -155,6 +155,13 @@ export const dict = {
       soloLabel: 'A estrutura',
       soloTitle: 'Um estúdio de uma pessoa. Por escolha.',
       soloBody: 'Falas sempre diretamente com quem desenha e constrói — sem intermediários nem telefone estragado. E, para projetos maiores, entra uma rede de colaboradores de confiança.',
+      aiLabel: 'AI-nativo',
+      aiTitle: 'A IA é uma alavanca,',
+      aiTitleAccent: 'não um atalho.',
+      aiBody1:
+        'A IA está a mudar a forma como o trabalho criativo se faz — e queremos mostrar que é uma forma de pensar melhor, não de pensar menos.',
+      aiBody2:
+        'Usamo-la todos os dias: para explorar mais depressa, construir as nossas próprias ferramentas e ir além das plataformas do costume. O objetivo é valor real — não uma camada de "tinta AI" por cima dos workflows de sempre.',
     },
     behind: {
       label: 'Por dentro',
@@ -341,6 +348,13 @@ export const dict = {
       soloLabel: 'The setup',
       soloTitle: 'A one-person studio. By design.',
       soloBody: 'You deal directly with the person doing the work — no middlemen, no broken telephone. And for larger projects, a trusted network of collaborators steps in.',
+      aiLabel: 'AI-native',
+      aiTitle: 'AI is a lever,',
+      aiTitleAccent: 'not a shortcut.',
+      aiBody1:
+        "AI is changing how creative work gets made — and we want to show it's a way to think better, not to think less.",
+      aiBody2:
+        'We use it every day: to explore faster, build our own tools, and move past the usual platforms. The aim is real value — not a layer of AI paint over the same old workflows.',
     },
     behind: {
       label: 'Behind it',

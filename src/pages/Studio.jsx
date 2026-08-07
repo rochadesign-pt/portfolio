@@ -90,6 +90,30 @@ export default function Studio() {
         </div>
       </section>
 
+      {/* AI-native — the studio's point of view on AI */}
+      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <div className="grid gap-10 border-t border-line pt-12 md:grid-cols-[1fr_1.15fr] md:gap-16 md:pt-16">
+          <div>
+            <Reveal className="mb-4">
+              <span className="label">{t.studioPage.aiLabel}</span>
+            </Reveal>
+            <MaskReveal>
+              <h2 className="display text-4xl leading-[1.08] md:text-6xl">
+                {t.studioPage.aiTitle} <span className="ital text-accent-text">{t.studioPage.aiTitleAccent}</span>
+              </h2>
+            </MaskReveal>
+          </div>
+          <div className="flex flex-col gap-6 md:pt-2">
+            <Reveal>
+              <p className="text-lg leading-relaxed text-muted">{t.studioPage.aiBody1}</p>
+            </Reveal>
+            <Reveal>
+              <p className="text-lg leading-relaxed text-muted">{t.studioPage.aiBody2}</p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* How the work gets made — the process, moved here from the home */}
       <ProcessTimeline />
 
