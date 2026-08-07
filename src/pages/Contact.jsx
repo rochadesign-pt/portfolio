@@ -272,7 +272,7 @@ export default function Contact() {
           <Reveal className="space-y-6">
             {/* Brand contact card — yellow */}
             <div className="rounded-2xl bg-accent p-8 text-accent-ink">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent-ink/60">{c.or}</p>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent-ink/60">{c.hateForms}</p>
               <a href={`mailto:${contact.email}`} className="block text-xl font-medium md:text-2xl">
                 {contact.email}
               </a>
@@ -291,6 +291,34 @@ export default function Contact() {
               </ul>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* What's next — the steps after they reach out, in a warm, playful tone */}
+      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <div className="mb-14 max-w-2xl">
+          <Reveal className="mb-4">
+            <span className="label">{c.next.label}</span>
+          </Reveal>
+          <MaskReveal>
+            <h2 className="display text-5xl md:text-7xl">
+              {c.next.title} <span className="ital text-accent-text">{c.next.titleAccent}</span>
+            </h2>
+          </MaskReveal>
+        </div>
+
+        <div className="grid border-t border-line md:grid-cols-4">
+          {c.next.steps.map((step, i) => (
+            <Reveal
+              key={step.n}
+              delay={i * 0.06}
+              className="border-b border-line py-8 md:border-b-0 md:border-l md:px-8 md:py-10 md:first:border-l-0 md:first:pl-0"
+            >
+              <span className="display block text-5xl leading-none text-muted md:text-6xl">{step.n}</span>
+              <h3 className="mt-8 text-xl md:text-2xl">{step.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{step.desc}</p>
+            </Reveal>
+          ))}
         </div>
       </section>
     </PageTransition>

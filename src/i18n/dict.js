@@ -181,9 +181,37 @@ export const dict = {
       sending: 'A enviar…',
       sentTitle: 'Recebido',
       or: 'Ou por email',
+      hateForms: 'Odeias formulários?',
       response: 'Respondemos em 24 horas úteis.',
       errorTitle: 'Algo correu mal',
       error: 'Não foi possível enviar. Tenta de novo ou escreve-nos para',
+      next: {
+        label: 'O que se segue',
+        title: 'O que acontece',
+        titleAccent: 'a seguir.',
+        steps: [
+          {
+            n: '01',
+            title: 'Envias-nos uma mensagem.',
+            desc: 'É o nosso primeiro encontro. Obrigado por dares o primeiro passo — a bola fica do nosso lado.',
+          },
+          {
+            n: '02',
+            title: 'Respondemos depressa.',
+            desc: 'Somos poucos e atentos, por isso costumamos responder no próprio dia. Se demorarmos, é porque estamos com as mãos na massa.',
+          },
+          {
+            n: '03',
+            title: 'Conversamos e propomos.',
+            desc: 'Falamos, definimos o âmbito e enviamos uma proposta clara. Ajustamos até fazer sentido para os dois lados.',
+          },
+          {
+            n: '04',
+            title: 'Começamos a construir.',
+            desc: 'Aperto de mão (virtual) e mãos à obra. É aqui que a parte boa começa.',
+          },
+        ],
+      },
     },
   },
   en: {
@@ -365,9 +393,37 @@ export const dict = {
       sending: 'Sending…',
       sentTitle: 'Received',
       or: 'Or by email',
+      hateForms: 'Hate forms?',
       response: 'We reply within 24 business hours.',
       errorTitle: 'Something went wrong',
       error: 'Could not send. Try again or email us at',
+      next: {
+        label: "What's next",
+        title: 'What happens',
+        titleAccent: 'next.',
+        steps: [
+          {
+            n: '01',
+            title: 'You send us a message.',
+            desc: "This is our first date. Thanks for taking the first step — the ball's in our court now.",
+          },
+          {
+            n: '02',
+            title: 'We reply fast.',
+            desc: "We're small and attentive, so we usually answer the same day. If we're slow, it's because our hands are busy making things.",
+          },
+          {
+            n: '03',
+            title: 'We talk and propose.',
+            desc: 'We chat, scope it out and send a clear proposal. We adjust until it makes sense for both sides.',
+          },
+          {
+            n: '04',
+            title: 'We start building.',
+            desc: 'A (virtual) handshake and we get going. This is where the good part begins.',
+          },
+        ],
+      },
     },
   },
 }
