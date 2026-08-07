@@ -5,3 +5,7 @@ dist-server
 .DS_Store
 *.local
 .vercel
+
+# local env (never commit real keys)
+.env
+.env.local
