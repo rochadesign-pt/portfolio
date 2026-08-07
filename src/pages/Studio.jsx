@@ -21,8 +21,10 @@ export default function Studio() {
           <span className="label">{t.studioPage.eyebrow}</span>
         </Reveal>
         <MaskReveal>
-          <h1 className="display text-6xl leading-[0.95] md:text-8xl">
-            {t.studioPage.title} <span className="ital text-accent-text">{t.studioPage.titleAccent}</span>
+          <h1 className="display text-6xl leading-[0.98] md:text-8xl">
+            {t.studioPage.title}
+            <br />
+            {t.studioPage.titleLine2} <span className="ital text-accent-text">{t.studioPage.titleAccent}</span>
           </h1>
         </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
