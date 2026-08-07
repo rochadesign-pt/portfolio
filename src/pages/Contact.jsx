@@ -19,8 +19,12 @@ export default function Contact() {
   useSeo(t.seo.contact)
 
   const [status, setStatus] = useState('idle') // idle | sending | success | error
-  const [sel, setSel] = useState({ type: '', budget: '', timeline: '' })
+  const [sel, setSel] = useState({ budget: '', found: '' })
+  const [help, setHelp] = useState([])
   const [token, setToken] = useState('')
+
+  const toggleHelp = (opt) =>
+    setHelp((h) => (h.includes(opt) ? h.filter((x) => x !== opt) : [...h, opt]))
   const captchaRef = useRef(null)
   const widgetId = useRef(null)
 
@@ -71,7 +75,7 @@ export default function Contact() {
       setStatus('error')
       return
     }
-    track('contact_submit', { type: sel.type })
+    track('contact_submit', { help: help.join(', ') })
     setStatus('sending')
 
     const payload = {
@@ -80,10 +84,10 @@ export default function Contact() {
       from_name: 'rochadesign.pt',
       Nome: data.get('name'),
       Email: data.get('email'),
-      Empresa: data.get('company') || '—',
-      'Tipo de projeto': sel.type || '—',
+      Representa: data.get('company') || '—',
+      Serviços: help.length ? help.join(', ') : '—',
       Orçamento: sel.budget || '—',
-      Prazo: sel.timeline || '—',
+      'Como nos encontrou': sel.found || '—',
       Mensagem: data.get('message'),
       ...(token ? { 'cf-turnstile-response': token } : {}),
     }
@@ -111,19 +115,19 @@ export default function Contact() {
 
   const field =
     'w-full border-b border-line bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-muted focus:border-accent'
+  const qlabel = 'mb-3 block text-base text-text/90'
 
-  // Inline render helper (not a nested component) so the selects don't remount
-  // on every keystroke/state change.
-  const renderSelect = (name, label, options) => (
-    <label className="relative block">
-      <span className="label mb-2 block text-muted">{label}</span>
+  // Inline render helpers (not nested components) so fields don't remount on
+  // every state change.
+  const renderSelect = (name, placeholder, options) => (
+    <div className="relative">
       <select
         name={name}
         value={sel[name]}
         onChange={(e) => setSel((s) => ({ ...s, [name]: e.target.value }))}
         className={`${field} cursor-pointer appearance-none pr-8 ${sel[name] ? 'text-text' : 'text-muted'}`}
       >
-        <option value="">{c.selectPlaceholder}</option>
+        <option value="">{placeholder}</option>
         {options.map((o) => (
           <option key={o} value={o} className="bg-surface text-text">
             {o}
@@ -139,7 +143,7 @@ export default function Contact() {
       >
         <path d="M4 6l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-    </label>
+    </div>
   )
 
   return (
@@ -169,35 +173,89 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={onSubmit} className="space-y-8">
-                <div className="grid gap-8 md:grid-cols-2">
-                  <input name="name" className={field} placeholder={c.formName} required autoComplete="name" />
+              <form onSubmit={onSubmit} className="max-w-2xl space-y-9">
+                <div>
+                  <label className={qlabel} htmlFor="name">{c.qName}</label>
+                  <input id="name" name="name" className={field} placeholder={c.phName} required autoComplete="name" />
+                </div>
+                <div>
+                  <label className={qlabel} htmlFor="email">{c.qEmail}</label>
                   <input
+                    id="email"
                     name="email"
                     type="email"
                     className={field}
-                    placeholder={c.formEmail}
+                    placeholder={c.phEmail}
                     required
                     autoComplete="email"
                   />
                 </div>
-                <input name="company" className={field} placeholder={c.formCompany} autoComplete="organization" />
-
-                <div className="grid gap-8 md:grid-cols-2">
-                  {renderSelect('type', c.formType, c.typeOptions)}
-                  {renderSelect('budget', c.formBudget, c.budgetOptions)}
+                <div>
+                  <label className={qlabel} htmlFor="company">{c.qCompany}</label>
+                  <input
+                    id="company"
+                    name="company"
+                    className={field}
+                    placeholder={c.phCompany}
+                    autoComplete="organization"
+                  />
                 </div>
-                <div className="md:max-w-[calc(50%-1rem)]">
-                  {renderSelect('timeline', c.formTimeline, c.timelineOptions)}
+
+                {/* What can we help you with — multi-select */}
+                <fieldset>
+                  <legend className={qlabel}>{c.qHelp}</legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {c.helpOptions.map((opt) => {
+                      const on = help.includes(opt)
+                      return (
+                        <button
+                          type="button"
+                          key={opt}
+                          onClick={() => toggleHelp(opt)}
+                          aria-pressed={on}
+                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                            on ? 'border-accent bg-accent/10 text-text' : 'border-line text-muted hover:border-text hover:text-text'
+                          }`}
+                        >
+                          <span
+                            className={`grid h-4 w-4 flex-none place-items-center rounded-[5px] border ${
+                              on ? 'border-accent bg-accent text-accent-ink' : 'border-line'
+                            }`}
+                          >
+                            {on && (
+                              <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M2.5 6.5l2.5 2.5 4.5-5" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            )}
+                          </span>
+                          {opt}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </fieldset>
+
+                <div>
+                  <label className={qlabel}>{c.qBudget}</label>
+                  {renderSelect('budget', c.budgetPlaceholder, c.budgetOptions)}
                 </div>
 
-                <textarea
-                  name="message"
-                  className={`${field} resize-none`}
-                  rows={4}
-                  placeholder={c.formMessage}
-                  required
-                />
+                <div>
+                  <label className={qlabel} htmlFor="message">{c.qMessage}</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    className={`${field} resize-none`}
+                    rows={4}
+                    placeholder={c.phMessage}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className={qlabel}>{c.qFound}</label>
+                  {renderSelect('found', c.foundPlaceholder, c.foundOptions)}
+                </div>
 
                 {/* Honeypot — hidden from humans, tempting to bots */}
                 <input
