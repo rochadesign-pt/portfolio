@@ -222,14 +222,8 @@ export default function Contact() {
                 </fieldset>
 
                 <div className="grid gap-8 md:grid-cols-2">
-                  <div>
-                    <span className={slabel}>{c.budgetLabel}</span>
-                    {renderSelect('budget', c.selectPlaceholder, c.budgetOptions)}
-                  </div>
-                  <div>
-                    <span className={slabel}>{c.foundLabel}</span>
-                    {renderSelect('found', c.selectPlaceholder, c.foundOptions)}
-                  </div>
+                  {renderSelect('budget', c.budgetLabel, c.budgetOptions)}
+                  {renderSelect('found', c.foundLabel, c.foundOptions)}
                 </div>
 
                 <textarea
