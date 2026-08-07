@@ -31,36 +31,46 @@ export default function Studio() {
         </Reveal>
       </section>
 
-      {/* Behind it — full-bleed portrait carrying the manifesto, body below */}
+      {/* Behind it — full-bleed portrait. On desktop, a lateral gradient darkens
+          the side opposite the subject and the manifesto (heading + body) sits
+          there. On mobile, the text drops below the photo. */}
       <section className="py-16 md:py-24">
-        <Reveal y={30} className="relative w-full overflow-hidden">
+        <div className="relative w-full overflow-hidden">
           <Cover
             colors={['#3a3a3d', '#0d0d0f']}
             image={behindPhoto}
             objectPosition="center 22%"
-            className="h-[64vh] min-h-[440px] w-full grayscale md:h-[84vh]"
+            className="h-[62vh] min-h-[420px] w-full grayscale md:h-[88vh]"
           />
-          {/* scrim so the heading stays legible over the photo */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0">
-            <div className="mx-auto max-w-[1400px] px-6 pb-10 md:px-10 md:pb-16">
-              <span className="label mb-4 block text-white/60">{t.behind.label}</span>
-              <MaskReveal>
-                <h2 className="display max-w-4xl text-3xl leading-[1.12] text-white md:text-5xl md:leading-[1.08]">
-                  {t.behind.title}
-                </h2>
-              </MaskReveal>
+          {/* lateral gradient (desktop) — dark on the right, clear by mid-frame */}
+          <div className="pointer-events-none absolute inset-0 hidden md:block [background-image:linear-gradient(to_left,rgba(0,0,0,0.92),rgba(0,0,0,0.5)_30%,transparent_62%)]" />
+          {/* text over the photo, right side (opposite the subject), centered */}
+          <div className="absolute inset-0 hidden items-center md:flex">
+            <div className="mx-auto flex w-full max-w-[1400px] justify-end px-10">
+              <div className="w-[46%] max-w-xl">
+                <span className="label mb-4 block text-white/60">{t.behind.label}</span>
+                <MaskReveal>
+                  <h2 className="display text-4xl leading-[1.1] text-white lg:text-5xl">{t.behind.title}</h2>
+                </MaskReveal>
+                <div className="mt-8 space-y-5">
+                  <p className="leading-relaxed text-white/75">{t.behind.body1}</p>
+                  <p className="leading-relaxed text-white/75">{t.behind.body2}</p>
+                </div>
+              </div>
             </div>
           </div>
-        </Reveal>
+        </div>
 
-        <div className="mx-auto mt-12 grid max-w-[1400px] gap-8 px-6 md:mt-16 md:grid-cols-2 md:gap-16 md:px-10">
-          <Reveal>
+        {/* mobile — text below the photo */}
+        <div className="mx-auto max-w-[1400px] px-6 pt-10 md:hidden">
+          <span className="label mb-4 block text-muted">{t.behind.label}</span>
+          <MaskReveal>
+            <h2 className="display text-3xl leading-[1.14]">{t.behind.title}</h2>
+          </MaskReveal>
+          <div className="mt-8 space-y-5">
             <p className="leading-relaxed text-muted">{t.behind.body1}</p>
-          </Reveal>
-          <Reveal>
             <p className="leading-relaxed text-muted">{t.behind.body2}</p>
-          </Reveal>
+          </div>
         </div>
       </section>
 
