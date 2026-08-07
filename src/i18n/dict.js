@@ -148,7 +148,7 @@ export const dict = {
     studioPage: {
       eyebrow: 'Estúdio',
       title: 'Um estúdio pequeno',
-      titleLine2: 'mas com',
+      titleLine2: 'com',
       titleAccent: 'grandes ambições',
       sub: 'Fundado em 2025, em Portugal. Trabalhamos com marcas em qualquer parte do mundo.',
       valuesLabel: 'Aquilo em que acreditamos',
@@ -334,7 +334,7 @@ export const dict = {
     studioPage: {
       eyebrow: 'Studio',
       title: 'A small studio',
-      titleLine2: 'but with',
+      titleLine2: 'with',
       titleAccent: 'big ambitions',
       sub: 'Founded in 2025, in Portugal. We work with brands anywhere in the world.',
       valuesLabel: 'What we believe',
