@@ -3,7 +3,6 @@ import { values } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
-import Marquee from '../components/Marquee'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
@@ -93,7 +92,7 @@ export default function Studio() {
       <ProcessTimeline />
 
       {/* Founder-led — a one-person studio, by design */}
-      <section className="mx-auto max-w-[1400px] px-6 py-16 md:px-10">
+      <section className="mx-auto max-w-[1400px] px-6 py-16 pb-24 md:px-10 md:pb-32">
         <Reveal className="mb-10">
           <h2 className="label">{t.studioPage.soloLabel}</h2>
         </Reveal>
@@ -105,17 +104,6 @@ export default function Studio() {
             <p className="max-w-md leading-relaxed text-muted md:text-lg">{t.studioPage.soloBody}</p>
           </Reveal>
         </div>
-      </section>
-
-      {/* Giant wordmark moment — outlined, scrolling */}
-      <section className="py-16 md:py-24">
-        <Marquee
-          items={['Rocha Design Studio']}
-          separator="✳"
-          outline
-          speed={55}
-          textClass="text-[13vw] leading-none md:text-[9rem]"
-        />
       </section>
     </PageTransition>
   )

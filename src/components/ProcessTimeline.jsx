@@ -1,43 +1,18 @@
-import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { process } from '../data/site'
 import Reveal from './Reveal'
 import MaskReveal from './MaskReveal'
 
-// A single step cell: hatched base with a "paper" fill that wipes down as the
-// scroll percentage moves through this step's slice.
-function StepCard({ progress, i, n, step, lang, cellClass }) {
-  const height = useTransform(progress, [i / n, (i + 0.85) / n], ['0%', '100%'], { clamp: true })
-  return (
-    <div className={`relative bg-bg ${cellClass}`}>
-      <div className="hatch pointer-events-none absolute inset-0" />
-      <motion.div style={{ height }} className="absolute inset-x-0 top-0 overflow-hidden bg-paper">
-        <div className="w-full p-6">
-          <p className="text-base font-medium text-[#0b0b0d]">
-            {i + 1}. {step.title[lang]}
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-[#0b0b0d]/70">{step.desc[lang]}</p>
-        </div>
-      </motion.div>
-    </div>
-  )
-}
-
-// Editorial staircase: step cards descend diagonally; each fills in continuously
-// as you scroll. Desktop = diagonal grid, mobile = stacked cards.
+// The studio's way of working, as a calm editorial list: big index, title and
+// description on a single baseline, separated by hairlines. The number warms to
+// the accent on hover.
 export default function ProcessTimeline() {
   const { t, lang } = useLang()
-  const ref = useRef(null)
-  const n = process.length
-
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 65%', 'end 90%'] })
 
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-      {/* Header + CTA */}
-      <div className="mb-12 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+      <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl">
           <Reveal className="mb-4">
             <span className="label">{t.homeProcess.label}</span>
@@ -51,7 +26,7 @@ export default function ProcessTimeline() {
         <Reveal>
           <Link
             to="/contact"
-            className="group inline-flex items-center justify-between gap-10 rounded-xl border border-line px-6 py-5 text-sm transition-colors hover:border-text/40 md:w-72"
+            className="group inline-flex items-center gap-3 text-sm text-muted transition-colors hover:text-text"
           >
             {t.homeProcess.cta}
             <span className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">↗</span>
@@ -59,47 +34,18 @@ export default function ProcessTimeline() {
         </Reveal>
       </div>
 
-      <div ref={ref}>
-        {/* Desktop staircase */}
-        <div
-          className="hidden gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid"
-          style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}
-        >
-          {Array.from({ length: n }).map((_, r) =>
-            Array.from({ length: n }).map((__, c) =>
-              r === c ? (
-                <StepCard
-                  key={`${r}-${c}`}
-                  progress={scrollYProgress}
-                  i={r}
-                  n={n}
-                  step={process[r]}
-                  lang={lang}
-                  cellClass="min-h-[156px]"
-                />
-              ) : (
-                <div key={`${r}-${c}`} className="relative min-h-[156px] bg-bg">
-                  <div className="hatch pointer-events-none absolute inset-0" />
-                </div>
-              ),
-            ),
-          )}
-        </div>
-
-        {/* Mobile stacked */}
-        <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:hidden">
-          {process.map((step, i) => (
-            <StepCard
-              key={step.n}
-              progress={scrollYProgress}
-              i={i}
-              n={n}
-              step={step}
-              lang={lang}
-              cellClass="min-h-[132px]"
-            />
-          ))}
-        </div>
+      <div>
+        {process.map((step, i) => (
+          <Reveal key={step.n} delay={i * 0.05}>
+            <div className="group grid grid-cols-[auto_1fr] items-baseline gap-x-6 gap-y-2 border-t border-line py-8 md:grid-cols-[7rem_1fr_1.5fr] md:gap-x-12 md:py-10">
+              <span className="display text-4xl leading-none text-muted transition-colors duration-500 group-hover:text-accent-text md:text-6xl">
+                {step.n}
+              </span>
+              <h3 className="display text-2xl md:text-3xl">{step.title[lang]}</h3>
+              <p className="col-start-2 max-w-xl leading-relaxed text-muted md:col-start-3">{step.desc[lang]}</p>
+            </div>
+          </Reveal>
+        ))}
       </div>
     </section>
   )
