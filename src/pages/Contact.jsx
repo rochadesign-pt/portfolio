@@ -4,6 +4,7 @@ import { contact, social } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
+import BriefBuilder from '../components/BriefBuilder'
 import PageTransition from '../components/PageTransition'
 import { track } from '../lib/analytics'
 import { useSeo } from '../lib/useSeo'
@@ -21,7 +22,24 @@ export default function Contact() {
   const [status, setStatus] = useState('idle') // idle | sending | success | error
   const [sel, setSel] = useState({ budget: '', found: '' })
   const [help, setHelp] = useState([])
+  const [message, setMessage] = useState('')
   const [token, setToken] = useState('')
+  const messageRef = useRef(null)
+
+  // The guided brief fills the real fields, then focuses the composed message so
+  // the visitor can polish it before sending.
+  const applyBrief = ({ help: h, budget, message: msg }) => {
+    setHelp(h)
+    setSel((s) => ({ ...s, budget: budget || s.budget }))
+    setMessage(msg)
+    track('brief_completed', { help: h.join(', ') })
+    requestAnimationFrame(() => {
+      const el = messageRef.current
+      if (!el) return
+      el.focus()
+      el.setSelectionRange(el.value.length, el.value.length)
+    })
+  }
 
   const toggleHelp = (opt) =>
     setHelp((h) => (h.includes(opt) ? h.filter((x) => x !== opt) : [...h, opt]))
@@ -88,7 +106,7 @@ export default function Contact() {
       Serviços: help.length ? help.join(', ') : '—',
       Orçamento: sel.budget || '—',
       'Como nos encontrou': sel.found || '—',
-      Mensagem: data.get('message'),
+      Mensagem: message || data.get('message'),
       ...(token ? { 'cf-turnstile-response': token } : {}),
     }
 
@@ -173,7 +191,14 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={onSubmit} className="space-y-8">
+              <>
+                <BriefBuilder
+                  b={c.brief}
+                  helpOptions={c.helpOptions}
+                  budgetOptions={c.budgetOptions}
+                  onApply={applyBrief}
+                />
+                <form onSubmit={onSubmit} className="space-y-8">
                 <div className="grid gap-8 md:grid-cols-2">
                   <input name="name" className={field} placeholder={c.phName} required autoComplete="name" />
                   <input
@@ -227,7 +252,10 @@ export default function Contact() {
                 </div>
 
                 <textarea
+                  ref={messageRef}
                   name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   className={`${field} resize-none`}
                   rows={4}
                   placeholder={c.phMessage}
@@ -265,7 +293,8 @@ export default function Contact() {
                     {status === 'sending' ? c.sending : `${c.formSubmit} →`}
                   </button>
                 </Magnetic>
-              </form>
+                </form>
+              </>
             )}
           </Reveal>
 
