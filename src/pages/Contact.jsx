@@ -4,7 +4,6 @@ import { contact, social } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Magnetic from '../components/Magnetic'
-import ContactTimeline from '../components/ContactTimeline'
 import PageTransition from '../components/PageTransition'
 import { track } from '../lib/analytics'
 import { useSeo } from '../lib/useSeo'
@@ -191,7 +190,7 @@ export default function Contact() {
                 {/* Serviços — multi-select */}
                 <fieldset>
                   <legend className={slabel}>{c.helpLabel}</legend>
-                  <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="mt-1 grid gap-x-8 gap-y-1 sm:grid-cols-2">
                     {c.helpOptions.map((opt) => {
                       const on = help.includes(opt)
                       return (
@@ -200,22 +199,22 @@ export default function Contact() {
                           key={opt}
                           onClick={() => toggleHelp(opt)}
                           aria-pressed={on}
-                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
-                            on ? 'border-accent bg-accent/10 text-text' : 'border-line text-muted hover:border-text hover:text-text'
-                          }`}
+                          className="group/cb flex items-center gap-3 py-2.5 text-left text-sm"
                         >
                           <span
-                            className={`grid h-4 w-4 flex-none place-items-center rounded-[5px] border ${
-                              on ? 'border-accent bg-accent text-accent-ink' : 'border-line'
+                            className={`grid h-5 w-5 flex-none place-items-center rounded-md border transition-colors duration-200 ${
+                              on
+                                ? 'border-accent bg-accent text-accent-ink'
+                                : 'border-line text-transparent group-hover/cb:border-text'
                             }`}
                           >
-                            {on && (
-                              <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M2.5 6.5l2.5 2.5 4.5-5" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            )}
+                            <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.2">
+                              <path d="M2.5 6.5l2.5 2.5 4.5-5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
                           </span>
-                          {opt}
+                          <span className={`transition-colors ${on ? 'text-text' : 'text-muted group-hover/cb:text-text'}`}>
+                            {opt}
+                          </span>
                         </button>
                       )
                     })}
@@ -293,22 +292,6 @@ export default function Contact() {
             </div>
           </Reveal>
         </div>
-      </section>
-
-      {/* What's next — the steps after they reach out, in a warm, playful tone */}
-      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <div className="mb-14 max-w-2xl">
-          <Reveal className="mb-4">
-            <span className="label">{c.next.label}</span>
-          </Reveal>
-          <MaskReveal>
-            <h2 className="display text-5xl md:text-7xl">
-              {c.next.title} <span className="ital text-accent-text">{c.next.titleAccent}</span>
-            </h2>
-          </MaskReveal>
-        </div>
-
-        <ContactTimeline steps={c.next.steps} />
       </section>
     </PageTransition>
   )
