@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from './theme/ThemeContext'
-import { LanguageProvider } from './i18n/LanguageContext'
+import { LanguageProvider, useLang } from './i18n/LanguageContext'
+import Wayfinding from './components/Wayfinding'
 import { ContentProvider } from './content/ContentProvider'
 import { ZoomProvider } from './context/Zoom'
 import { MenuProvider, useMenu } from './context/Menu'
@@ -39,6 +40,18 @@ function AnimatedRoutes() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
+  )
+}
+
+// A brief crossfade over the page content when the language morphs. Plain
+// opacity only — no transform/will-change — so the home sticky-stack and the
+// click-to-zoom containing blocks stay untouched.
+function LangFade({ children }) {
+  const { switching } = useLang()
+  return (
+    <div style={{ opacity: switching ? 0 : 1, transition: 'opacity 0.19s ease-in-out' }}>
+      {children}
+    </div>
   )
 }
 
@@ -91,10 +104,13 @@ export function Shell() {
           <div className="grain" aria-hidden="true" />
           <Nav />
           <MenuPanel />
+          <Wayfinding />
           <PageShell>
-            <AnimatedRoutes />
-            <RoutedCTA />
-            <Footer />
+            <LangFade>
+              <AnimatedRoutes />
+              <RoutedCTA />
+              <Footer />
+            </LangFade>
           </PageShell>
         </SmoothScroll>
       </MenuProvider>
