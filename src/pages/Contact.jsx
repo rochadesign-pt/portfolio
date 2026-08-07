@@ -115,7 +115,7 @@ export default function Contact() {
 
   const field =
     'w-full border-b border-line bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-muted focus:border-accent'
-  const qlabel = 'mb-3 block text-base text-text/90'
+  const slabel = 'label mb-3 block text-muted'
 
   // Inline render helpers (not nested components) so fields don't remount on
   // every state change.
@@ -173,15 +173,10 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={onSubmit} className="max-w-2xl space-y-9">
-                <div>
-                  <label className={qlabel} htmlFor="name">{c.qName}</label>
-                  <input id="name" name="name" className={field} placeholder={c.phName} required autoComplete="name" />
-                </div>
-                <div>
-                  <label className={qlabel} htmlFor="email">{c.qEmail}</label>
+              <form onSubmit={onSubmit} className="space-y-8">
+                <div className="grid gap-8 md:grid-cols-2">
+                  <input name="name" className={field} placeholder={c.phName} required autoComplete="name" />
                   <input
-                    id="email"
                     name="email"
                     type="email"
                     className={field}
@@ -190,20 +185,11 @@ export default function Contact() {
                     autoComplete="email"
                   />
                 </div>
-                <div>
-                  <label className={qlabel} htmlFor="company">{c.qCompany}</label>
-                  <input
-                    id="company"
-                    name="company"
-                    className={field}
-                    placeholder={c.phCompany}
-                    autoComplete="organization"
-                  />
-                </div>
+                <input name="company" className={field} placeholder={c.phCompany} autoComplete="organization" />
 
-                {/* What can we help you with — multi-select */}
+                {/* Serviços — multi-select */}
                 <fieldset>
-                  <legend className={qlabel}>{c.qHelp}</legend>
+                  <legend className={slabel}>{c.helpLabel}</legend>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {c.helpOptions.map((opt) => {
                       const on = help.includes(opt)
@@ -235,27 +221,24 @@ export default function Contact() {
                   </div>
                 </fieldset>
 
-                <div>
-                  <label className={qlabel}>{c.qBudget}</label>
-                  {renderSelect('budget', c.budgetPlaceholder, c.budgetOptions)}
+                <div className="grid gap-8 md:grid-cols-2">
+                  <div>
+                    <span className={slabel}>{c.budgetLabel}</span>
+                    {renderSelect('budget', c.selectPlaceholder, c.budgetOptions)}
+                  </div>
+                  <div>
+                    <span className={slabel}>{c.foundLabel}</span>
+                    {renderSelect('found', c.selectPlaceholder, c.foundOptions)}
+                  </div>
                 </div>
 
-                <div>
-                  <label className={qlabel} htmlFor="message">{c.qMessage}</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    className={`${field} resize-none`}
-                    rows={4}
-                    placeholder={c.phMessage}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className={qlabel}>{c.qFound}</label>
-                  {renderSelect('found', c.foundPlaceholder, c.foundOptions)}
-                </div>
+                <textarea
+                  name="message"
+                  className={`${field} resize-none`}
+                  rows={4}
+                  placeholder={c.phMessage}
+                  required
+                />
 
                 {/* Honeypot — hidden from humans, tempting to bots */}
                 <input
