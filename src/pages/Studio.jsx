@@ -6,7 +6,6 @@ import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import WorkCard from '../components/WorkCard'
-import ProcessTimeline from '../components/ProcessTimeline'
 import OriginGlobe from '../components/OriginGlobe'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
@@ -130,10 +129,7 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* 6 — How the work gets made */}
-      <ProcessTimeline />
-
-      {/* 7 — Who's behind it — a one-person studio, with a portrait as the human close */}
+      {/* 6 — Who's behind it — a one-person studio, with a portrait as the human close */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 pb-24 md:px-10 md:pb-32">
         <Reveal className="mb-10">
           <h2 className="label">{t.studioPage.soloLabel}</h2>
