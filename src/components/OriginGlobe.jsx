@@ -126,7 +126,10 @@ export default function OriginGlobe() {
       if (!visible.current) return
 
       const p = progress.current
-      const e = easeInOut(p)
+      // Reversed journey: p=0 starts zoomed into Ílhavo (rooted), scrolling
+      // pulls back out to the whole globe (available to the world). `e` is the
+      // Ílhavo-proximity: 1 at home, 0 at the world view.
+      const e = easeInOut(1 - p)
       const cx = W / 2
       const cy = H / 2
       const R0 = Math.min(W, H) * (mobile ? 0.36 : 0.34)
@@ -170,7 +173,7 @@ export default function OriginGlobe() {
       // marker at the target
       let tv = rotY(T, yaw)
       tv = rotX(tv, pitch)
-      const mAlpha = smooth(0.32, 0.72, p)
+      const mAlpha = smooth(0.32, 0.72, e)
       if (tv.z > 0 && mAlpha > 0.001) {
         const mx = cx + tv.x * Reff
         const my = cy - tv.y * Reff
@@ -197,10 +200,11 @@ export default function OriginGlobe() {
         ctx.fill()
       }
 
-      // overlay copy opacities
-      if (worldRef.current) worldRef.current.style.opacity = String(clamp01(1 - p / 0.42))
-      if (homeRef.current) homeRef.current.style.opacity = String(smooth(0.5, 0.8, p))
-      if (placeRef.current) placeRef.current.style.opacity = String(smooth(0.62, 0.9, p))
+      // overlay copy opacities — home + coords lead at the start (Ílhavo), the
+      // world line arrives as you pull back out
+      if (homeRef.current) homeRef.current.style.opacity = String(clamp01(1 - p / 0.42))
+      if (placeRef.current) placeRef.current.style.opacity = String(clamp01(1 - p / 0.35))
+      if (worldRef.current) worldRef.current.style.opacity = String(smooth(0.55, 0.85, p))
       if (hintRef.current) hintRef.current.style.opacity = String(clamp01(1 - p / 0.12))
     }
     raf = requestAnimationFrame(render)
@@ -246,11 +250,11 @@ export default function OriginGlobe() {
         {/* copy, layered and crossfading — held in the upper third so the pin
             and coordinate readout can cluster below it, clear of the text */}
         <div className="pointer-events-none absolute inset-x-0 top-[28vh] grid place-items-center px-6 text-center md:top-[30vh]">
-          <p ref={worldRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl">
-            {o.world}
-          </p>
-          <p ref={homeRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl" style={{ opacity: 0 }}>
+          <p ref={homeRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl">
             {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
+          </p>
+          <p ref={worldRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl" style={{ opacity: 0 }}>
+            {o.world} <span className="ital text-accent-text">{o.worldAccent}</span>
           </p>
         </div>
 
