@@ -1,7 +1,7 @@
 import { useLang } from '../i18n/LanguageContext'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
-import ServicesBento from '../components/ServicesBento'
+import ServiceColumns from '../components/ServiceColumns'
 import ProcessTimeline from '../components/ProcessTimeline'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
@@ -41,7 +41,7 @@ export default function Services() {
             <h2 className="display max-w-3xl text-4xl md:text-6xl">{s.capLine}</h2>
           </MaskReveal>
         </div>
-        <ServicesBento />
+        <ServiceColumns headingAs="h3" />
       </section>
 
       {/* How we work — the process (lives here, the commercial page) */}
