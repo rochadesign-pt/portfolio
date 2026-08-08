@@ -247,13 +247,17 @@ export default function OriginGlobe() {
           <span className="label text-muted">{o.label}</span>
         </div>
 
-        {/* copy, layered and crossfading — held in the upper third so the pin
-            and coordinate readout can cluster below it, clear of the text */}
+        {/* Home headline — held in the upper area so the pin and coordinate
+            readout can cluster below it, clear of the text. */}
         <div className="pointer-events-none absolute inset-x-0 top-[22vh] grid place-items-center px-6 text-center md:top-[24vh]">
-          <p ref={homeRef} className="display text-5xl leading-[1.02] [grid-area:1/1] md:text-8xl">
+          <p ref={homeRef} className="display text-5xl leading-[1.02] md:text-8xl">
             {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
           </p>
-          <p ref={worldRef} className="display text-5xl leading-[1.02] [grid-area:1/1] md:text-8xl" style={{ opacity: 0 }}>
+        </div>
+
+        {/* World headline — centred over the globe (no pin at this end). */}
+        <div ref={worldRef} className="pointer-events-none absolute inset-0 grid place-items-center px-6 text-center" style={{ opacity: 0 }}>
+          <p className="display text-5xl leading-[1.02] md:text-8xl">
             {o.world} <span className="ital text-accent-text">{o.worldAccent}</span>
           </p>
         </div>
