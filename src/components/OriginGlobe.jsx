@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLang } from '../i18n/LanguageContext'
+import { landDots } from '../data/landDots'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,15 +24,18 @@ const smooth = (a, b, t) => {
 }
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2)
 
-// Evenly distributed points on a unit sphere (Fibonacci spiral).
-function fibonacciSphere(n) {
-  const pts = new Array(n)
-  const golden = Math.PI * (3 - Math.sqrt(5))
-  for (let i = 0; i < n; i++) {
-    const y = 1 - (i / (n - 1)) * 2
-    const r = Math.sqrt(Math.max(0, 1 - y * y))
-    const theta = i * golden
-    pts[i] = { x: Math.cos(theta) * r, y, z: Math.sin(theta) * r }
+// The world's landmass as unit-sphere points, from a pre-sampled land mask
+// (src/data/landDots — [lon, lat] pairs). `stride` thins it for mobile.
+function landPoints(stride) {
+  const pts = []
+  for (let i = 0; i < landDots.length; i += stride) {
+    const la = landDots[i][1] * D2R
+    const lo = landDots[i][0] * D2R
+    pts.push({
+      x: Math.cos(la) * Math.sin(lo),
+      y: Math.sin(la),
+      z: Math.cos(la) * Math.cos(lo),
+    })
   }
   return pts
 }
@@ -63,7 +67,7 @@ export default function OriginGlobe() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const mobile = window.innerWidth < 768
 
-    const points = fibonacciSphere(mobile ? 720 : 1600)
+    const points = landPoints(mobile ? 2 : 1)
     // Target as a unit vector in the same (lat/lon) frame.
     const tLat = TARGET.lat * D2R
     const tLon = TARGET.lon * D2R
