@@ -59,16 +59,25 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* 4 — What we believe */}
+      {/* 4 — What we believe. Restrained cards (dark surface + a big ghosted
+          index that warms to the accent on hover) — a card language shared with
+          Services, but without the colour, to fit Studio's calmer register. */}
       <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-14">
+        <Reveal className="mb-12 md:mb-14">
           <h2 className="label">{t.studioPage.valuesLabel}</h2>
         </Reveal>
-        <div className="grid gap-x-16 gap-y-14 md:grid-cols-2">
-          {values.map((v) => (
-            <Reveal key={v.title.en} className="border-t border-line pt-8">
-              <h3 className="display text-3xl md:text-4xl">{v.title[lang]}</h3>
-              <p className="mt-4 max-w-md text-muted">{v.desc[lang]}</p>
+        <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
+          {values.map((v, i) => (
+            <Reveal key={v.title.en} delay={i * 0.06}>
+              <article className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-8 transition-colors duration-500 hover:border-text/20 md:p-10">
+                <span className="display pointer-events-none absolute -right-3 -top-6 text-8xl leading-none text-text/[0.04] transition-colors duration-500 group-hover:text-accent-text/15 md:text-9xl">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="relative">
+                  <h3 className="display text-2xl md:text-3xl">{v.title[lang]}</h3>
+                  <p className="mt-4 max-w-md leading-relaxed text-muted">{v.desc[lang]}</p>
+                </div>
+              </article>
             </Reveal>
           ))}
         </div>
