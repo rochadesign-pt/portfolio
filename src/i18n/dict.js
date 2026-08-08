@@ -162,6 +162,15 @@ export const dict = {
         'A IA está a mudar a forma como o trabalho criativo se faz — e queremos mostrar que é uma forma de pensar melhor, não de pensar menos.',
       aiBody2:
         'Usamo-la todos os dias: para explorar mais depressa, construir as nossas próprias ferramentas e ir além das plataformas do costume. O objetivo é valor real — não uma camada de "tinta AI" por cima dos workflows de sempre.',
+      origin: {
+        label: 'Raízes',
+        world: 'Em qualquer parte do mundo.',
+        home: 'Enraizados em',
+        homeAccent: 'Ílhavo.',
+        place: 'Ílhavo · Portugal',
+        coords: '40.6035° N, 8.6704° W',
+        hint: 'Faz scroll',
+      },
     },
     behind: {
       label: 'Por dentro',
@@ -374,6 +383,15 @@ export const dict = {
         "AI is changing how creative work gets made — and we want to show it's a way to think better, not to think less.",
       aiBody2:
         'We use it every day: to explore faster, build our own tools, and move past the usual platforms. The aim is real value — not a layer of AI paint over the same old workflows.',
+      origin: {
+        label: 'Roots',
+        world: 'Anywhere in the world.',
+        home: 'Rooted in',
+        homeAccent: 'Ílhavo.',
+        place: 'Ílhavo · Portugal',
+        coords: '40.6035° N, 8.6704° W',
+        hint: 'Scroll',
+      },
     },
     behind: {
       label: 'Behind it',

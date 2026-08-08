@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
 import ProcessTimeline from '../components/ProcessTimeline'
+import OriginGlobe from '../components/OriginGlobe'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -74,6 +75,9 @@ export default function Studio() {
           </div>
         </div>
       </section>
+
+      {/* Roots — an immersive globe that flies home to Ílhavo on scroll */}
+      <OriginGlobe />
 
       {/* Values */}
       <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
