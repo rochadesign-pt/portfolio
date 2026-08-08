@@ -1,8 +1,11 @@
+import { Link } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { values } from '../data/site'
+import { useContent } from '../content/ContentProvider'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
+import WorkCard from '../components/WorkCard'
 import ProcessTimeline from '../components/ProcessTimeline'
 import OriginGlobe from '../components/OriginGlobe'
 import PageTransition from '../components/PageTransition'
@@ -13,6 +16,8 @@ const behindPhoto = '/tiago-rocha.avif'
 
 export default function Studio() {
   const { t, lang } = useLang()
+  const { projects } = useContent()
+  const featured = projects.slice(0, 3)
   useSeo(t.seo.studio)
 
   return (
@@ -66,6 +71,37 @@ export default function Studio() {
               <h3 className="display text-3xl md:text-4xl">{v.title[lang]}</h3>
               <p className="mt-4 max-w-md text-muted">{v.desc[lang]}</p>
             </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Proof — a slim strip of selected work, so the beliefs above don't hang
+          in the abstract before the process below */}
+      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <div className="mb-12 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <Reveal className="mb-4">
+              <span className="label">{t.studioPage.workLabel}</span>
+            </Reveal>
+            <MaskReveal>
+              <h2 className="display text-4xl md:text-6xl">
+                {t.studioPage.workTitle} <span className="ital text-accent-text">{t.studioPage.workTitleAccent}</span>
+              </h2>
+            </MaskReveal>
+          </div>
+          <Reveal>
+            <Link
+              to="/work"
+              className="group inline-flex items-center gap-3 whitespace-nowrap text-sm text-muted transition-colors hover:text-text"
+            >
+              {t.studioPage.workCta}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </Link>
+          </Reveal>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
+          {featured.map((p, i) => (
+            <WorkCard key={p.slug} project={p} index={i} titleAs="h3" />
           ))}
         </div>
       </section>
