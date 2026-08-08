@@ -249,11 +249,11 @@ export default function OriginGlobe() {
 
         {/* copy, layered and crossfading — held in the upper third so the pin
             and coordinate readout can cluster below it, clear of the text */}
-        <div className="pointer-events-none absolute inset-x-0 top-[28vh] grid place-items-center px-6 text-center md:top-[30vh]">
-          <p ref={homeRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl">
+        <div className="pointer-events-none absolute inset-x-0 top-[22vh] grid place-items-center px-6 text-center md:top-[24vh]">
+          <p ref={homeRef} className="display text-5xl leading-[1.02] [grid-area:1/1] md:text-8xl">
             {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
           </p>
-          <p ref={worldRef} className="display text-4xl leading-tight [grid-area:1/1] md:text-6xl" style={{ opacity: 0 }}>
+          <p ref={worldRef} className="display text-5xl leading-[1.02] [grid-area:1/1] md:text-8xl" style={{ opacity: 0 }}>
             {o.world} <span className="ital text-accent-text">{o.worldAccent}</span>
           </p>
         </div>
