@@ -13,6 +13,15 @@ import { useSeo } from '../lib/useSeo'
 // B&W portrait for the founder section (in /public).
 const behindPhoto = '/tiago-rocha.avif'
 
+// Studio / place photography. Drop files in /public and set the paths here;
+// until then, tasteful duotone placeholders (with captions) stand in — swapping
+// to a real photo is a one-field change via Cover's `image` prop.
+const photos = {
+  place: null, // e.g. '/studio/ilhavo-ria.avif' — wide shot of Ílhavo / the Ria
+  space: null, // e.g. '/studio/space.avif' — the studio
+  detail: null, // e.g. '/studio/detail.avif' — a craft/detail or city shot
+}
+
 export default function Studio() {
   const { t, lang } = useLang()
   const { projects } = useContent()
@@ -40,6 +49,61 @@ export default function Studio() {
 
       {/* 2 — Roots: the globe flies from Ílhavo out to the world */}
       <OriginGlobe />
+
+      {/* 2b — Roots made real: a small photo-essay of Ílhavo and the studio.
+          Duotone placeholders with captions until real photography drops in. */}
+      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
+        <div className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-xl">
+            <Reveal className="mb-4">
+              <span className="label">{t.studioPage.placeLabel}</span>
+            </Reveal>
+            <MaskReveal>
+              <h2 className="display text-4xl md:text-6xl">
+                {t.studioPage.placeTitle} <span className="ital text-accent-text">{t.studioPage.placeAccent}</span>
+              </h2>
+            </MaskReveal>
+          </div>
+          <Reveal className="max-w-sm">
+            <p className="leading-relaxed text-muted">{t.studioPage.placeBody}</p>
+          </Reveal>
+        </div>
+
+        <div className="grid gap-3 md:gap-4">
+          <Reveal>
+            <div className="overflow-hidden rounded-2xl">
+              <Cover
+                colors={['#3a3630', '#0b0b0d']}
+                image={photos.place || undefined}
+                label={t.studioPage.placeCaption}
+                className="aspect-[16/9] w-full md:aspect-[21/9]"
+              />
+            </div>
+          </Reveal>
+          <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
+            <Reveal delay={0.05}>
+              <div className="overflow-hidden rounded-2xl">
+                <Cover
+                  colors={['#2a2e33', '#0b0b0d']}
+                  image={photos.space || undefined}
+                  label={t.studioPage.spaceCaption}
+                  className="aspect-[4/3] w-full"
+                />
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="overflow-hidden rounded-2xl">
+                <Cover
+                  colors={['#332a26', '#0b0b0d']}
+                  image={photos.detail || undefined}
+                  label={t.studioPage.detailCaption}
+                  className="aspect-[4/3] w-full"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       {/* 3 — Manifesto (text-led, no photo) */}
       <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
