@@ -62,17 +62,8 @@ export const dict = {
       sub: 'De uma primeira conversa a um lançamento impecável — quatro passos, sem surpresas.',
       cta: 'Começar um projeto',
     },
-    stats: {
-      label: 'Em números',
-      body: 'Números não fazem bom design. Mas dão contexto ao que construímos.',
-    },
     clients: {
       label: 'Confiam em nós',
-    },
-    studioTeaser: {
-      label: 'O estúdio',
-      body: 'Pequenos por escolha. Trabalhamos em poucos projetos de cada vez para nos entregarmos a sério a cada um.',
-      cta: 'Conhecer o estúdio',
     },
     exploration: {
       label: 'Exploration',
@@ -82,14 +73,6 @@ export const dict = {
       acc2: 'curiosidade',
       lead3: 'moldam novas formas de trabalhar.',
       sub: 'Estudos, ferramentas internas e coisas que fazemos por gosto. É aqui que o próximo trabalho começa.',
-    },
-    cta: {
-      label: 'Vamos a isto',
-      line: 'Tens uma marca',
-      lineAccent: 'para construir?',
-      sub: 'Conta-nos o que tens em mãos. Respondemos em 24 horas.',
-      button: 'Começar um projeto',
-      email: 'ou escreve para',
     },
     bigCta: {
       line: 'Vamos começar algo grande',
@@ -102,7 +85,6 @@ export const dict = {
       nav: 'Navegação',
       contactCol: 'Contacto',
       social: 'Redes',
-      rights: 'Todos os direitos reservados.',
       back: 'Voltar ao topo',
     },
     workPage: {
@@ -114,14 +96,12 @@ export const dict = {
       filterAll: 'Tudo',
     },
     project: {
-      overview: 'Sobre o projeto',
       client: 'Cliente',
       category: 'Categoria',
       industry: 'Indústria',
       country: 'País',
       year: 'Ano',
       services: 'Serviços',
-      role: 'O nosso papel',
       context: 'Contexto',
       process: 'O processo',
       chapters: 'Capítulos',
@@ -133,9 +113,7 @@ export const dict = {
       next: 'Próximo projeto',
       moreCases: 'Ver mais',
       moreCasesAccent: 'projetos',
-      readCase: 'Ver projeto',
       back: 'Todos os projetos',
-      live: 'Ver site',
     },
     servicesPage: {
       eyebrow: 'Serviços',
@@ -145,8 +123,6 @@ export const dict = {
       sub: 'Estratégia, identidade e interface. Com research a sério e craft até ao último detalhe — sem atalhos.',
       capLabel: 'O que fazemos',
       capLine: 'Três disciplinas, um só padrão de craft.',
-      processLabel: 'Como trabalhamos',
-      processTitle: 'O processo',
     },
     studioPage: {
       eyebrow: 'Estúdio',
@@ -166,7 +142,6 @@ export const dict = {
       aiBody2:
         'Usamo-la todos os dias: para explorar mais depressa, construir as nossas próprias ferramentas e ir além das plataformas do costume. O objetivo é valor real — não uma camada de "tinta AI" por cima dos workflows de sempre.',
       origin: {
-        label: 'Raízes',
         home: 'Enraizados em',
         homeAccent: 'Ílhavo.',
         world: 'Disponíveis para o',
@@ -291,17 +266,8 @@ export const dict = {
       sub: 'From a first conversation to an immaculate launch — four steps, no surprises.',
       cta: 'Start a project',
     },
-    stats: {
-      label: 'By the numbers',
-      body: 'Numbers do not make good design. But they give context to what we build.',
-    },
     clients: {
       label: 'Trusted by',
-    },
-    studioTeaser: {
-      label: 'The studio',
-      body: 'Small by choice. We take on few projects at a time so we can give each one everything.',
-      cta: 'Meet the studio',
     },
     exploration: {
       label: 'Exploration',
@@ -311,14 +277,6 @@ export const dict = {
       acc2: 'curiosity',
       lead3: 'shape new ways of working.',
       sub: 'Studies, internal tools and things we make for the love of it. This is where the next project starts.',
-    },
-    cta: {
-      label: "Let's do this",
-      line: 'Got a brand',
-      lineAccent: 'to build?',
-      sub: 'Tell us what you are working on. We reply within 24 hours.',
-      button: 'Start a project',
-      email: 'or write to',
     },
     bigCta: {
       line: "Let's start something big",
@@ -331,7 +289,6 @@ export const dict = {
       nav: 'Navigation',
       contactCol: 'Contact',
       social: 'Social',
-      rights: 'All rights reserved.',
       back: 'Back to top',
     },
     workPage: {
@@ -343,14 +300,12 @@ export const dict = {
       filterAll: 'All',
     },
     project: {
-      overview: 'About the project',
       client: 'Client',
       category: 'Category',
       industry: 'Industry',
       country: 'Country',
       year: 'Year',
       services: 'Services',
-      role: 'Our role',
       context: 'Context',
       process: 'The process',
       chapters: 'Chapters',
@@ -362,9 +317,7 @@ export const dict = {
       next: 'Next project',
       moreCases: 'Explore more',
       moreCasesAccent: 'projects',
-      readCase: 'Read case',
       back: 'All projects',
-      live: 'View site',
     },
     servicesPage: {
       eyebrow: 'Services',
@@ -374,8 +327,6 @@ export const dict = {
       sub: 'Strategy, identity and interface. With real research and craft down to the last detail — no shortcuts.',
       capLabel: 'What we do',
       capLine: 'Three disciplines, one standard of craft.',
-      processLabel: 'How we work',
-      processTitle: 'The process',
     },
     studioPage: {
       eyebrow: 'Studio',
@@ -395,7 +346,6 @@ export const dict = {
       aiBody2:
         'We use it every day: to explore faster, build our own tools, and move past the usual platforms. The aim is real value — not a layer of AI paint over the same old workflows.',
       origin: {
-        label: 'Roots',
         home: 'Rooted in',
         homeAccent: 'Ílhavo.',
         world: 'Available to the',

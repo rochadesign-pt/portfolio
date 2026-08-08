@@ -113,13 +113,6 @@ export const values = [
   },
 ]
 
-export const team = [
-  { name: 'Tiago Rocha', role: { pt: 'Fundador & Design Lead', en: 'Founder & Design Lead' } },
-  { name: '[Nome]', role: { pt: 'Brand Designer', en: 'Brand Designer' } },
-  { name: '[Nome]', role: { pt: 'Product Designer', en: 'Product Designer' } },
-  { name: '[Nome]', role: { pt: 'Motion & Dev', en: 'Motion & Dev' } },
-]
-
 export const clients = ['Lumen', 'Meridian', 'Ferve', 'Orbit', 'Casa Nova', 'Pulse', 'Northwind', 'Atlas']
 
 // Exploration / lab tiles — off-brief experiments, laid out as a mosaic.
