@@ -131,7 +131,8 @@ export default function OriginGlobe() {
       // Ílhavo-proximity: 1 at home, 0 at the world view.
       const e = easeInOut(1 - p)
       const cx = W / 2
-      const cy = H / 2
+      // Nudge the globe down a touch so it doesn't crowd the hero above it.
+      const cy = H / 2 + H * 0.08
       const R0 = Math.min(W, H) * (mobile ? 0.36 : 0.34)
       const scale = 1 + (ZOOM - 1) * e
       const Reff = R0 * scale
@@ -242,30 +243,29 @@ export default function OriginGlobe() {
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
 
-        {/* eyebrow */}
-        <div className="absolute left-6 top-28 md:left-10 md:top-32">
-          <span className="label text-muted">{o.label}</span>
-        </div>
-
-        {/* Home headline — held in the upper area so the pin and coordinate
-            readout can cluster below it, clear of the text. */}
-        <div className="pointer-events-none absolute inset-x-0 top-[22vh] grid place-items-center px-6 text-center md:top-[24vh]">
+        {/* Home headline — centred in the upper-middle, with the coordinate
+            readout and pin clustered just below it. */}
+        <div className="pointer-events-none absolute inset-x-0 top-[40%] -translate-y-1/2 px-6 text-center">
           <p ref={homeRef} className="display text-5xl leading-[1.02] md:text-8xl">
             {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
           </p>
         </div>
 
-        {/* World headline — centred over the globe (no pin at this end). */}
-        <div ref={worldRef} className="pointer-events-none absolute inset-0 grid place-items-center px-6 text-center" style={{ opacity: 0 }}>
+        {/* World headline — centred over the (lowered) globe; no pin at this end. */}
+        <div
+          ref={worldRef}
+          className="pointer-events-none absolute inset-x-0 top-[58%] -translate-y-1/2 px-6 text-center"
+          style={{ opacity: 0 }}
+        >
           <p className="display text-5xl leading-[1.02] md:text-8xl">
             {o.world} <span className="ital text-accent-text">{o.worldAccent}</span>
           </p>
         </div>
 
-        {/* place + coordinates readout, tucked just below the centred pin */}
+        {/* place + coordinates readout, tucked just above the pin */}
         <div
           ref={placeRef}
-          className="pointer-events-none absolute inset-x-0 top-[57%] flex flex-col items-center gap-1 text-center"
+          className="pointer-events-none absolute inset-x-0 top-[52%] -translate-y-1/2 flex flex-col items-center gap-1 text-center"
           style={{ opacity: 0 }}
         >
           <span className="label text-accent-text">{o.place}</span>
