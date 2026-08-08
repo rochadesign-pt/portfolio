@@ -144,40 +144,6 @@ export const dict = {
       sub: 'Transformamos complexidade em clareza. Da estratégia à identidade e à interface, construímos marcas e produtos digitais com research a sério e craft até ao último detalhe — sem atalhos.',
       processLabel: 'Como trabalhamos',
       processTitle: 'O processo',
-      colophon: {
-        label: 'Bastidores',
-        title: 'Feito com',
-        titleAccent: 'intenção',
-        sub: 'Transparência também é craft. Estas são as ferramentas por trás deste site — o mesmo rigor que levamos para cada projeto.',
-        groups: [
-          {
-            label: 'Tipografia',
-            items: [
-              { name: 'Switzer', role: 'Títulos & texto' },
-              { name: 'Season Mix', role: 'Palavras-destaque' },
-            ],
-          },
-          {
-            label: 'Stack',
-            items: [
-              { name: 'React + Vite', role: 'Base da aplicação' },
-              { name: 'Tailwind CSS', role: 'Sistema de estilo' },
-              { name: 'Motion · GSAP · Lenis', role: 'Movimento & scroll' },
-              { name: 'Sanity', role: 'Conteúdo (CMS)' },
-              { name: 'Vercel', role: 'Deploy & hosting' },
-            ],
-          },
-          {
-            label: 'IA no processo',
-            items: [
-              { name: 'Claude', role: 'Raciocínio & código' },
-              { name: 'Exploração assistida', role: 'Iterar mais depressa' },
-              { name: 'Ferramentas próprias', role: 'Construídas à medida' },
-            ],
-          },
-        ],
-        note: 'Este site é o nosso próprio playground — construído à mão, afinado ao pixel.',
-      },
     },
     studioPage: {
       eyebrow: 'Estúdio',
@@ -390,40 +356,6 @@ export const dict = {
       sub: 'We turn complexity into clarity. From strategy to identity to interface, we build brands and digital products with real research and craft down to the last detail — no shortcuts.',
       processLabel: 'How we work',
       processTitle: 'The process',
-      colophon: {
-        label: 'Behind the scenes',
-        title: 'Built with',
-        titleAccent: 'intention',
-        sub: 'Transparency is craft too. These are the tools behind this site — the same rigor we bring to every project.',
-        groups: [
-          {
-            label: 'Typography',
-            items: [
-              { name: 'Switzer', role: 'Headlines & body' },
-              { name: 'Season Mix', role: 'Accent words' },
-            ],
-          },
-          {
-            label: 'Stack',
-            items: [
-              { name: 'React + Vite', role: 'Application base' },
-              { name: 'Tailwind CSS', role: 'Styling system' },
-              { name: 'Motion · GSAP · Lenis', role: 'Motion & scroll' },
-              { name: 'Sanity', role: 'Content (CMS)' },
-              { name: 'Vercel', role: 'Deploy & hosting' },
-            ],
-          },
-          {
-            label: 'AI in the loop',
-            items: [
-              { name: 'Claude', role: 'Reasoning & code' },
-              { name: 'Assisted exploration', role: 'Iterate faster' },
-              { name: 'Custom tools', role: 'Built in-house' },
-            ],
-          },
-        ],
-        note: 'This site is our own playground — hand-built, tuned to the pixel.',
-      },
     },
     studioPage: {
       eyebrow: 'Studio',

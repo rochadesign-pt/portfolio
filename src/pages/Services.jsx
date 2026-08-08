@@ -3,7 +3,6 @@ import { process } from '../data/site'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import ServiceColumns from '../components/ServiceColumns'
-import Colophon from '../components/Colophon'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -51,9 +50,6 @@ export default function Services() {
           ))}
         </div>
       </section>
-
-      {/* Colophon — the site's own materials, on the table */}
-      <Colophon />
     </PageTransition>
   )
 }
