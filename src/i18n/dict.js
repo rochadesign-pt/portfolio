@@ -120,9 +120,7 @@ export const dict = {
       title: 'Do conceito',
       titleAccent: 'ao lançamento',
       lead: 'Marcas e produtos digitais pensados para resolver problemas reais — e construídos para durar.',
-      sub: 'Estratégia, identidade e interface. Com research a sério e craft até ao último detalhe — sem atalhos.',
       capLabel: 'O que fazemos',
-      capLine: 'Três disciplinas, um só padrão de craft.',
     },
     studioPage: {
       eyebrow: 'Estúdio',
@@ -332,9 +330,7 @@ export const dict = {
       title: 'From concept',
       titleAccent: 'to launch',
       lead: 'Brands and digital products designed to solve real problems — and built to last.',
-      sub: 'Strategy, identity and interface. With real research and craft down to the last detail — no shortcuts.',
       capLabel: 'What we do',
-      capLine: 'Three disciplines, one standard of craft.',
     },
     studioPage: {
       eyebrow: 'Studio',

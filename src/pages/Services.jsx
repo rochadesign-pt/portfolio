@@ -13,35 +13,30 @@ export default function Services() {
 
   return (
     <PageTransition>
-      {/* The promise */}
-      <section className="mx-auto max-w-[1400px] px-6 pt-40 pb-20 md:px-10 md:pt-52 md:pb-24">
-        <Reveal className="mb-4">
+      {/* The promise — title and supporting line side by side, so the header
+          reads as one big statement + a caption, not a stack of big texts. */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-40 pb-20 md:px-10 md:pt-52 md:pb-28">
+        <Reveal className="mb-6 md:mb-8">
           <span className="label">{s.eyebrow}</span>
         </Reveal>
-        <MaskReveal>
-          <h1 className="display text-6xl md:text-8xl">
-            {s.title} <span className="ital text-accent-text">{s.titleAccent}</span>
-          </h1>
-        </MaskReveal>
-        <Reveal className="mt-8 max-w-3xl md:mt-10">
-          <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">{s.lead}</p>
-        </Reveal>
-        <Reveal className="mt-6 max-w-xl">
-          <p className="text-muted">{s.sub}</p>
-        </Reveal>
+        <div className="grid gap-8 md:grid-cols-[1.35fr_1fr] md:items-end md:gap-16">
+          <MaskReveal>
+            <h1 className="display text-6xl md:text-8xl">
+              {s.title} <span className="ital text-accent-text">{s.titleAccent}</span>
+            </h1>
+          </MaskReveal>
+          <Reveal className="md:pb-3">
+            <p className="max-w-md text-lg leading-relaxed text-muted md:text-xl">{s.lead}</p>
+          </Reveal>
+        </div>
       </section>
 
-      {/* What we do — the capabilities */}
+      {/* What we do — just a quiet label, then the columns speak */}
       <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
-        <div className="mb-12 md:mb-14">
-          <Reveal className="mb-4">
-            <span className="label">{s.capLabel}</span>
-          </Reveal>
-          <MaskReveal>
-            <h2 className="display max-w-3xl text-4xl md:text-6xl">{s.capLine}</h2>
-          </MaskReveal>
-        </div>
-        <ServiceColumns headingAs="h3" />
+        <Reveal className="mb-8 border-t border-line pt-8 md:mb-10">
+          <span className="label text-muted">{s.capLabel}</span>
+        </Reveal>
+        <ServiceColumns headingAs="h2" />
       </section>
 
       {/* How we work — the process (lives here, the commercial page) */}
