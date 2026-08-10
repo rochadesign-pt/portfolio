@@ -243,9 +243,9 @@ export default function OriginGlobe() {
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
 
-        {/* Home headline — centred in the upper-middle, with the coordinate
-            readout and pin clustered just below it. */}
-        <div className="pointer-events-none absolute inset-x-0 top-[40%] -translate-y-1/2 px-6 text-center">
+        {/* Home headline — sits at the same height as the world headline so the
+            two crossfade in place, with the coordinate readout below it. */}
+        <div className="pointer-events-none absolute inset-x-0 top-[58%] -translate-y-1/2 px-6 text-center">
           <p ref={homeRef} className="display text-5xl leading-[1.02] md:text-8xl">
             {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
           </p>
@@ -262,10 +262,10 @@ export default function OriginGlobe() {
           </p>
         </div>
 
-        {/* place + coordinates readout, tucked just above the pin */}
+        {/* place + coordinates readout, below the headline */}
         <div
           ref={placeRef}
-          className="pointer-events-none absolute inset-x-0 top-[52%] -translate-y-1/2 flex flex-col items-center gap-1 text-center"
+          className="pointer-events-none absolute inset-x-0 top-[72%] -translate-y-1/2 flex flex-col items-center gap-1 text-center"
           style={{ opacity: 0 }}
         >
           <span className="label text-accent-text">{o.place}</span>
