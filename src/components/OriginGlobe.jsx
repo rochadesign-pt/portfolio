@@ -152,22 +152,12 @@ export default function OriginGlobe() {
         if (v.z < -0.25) continue
         const sx = cx + v.x * Reff
         const sy = cy - v.y * Reff
-        // proximity to target (pre-rotation dot product) → accent tint near Ílhavo
-        const near = base.x * T.x + base.y * T.y + base.z * T.z
         const depth = clamp01((v.z + 0.25) / 1.25)
         const a = (0.12 + depth * 0.5) * clamp01(0.4 + v.z)
         const dr = (0.7 + depth * 0.9) * (mobile ? 0.85 : 1)
-        const tint = smooth(0.986, 0.999, near) * e
-        const col = tint > 0
-          ? {
-              r: cText.r + (cAccent.r - cText.r) * tint,
-              g: cText.g + (cAccent.g - cText.g) * tint,
-              b: cText.b + (cAccent.b - cText.b) * tint,
-            }
-          : cText
         ctx.beginPath()
-        ctx.fillStyle = `rgba(${col.r | 0},${col.g | 0},${col.b | 0},${a + tint * 0.4})`
-        ctx.arc(sx, sy, dr + tint * 1.2, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${cText.r},${cText.g},${cText.b},${a})`
+        ctx.arc(sx, sy, dr, 0, Math.PI * 2)
         ctx.fill()
       }
 
@@ -176,8 +166,10 @@ export default function OriginGlobe() {
       tv = rotX(tv, pitch)
       const mAlpha = smooth(0.32, 0.72, e)
       if (tv.z > 0 && mAlpha > 0.001) {
+        // Drop the hotspot below the centred headline so it reads as a labelled
+        // geo-marker (pin → place → coordinates) rather than sitting on the text.
         const mx = cx + tv.x * Reff
-        const my = cy - tv.y * Reff
+        const my = cy - tv.y * Reff + H * 0.15
         const ac = `${cAccent.r},${cAccent.g},${cAccent.b}`
         // pulsing ring
         if (!reduce) {
@@ -262,10 +254,10 @@ export default function OriginGlobe() {
           </p>
         </div>
 
-        {/* place + coordinates readout, below the headline */}
+        {/* place + coordinates readout, sitting just under the hotspot */}
         <div
           ref={placeRef}
-          className="pointer-events-none absolute inset-x-0 top-[72%] -translate-y-1/2 flex flex-col items-center gap-1 text-center"
+          className="pointer-events-none absolute inset-x-0 top-[80%] -translate-y-1/2 flex flex-col items-center gap-1 text-center"
           style={{ opacity: 0 }}
         >
           <span className="label text-accent-text">{o.place}</span>
