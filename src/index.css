@@ -202,7 +202,7 @@
   --my: 50%;
   --on: 0;
   --dot: rgba(255, 255, 255, 0.05);
-  --dot-strong: rgba(255, 255, 255, 0.16);
+  --dot-strong: rgba(255, 255, 255, 0.32);
   background-image: radial-gradient(circle, var(--dot) 1.1px, transparent 1.4px);
   background-size: 26px 26px;
 }
@@ -219,7 +219,7 @@
 }
 :root[data-theme='light'] .dotfield {
   --dot: rgba(0, 0, 0, 0.055);
-  --dot-strong: rgba(0, 0, 0, 0.16);
+  --dot-strong: rgba(0, 0, 0, 0.28);
 }
 
 /* Hollow / outlined display text — a graphic accent for oversized words. */
