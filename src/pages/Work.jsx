@@ -7,6 +7,7 @@ import { easeSoft } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import WorkCard from '../components/WorkCard'
+import WorkShowreel from '../components/WorkShowreel'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -20,49 +21,62 @@ export default function Work() {
     filter === 'All' ? projects : projects.filter((p) => (p.disciplines || []).includes(filter))
 
   const filters = ['All', ...disciplines]
+  const featured = projects.slice(0, 5)
 
   return (
     <PageTransition>
-      {/* Title hero — sized so only a sliver of the first projects peeks below
-          the fold, inviting the scroll. */}
-      <section className="mx-auto flex min-h-[80svh] max-w-[1400px] flex-col px-6 pt-40 pb-10 md:px-10 md:pt-52">
-        <div>
-          <Reveal className="mb-4">
-            <span className="label">{t.workPage.eyebrow}</span>
-          </Reveal>
-          <MaskReveal>
-            <h1 className="display text-6xl md:text-8xl">
-              {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
-            </h1>
-          </MaskReveal>
-          <Reveal className="mt-8 max-w-3xl md:mt-10">
-            <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
-              {t.workPage.lead}
-            </p>
-          </Reveal>
-          <Reveal className="mt-6 max-w-xl">
-            <p className="text-sm text-muted">{t.workPage.sub}</p>
-          </Reveal>
-        </div>
-
-        <Reveal className="mt-auto flex flex-wrap gap-2 pt-16">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`rounded-full border px-5 py-2 text-sm transition-colors ${
-                filter === f
-                  ? 'border-accent bg-accent text-accent-ink'
-                  : 'border-line text-muted hover:border-text hover:text-text'
-              }`}
-            >
-              {f === 'All' ? t.workPage.filterAll : f}
-            </button>
-          ))}
+      {/* Title hero */}
+      <section className="mx-auto max-w-[1400px] px-6 pt-40 pb-16 md:px-10 md:pt-52 md:pb-20">
+        <Reveal className="mb-4">
+          <span className="label">{t.workPage.eyebrow}</span>
+        </Reveal>
+        <MaskReveal>
+          <h1 className="display text-6xl md:text-8xl">
+            {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
+          </h1>
+        </MaskReveal>
+        <Reveal className="mt-8 max-w-3xl md:mt-10">
+          <p className="display text-2xl leading-[1.28] text-text md:text-[2rem] md:leading-[1.25]">
+            {t.workPage.lead}
+          </p>
+        </Reveal>
+        <Reveal className="mt-6 max-w-xl">
+          <p className="text-sm text-muted">{t.workPage.sub}</p>
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-[1400px] px-6 pb-16 md:px-10">
+      {/* Featured — horizontal showreel */}
+      {featured.length > 1 && (
+        <>
+          <div className="mx-auto max-w-[1400px] px-6 pb-8 md:px-10">
+            <Reveal>
+              <span className="label text-muted">{t.workPage.featuredLabel}</span>
+            </Reveal>
+          </div>
+          <WorkShowreel projects={featured} />
+        </>
+      )}
+
+      {/* Archive — filterable grid */}
+      <section className="mx-auto max-w-[1400px] px-6 pb-16 pt-24 md:px-10 md:pt-32">
+        <Reveal className="mb-10 flex flex-col gap-6 border-t border-line pt-8 md:flex-row md:items-center md:justify-between">
+          <span className="label text-muted">{t.workPage.archiveLabel}</span>
+          <div className="flex flex-wrap gap-2">
+            {filters.map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`rounded-full border px-5 py-2 text-sm transition-colors ${
+                  filter === f
+                    ? 'border-accent bg-accent text-accent-ink'
+                    : 'border-line text-muted hover:border-text hover:text-text'
+                }`}
+              >
+                {f === 'All' ? t.workPage.filterAll : f}
+              </button>
+            ))}
+          </div>
+        </Reveal>
         <motion.div layout className="grid gap-x-6 gap-y-14 md:grid-cols-2">
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (

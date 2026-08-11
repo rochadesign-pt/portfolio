@@ -94,6 +94,8 @@ export const dict = {
       lead: 'Não desenhamos para preencher portefólio. Cada marca, cada site, cada produto aqui nasceu de um problema real e foi construído com intenção — do primeiro esboço ao último pixel.',
       sub: 'Branding, web e produto digital. Filtra por disciplina.',
       filterAll: 'Tudo',
+      featuredLabel: 'Em destaque',
+      archiveLabel: 'Arquivo',
     },
     project: {
       client: 'Cliente',
@@ -304,6 +306,8 @@ export const dict = {
       lead: 'We don’t design to fill a portfolio. Every brand, every site, every product here started from a real problem and was built with intent — from the first sketch to the last pixel.',
       sub: 'Branding, web and digital product. Filter by discipline.',
       filterAll: 'All',
+      featuredLabel: 'Featured',
+      archiveLabel: 'Archive',
     },
     project: {
       client: 'Client',
