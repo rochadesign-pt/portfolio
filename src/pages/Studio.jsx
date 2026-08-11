@@ -5,6 +5,7 @@ import { useContent } from '../content/ContentProvider'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import Cover from '../components/Cover'
+import ParallaxImage from '../components/ParallaxImage'
 import WorkCard from '../components/WorkCard'
 import OriginGlobe from '../components/OriginGlobe'
 import PageTransition from '../components/PageTransition'
@@ -70,37 +71,27 @@ export default function Studio() {
         </div>
 
         <div className="grid gap-3 md:gap-4">
-          <Reveal>
-            <div className="overflow-hidden rounded-2xl">
-              <Cover
-                colors={['#3a3630', '#0b0b0d']}
-                image={photos.place || undefined}
-                label={t.studioPage.placeCaption}
-                className="aspect-[16/9] w-full md:aspect-[21/9]"
-              />
-            </div>
-          </Reveal>
+          <ParallaxImage
+            colors={['#3a3630', '#0b0b0d']}
+            image={photos.place || undefined}
+            label={t.studioPage.placeCaption}
+            className="aspect-[16/9] w-full md:aspect-[21/9]"
+          />
           <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
-            <Reveal delay={0.05}>
-              <div className="overflow-hidden rounded-2xl">
-                <Cover
-                  colors={['#2a2e33', '#0b0b0d']}
-                  image={photos.space || undefined}
-                  label={t.studioPage.spaceCaption}
-                  className="aspect-[4/3] w-full"
-                />
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="overflow-hidden rounded-2xl">
-                <Cover
-                  colors={['#332a26', '#0b0b0d']}
-                  image={photos.detail || undefined}
-                  label={t.studioPage.detailCaption}
-                  className="aspect-[4/3] w-full"
-                />
-              </div>
-            </Reveal>
+            <ParallaxImage
+              colors={['#2a2e33', '#0b0b0d']}
+              image={photos.space || undefined}
+              label={t.studioPage.spaceCaption}
+              className="aspect-[4/3] w-full"
+              speed={9}
+            />
+            <ParallaxImage
+              colors={['#332a26', '#0b0b0d']}
+              image={photos.detail || undefined}
+              label={t.studioPage.detailCaption}
+              className="aspect-[4/3] w-full"
+              speed={5}
+            />
           </div>
         </div>
       </section>
