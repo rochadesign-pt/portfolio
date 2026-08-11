@@ -2,7 +2,7 @@ import { useLang } from '../i18n/LanguageContext'
 import Reveal from '../components/Reveal'
 import MaskReveal from '../components/MaskReveal'
 import ServiceColumns from '../components/ServiceColumns'
-import ProcessTimeline from '../components/ProcessTimeline'
+import ProcessScroll from '../components/ProcessScroll'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
@@ -39,8 +39,8 @@ export default function Services() {
         <ServiceColumns headingAs="h2" />
       </section>
 
-      {/* How we work — the process (lives here, the commercial page) */}
-      <ProcessTimeline />
+      {/* How we work — a pinned, scroll-scrubbed process */}
+      <ProcessScroll />
     </PageTransition>
   )
 }
