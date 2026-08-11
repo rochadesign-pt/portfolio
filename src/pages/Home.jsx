@@ -290,7 +290,7 @@ export default function Home() {
       {/* The lab lives in a tall wrapper so it pins and stays fully visible for
           a while — room to actually see (and drag through) the projects —
           before the CTA rises over it. */}
-      <div className="relative z-0 h-[220vh]">
+      <div className="relative z-0 h-[180vh]">
         <div className="sticky top-0">
           <Exploration />
         </div>
