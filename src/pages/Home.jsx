@@ -287,14 +287,14 @@ export default function Home() {
              gated on this wrapper's progress inside CTASection). The extra
              wrapper height beyond one viewport is the scroll room the curtains
              sweep across, so the block-rise and the reveal never overlap. */}
-      {/* The lab lives in a tall wrapper so it pins and stays fully visible for
-          a while — room to actually see (and drag through) the projects —
-          before the CTA rises over it. */}
-      <div className="relative z-0 h-[180vh]">
-        <div className="sticky top-0">
-          <Exploration />
-        </div>
+      {/* The lab pins (sticky in the page flow, so it stays put the whole time)
+          and the spacer below is empty scroll room — the lab holds fully visible
+          across it (room to see and drag the projects) before the CTA rises up
+          and over the still-pinned lab. */}
+      <div className="sticky top-0 z-0">
+        <Exploration />
       </div>
+      <div aria-hidden="true" className="h-[80vh]" />
       <div data-cta-stack className="relative z-10 h-[180vh]">
         <div className="sticky top-0 h-screen overflow-hidden">
           <CTASection stacked />
