@@ -26,7 +26,12 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
 
   return (
     <Reveal delay={(index % 2) * 0.06} immediate={immediate}>
-      <Link to={`/work/${project.slug}`} onClick={onClick} className="group block">
+      <Link
+        to={`/work/${project.slug}`}
+        onClick={onClick}
+        data-cursor={lang === 'en' ? 'View' : 'Ver'}
+        className="group block"
+      >
         <div ref={coverRef} className="relative overflow-hidden rounded-xl">
           <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
             <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" eager={eager} />

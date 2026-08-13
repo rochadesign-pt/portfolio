@@ -84,7 +84,6 @@ export default function Exploration() {
         lastX = e.clientX
         lastDX = 0
         flick?.kill()
-        el.style.cursor = 'grabbing'
         try {
           el.setPointerCapture(e.pointerId)
         } catch {
@@ -102,7 +101,6 @@ export default function Exploration() {
       const onUp = () => {
         if (!dragging) return
         dragging = false
-        el.style.cursor = 'grab'
         vel = 0
         const dist = clamp(lastDX * 16, -1400, 1400)
         flick = gsap.to(state, {
@@ -116,7 +114,6 @@ export default function Exploration() {
         })
       }
 
-      el.style.cursor = 'grab'
       el.style.touchAction = 'pan-y' // let the page scroll vertically; we take horizontal drags
       el.addEventListener('pointerdown', onDown)
       window.addEventListener('pointermove', onMove)
@@ -162,7 +159,11 @@ export default function Exploration() {
 
         {/* Scroll-driven, draggable marquee band */}
         <div className="overflow-hidden">
-          <div ref={track} className="flex w-max items-start gap-6 px-6 will-change-transform md:gap-8 md:px-10">
+          <div
+            ref={track}
+            data-cursor={lang === 'en' ? 'Drag' : 'Arrastar'}
+            className="flex w-max items-start gap-6 px-6 will-change-transform md:gap-8 md:px-10"
+          >
             {content.map((e, i) => (
               <Tile key={i} e={e} lang={lang} />
             ))}

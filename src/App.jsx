@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from './theme/ThemeContext'
 import { LanguageProvider, useLang } from './i18n/LanguageContext'
 import Wayfinding from './components/Wayfinding'
+import Cursor from './components/Cursor'
 import { ContentProvider } from './content/ContentProvider'
 import { ZoomProvider } from './context/Zoom'
 import { MenuProvider, useMenu } from './context/Menu'
@@ -105,6 +106,7 @@ export function Shell() {
           <Nav />
           <MenuPanel />
           <Wayfinding />
+          <Cursor />
           <PageShell>
             <LangFade>
               <AnimatedRoutes />

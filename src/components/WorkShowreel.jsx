@@ -86,6 +86,7 @@ export default function WorkShowreel({ projects }) {
                 key={p.slug}
                 to={`/work/${p.slug}`}
                 onClick={(e) => openZoom(e, p)}
+                data-cursor={lang === 'en' ? 'View' : 'Ver'}
                 className="group relative h-[58vh] w-[80vw] shrink-0 snap-center overflow-hidden rounded-2xl sm:w-[62vw] md:h-[70vh] md:w-[46vw] lg:w-[38vw]"
               >
                 <div className="reel-cover absolute inset-0 scale-[1.2] [will-change:transform]">

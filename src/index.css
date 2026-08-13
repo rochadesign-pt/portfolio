@@ -295,3 +295,10 @@
   background: transparent;
   border: 0;
 }
+
+/* Custom cursor — hide the OS cursor only inside marked zones, and only while
+   the custom cursor is mounted (fine pointers). */
+.rds-cursor [data-cursor],
+.rds-cursor [data-cursor] * {
+  cursor: none;
+}
