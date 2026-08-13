@@ -113,7 +113,7 @@ export default function BriefBuilder({ b, helpOptions, budgetOptions, onApply })
           exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h3 className="display mb-6 text-2xl md:text-3xl">{cur.q}</h3>
+          <h2 className="display mb-6 text-2xl md:text-3xl">{cur.q}</h2>
 
           {cur.kind === 'text' ? (
             <textarea

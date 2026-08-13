@@ -68,7 +68,32 @@ export default function Exploration() {
         state.pos += vel
         render()
       }
-      if (!reduce) gsap.ticker.add(tick)
+      // Only run the ticker while the band is on (or near) screen — the home
+      // page keeps it mounted the whole scroll via a sticky stack, so pausing
+      // it off-screen saves a per-frame integrator for nothing.
+      let ticking = false
+      const startTick = () => {
+        if (ticking) return
+        ticking = true
+        gsap.ticker.add(tick)
+      }
+      const stopTick = () => {
+        if (!ticking) return
+        ticking = false
+        gsap.ticker.remove(tick)
+      }
+      const section = el.closest('section')
+      let io = null
+      if (!reduce) {
+        if (section && 'IntersectionObserver' in window) {
+          io = new IntersectionObserver(([e]) => (e.isIntersecting ? startTick() : stopTick()), {
+            rootMargin: '200px',
+          })
+          io.observe(section)
+        } else {
+          startTick()
+        }
+      }
 
       // Scroll surge — nudges velocity with scroll, then the tick settles it.
       const st = ScrollTrigger.create({
@@ -120,7 +145,8 @@ export default function Exploration() {
       window.addEventListener('pointerup', onUp)
 
       return () => {
-        gsap.ticker.remove(tick)
+        io?.disconnect()
+        stopTick()
         st.kill()
         flick?.kill()
         el.removeEventListener('pointerdown', onDown)

@@ -25,7 +25,7 @@ export default function MenuPanel() {
           above the shell so it's never clipped. left = 100% - panel width. */}
       <button
         onClick={close}
-        aria-label="Fechar menu"
+        aria-label={lang === 'pt' ? 'Fechar menu' : 'Close menu'}
         tabIndex={open ? 0 : -1}
         className={`fixed left-[28%] top-1/2 z-[70] flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-text text-bg shadow-lg transition-all duration-500 md:left-[64%] ${
           open ? 'scale-100 opacity-100 delay-200' : 'pointer-events-none scale-75 opacity-0'

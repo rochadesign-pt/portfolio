@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { track } from '../lib/analytics'
 
@@ -36,6 +36,7 @@ const options = [
 
 export default function LanguageSwitcher() {
   const { lang, setLang } = useLang()
+  const reduce = useReducedMotion()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -55,8 +56,9 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs font-medium transition-colors hover:border-text/40"
-        aria-label="Select language"
+        aria-label={lang === 'pt' ? 'Selecionar idioma' : 'Select language'}
         aria-expanded={open}
+        aria-haspopup="listbox"
       >
         <span className="h-3 w-[18px] overflow-hidden rounded-[2px] ring-1 ring-line">
           <Current />
@@ -67,7 +69,7 @@ export default function LanguageSwitcher() {
           height="9"
           viewBox="0 0 10 10"
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={reduce ? { duration: 0 } : { duration: 0.2 }}
           className="text-muted"
         >
           <path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -77,10 +79,10 @@ export default function LanguageSwitcher() {
       <AnimatePresence>
         {open && (
           <motion.ul
-            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.97 }}
-            transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.97 }}
+            transition={reduce ? { duration: 0.12 } : { duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
             className="absolute right-0 z-50 mt-2 w-44 origin-top-right overflow-hidden rounded-xl border border-line bg-surface p-1 shadow-2xl"
           >
             {options.map((o) => {

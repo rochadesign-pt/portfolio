@@ -1,10 +1,13 @@
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion'
 
 // A quiet wayfinding layer: a hairline progress bar pinned to the top edge,
 // tracking read depth. (The right-side section dot rail was removed.)
 export default function Wayfinding() {
+  const reduce = useReducedMotion()
   const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 })
+  const spring = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 })
+  // Under reduced motion, track scroll directly (no spring easing/overshoot).
+  const scaleX = reduce ? scrollYProgress : spring
 
   return (
     <motion.div

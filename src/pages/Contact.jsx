@@ -141,6 +141,7 @@ export default function Contact() {
     <div className="relative">
       <select
         name={name}
+        aria-label={placeholder}
         value={sel[name]}
         onChange={(e) => setSel((s) => ({ ...s, [name]: e.target.value }))}
         className={`${field} cursor-pointer appearance-none pr-8 ${sel[name] ? 'text-text' : 'text-muted'}`}
@@ -184,7 +185,7 @@ export default function Contact() {
         <div className="grid gap-16 md:grid-cols-[1.4fr_1fr]">
           <Reveal>
             {status === 'success' ? (
-              <div className="flex min-h-72 items-center">
+              <div className="flex min-h-72 items-center" role="status" aria-live="polite">
                 <p className="display text-4xl md:text-5xl">
                   {c.sentTitle} <span className="ital text-accent-text">✓</span>
                   <span className="mt-4 block text-lg text-muted">{c.response}</span>
@@ -200,17 +201,18 @@ export default function Contact() {
                 />
                 <form onSubmit={onSubmit} className="space-y-8">
                 <div className="grid gap-8 md:grid-cols-2">
-                  <input name="name" className={field} placeholder={c.phName} required autoComplete="name" />
+                  <input name="name" aria-label={c.phName} className={field} placeholder={c.phName} required autoComplete="name" />
                   <input
                     name="email"
                     type="email"
+                    aria-label={c.phEmail}
                     className={field}
                     placeholder={c.phEmail}
                     required
                     autoComplete="email"
                   />
                 </div>
-                <input name="company" className={field} placeholder={c.phCompany} autoComplete="organization" />
+                <input name="company" aria-label={c.phCompany} className={field} placeholder={c.phCompany} autoComplete="organization" />
 
                 {/* Serviços — multi-select */}
                 <fieldset>
@@ -254,6 +256,7 @@ export default function Contact() {
                 <textarea
                   ref={messageRef}
                   name="message"
+                  aria-label={c.phMessage}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className={`${field} resize-none`}
@@ -275,7 +278,7 @@ export default function Contact() {
                 {TURNSTILE_SITEKEY && <div ref={captchaRef} className="min-h-[65px]" />}
 
                 {status === 'error' && (
-                  <p className="text-sm text-accent-text">
+                  <p className="text-sm text-accent-text" role="alert">
                     {c.error}{' '}
                     <a href={`mailto:${contact.email}`} className="link-underline">
                       {contact.email}
@@ -283,6 +286,11 @@ export default function Contact() {
                     .
                   </p>
                 )}
+
+                {/* Screen-reader status for the sending state */}
+                <span className="sr-only" role="status" aria-live="polite">
+                  {status === 'sending' ? c.sending : ''}
+                </span>
 
                 <Magnetic className="inline-block">
                   <button

@@ -34,6 +34,24 @@ export default function WorkShowreel({ projects }) {
 
       const measure = () => Math.max(0, track.scrollWidth - vw)
       let total = measure()
+      // Static geometry, cached on setup/refresh so the scrub loop never reads
+      // layout (getBoundingClientRect per cover per frame = reflow thrash). Each
+      // card's centre in the viewport is derived purely from the known translate:
+      // trackBaseLeft (its untransformed left) + x + the card's fixed offset.
+      let trackBaseLeft = 0
+      let geo = []
+      const cacheGeo = () => {
+        // Read the untransformed left by neutralising the current transform.
+        const prev = track.style.transform
+        track.style.transform = 'translate3d(0,0,0)'
+        trackBaseLeft = track.getBoundingClientRect().left
+        track.style.transform = prev
+        geo = covers.map((cover) => {
+          const card = cover.parentElement
+          return { center: card.offsetLeft + card.offsetWidth / 2 }
+        })
+      }
+      cacheGeo()
       // Height of the pinned scroll = the horizontal overflow, so 1px of vertical
       // scroll ≈ 1px of sideways travel.
       wrapRef.current.style.height = `${window.innerHeight + total}px`
@@ -47,15 +65,16 @@ export default function WorkShowreel({ projects }) {
         onRefresh: () => {
           total = measure()
           wrapRef.current.style.height = `${window.innerHeight + total}px`
+          cacheGeo()
         },
         onUpdate: (self) => {
           const x = -self.progress * total
           track.style.transform = `translate3d(${x}px,0,0)`
           if (reduce) return
-          for (const cover of covers) {
-            const r = cover.parentElement.getBoundingClientRect()
-            const rel = Math.max(-0.5, Math.min(0.5, (r.left + r.width / 2 - vw / 2) / vw))
-            cover.style.transform = `translate3d(${-rel * 56}px,0,0) scale(1.2)`
+          for (let i = 0; i < covers.length; i++) {
+            const centerX = trackBaseLeft + x + geo[i].center
+            const rel = Math.max(-0.5, Math.min(0.5, (centerX - vw / 2) / vw))
+            covers[i].style.transform = `translate3d(${-rel * 56}px,0,0) scale(1.2)`
           }
         },
       })
@@ -92,13 +111,13 @@ export default function WorkShowreel({ projects }) {
                 <div className="reel-cover absolute inset-0 scale-[1.2] [will-change:transform]">
                   <Cover colors={p.cover} image={p.coverImage} className="h-full w-full" objectPosition="center 22%" />
                 </div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45" />
                 <div className="pointer-events-none relative flex h-full flex-col justify-between p-7 md:p-9">
-                  <span className="label text-white/70">
-                    {String(i + 1).padStart(2, '0')} <span className="text-white/40">/ {String(total).padStart(2, '0')}</span>
+                  <span className="label text-white/85">
+                    {String(i + 1).padStart(2, '0')} <span className="text-white/55">/ {String(total).padStart(2, '0')}</span>
                   </span>
                   <div>
-                    <span className="label text-white/60">{p.category}</span>
+                    <span className="label text-white/80">{p.category}</span>
                     <h3 className="display mt-1 text-3xl text-white md:text-4xl">{p.title}</h3>
                     {p.tagline && <p className="mt-2 max-w-sm text-sm text-white/70">{p.tagline[lang] || p.tagline}</p>}
                   </div>

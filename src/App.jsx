@@ -56,11 +56,24 @@ function LangFade({ children }) {
   )
 }
 
+// Skip link — first tab stop, jumps keyboard/SR users straight to the content.
+function SkipLink() {
+  const { lang } = useLang()
+  return (
+    <a
+      href="#main"
+      className="sr-only rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200]"
+    >
+      {lang === 'en' ? 'Skip to content' : 'Saltar para o conteúdo'}
+    </a>
+  )
+}
+
 // The scrollable content that slides aside to reveal the menu panel.
 function PageShell({ children }) {
   const { open, close } = useMenu()
   return (
-    <div className={`page-shell ${open ? 'is-open' : ''}`}>
+    <div id="main" tabIndex={-1} className={`page-shell outline-none ${open ? 'is-open' : ''}`}>
       {open && <button aria-label="Fechar menu" className="page-shell-cover" onClick={close} />}
       {children}
     </div>
@@ -102,6 +115,7 @@ export function Shell() {
         <VisualEditing />
         <Preloader />
         <SmoothScroll>
+          <SkipLink />
           <div className="grain" aria-hidden="true" />
           <Nav />
           <MenuPanel />

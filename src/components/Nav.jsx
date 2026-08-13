@@ -9,10 +9,21 @@ import Wordmark from './Wordmark'
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme()
+  const { lang } = useLang()
+  const dark = theme === 'dark'
+  const label =
+    lang === 'pt'
+      ? dark
+        ? 'Mudar para tema claro'
+        : 'Mudar para tema escuro'
+      : dark
+        ? 'Switch to light theme'
+        : 'Switch to dark theme'
   return (
     <button
       onClick={toggle}
-      aria-label="Toggle theme"
+      aria-label={label}
+      aria-pressed={dark}
       className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-text transition-colors hover:border-text/40"
     >
       {theme === 'dark' ? (

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useLang } from '../i18n/LanguageContext'
 import { easeSoft } from '../lib/motion'
 import Cover from './Cover'
@@ -10,6 +10,7 @@ import { track } from '../lib/analytics'
 
 export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = false, immediate = false }) {
   const { lang } = useLang()
+  const reduce = useReducedMotion()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
   const isCaseStudy = project.isCaseStudy !== false
@@ -33,7 +34,7 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
         className="group block"
       >
         <div ref={coverRef} className="relative overflow-hidden rounded-xl">
-          <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
+          <motion.div whileHover={reduce ? undefined : { scale: 1.04 }} transition={{ duration: 0.8, ease: easeSoft }}>
             <Cover colors={project.cover} image={project.coverImage} className="aspect-[4/3] w-full" eager={eager} />
           </motion.div>
 

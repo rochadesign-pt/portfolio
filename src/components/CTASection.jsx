@@ -133,15 +133,33 @@ export default function CTASection({ stacked = false }) {
       }
     }
 
-    // A single always-on rAF loop while the section is mounted. One rect read +
-    // 12 style writes per frame is trivial, and it removes every point of
-    // failure (scroll events, observers) that could leave the reveal stuck.
-    let rafId = requestAnimationFrame(function loop() {
+    // A rAF loop drives the reveal (reliable on iOS Safari, where scroll events
+    // are throttled during momentum). It runs only while the section is near the
+    // viewport — an IntersectionObserver starts/stops it — so it costs nothing
+    // while scrolled away (e.g. the home sticky-stack, mounted the whole time).
+    let rafId = 0
+    let running = false
+    const loop = () => {
       apply()
       rafId = requestAnimationFrame(loop)
-    })
+    }
+    const start = () => {
+      if (running) return
+      running = true
+      rafId = requestAnimationFrame(loop)
+    }
+    const stop = () => {
+      running = false
+      cancelAnimationFrame(rafId)
+    }
+    apply() // correct initial paint before the observer fires
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { rootMargin: '200px' })
+    io.observe(section)
 
-    return () => cancelAnimationFrame(rafId)
+    return () => {
+      stop()
+      io.disconnect()
+    }
   }, [isContact, pathname, stacked])
 
   if (isContact) return null
