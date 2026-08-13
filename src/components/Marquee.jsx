@@ -17,6 +17,8 @@ export default function Marquee({
   textClass = 'text-4xl md:text-6xl',
   renderItem,
   gapClass = 'gap-8',
+  bordered = true,
+  fade = false,
 }) {
   const track = useRef(null)
 
@@ -44,8 +46,15 @@ export default function Marquee({
       <span className={`display ${textClass} ${outline ? 'text-outline' : 'text-text/90'}`}>{item}</span>
     ))
 
+  // A soft fade at each end, so items dissolve into the background instead of
+  // being hard-clipped by the overflow edge.
+  const fadeMask = 'linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)'
+
   return (
-    <div className="overflow-hidden py-6 border-y border-line">
+    <div
+      className={`overflow-hidden py-6 ${bordered ? 'border-y border-line' : ''}`}
+      style={fade ? { maskImage: fadeMask, WebkitMaskImage: fadeMask } : undefined}
+    >
       <div ref={track} className={`flex w-max items-center ${gapClass} whitespace-nowrap will-change-transform`}>
         {content.map((item, i) => (
           <span key={i} className={`flex items-center ${gapClass}`}>

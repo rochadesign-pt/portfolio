@@ -25,7 +25,6 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 function Hero() {
   const { t } = useLang()
-  const reduce = useReducedMotion()
   const [started, setStarted] = useState(false)
 
   // Start the hero entrance when the preloader finishes (or immediately if it
@@ -82,20 +81,6 @@ function Hero() {
           <p className="max-w-md text-lg text-muted">{t.hero.sub}</p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-16 flex items-center gap-2 text-xs text-muted"
-        >
-          <motion.span
-            animate={reduce ? {} : { y: [0, 6, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            ↓
-          </motion.span>
-          <span className="label">{t.hero.scroll}</span>
-        </motion.div>
       </div>
     </section>
   )
@@ -249,6 +234,8 @@ function ClientsBand() {
         items={clients}
         separator={null}
         speed={40}
+        bordered={false}
+        fade
         gapClass="gap-12 md:gap-20"
         renderItem={(c) =>
           c.logo ? (

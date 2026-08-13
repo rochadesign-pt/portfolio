@@ -21,6 +21,13 @@ export default defineType({
       description: 'On = full case-study page. Off = shown as work, no deep story.',
       initialValue: true,
     }),
+    defineField({
+      name: 'concept',
+      title: 'Concept / self-initiated?',
+      type: 'boolean',
+      description: 'On = "Concept" badge (test / personal projects). Off = "Case study" badge (real client work).',
+      initialValue: false,
+    }),
     defineField({ name: 'category', title: 'Category', type: 'string', description: 'e.g. Brand Identity, Website' }),
     defineField({
       name: 'disciplines',

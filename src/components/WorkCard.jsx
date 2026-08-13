@@ -13,7 +13,9 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
   const reduce = useReducedMotion()
   const coverRef = useRef(null)
   const zoomCtx = useZoom()
-  const isCaseStudy = project.isCaseStudy !== false
+  // Two nomenclatures: "Case study" for real client work, "Concept" for
+  // self-initiated / test projects (flagged by `concept: true`).
+  const concept = project.concept === true
   const Title = titleAs
 
   const onClick = (e) => {
@@ -46,14 +48,14 @@ export default function WorkCard({ project, index = 0, titleAs = 'h3', eager = f
             </span>
             <span
               className={`inline-flex -translate-y-1 items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium opacity-0 transition-all delay-[60ms] duration-500 group-hover:translate-y-0 group-hover:opacity-100 ${
-                isCaseStudy ? 'bg-accent text-accent-ink' : 'bg-white/90 text-[#0b0b0d]'
+                concept ? 'bg-white/90 text-[#0b0b0d]' : 'bg-accent text-accent-ink'
               }`}
             >
               <span
                 className="h-2.5 w-2.5 rounded-[3px]"
-                style={{ background: isCaseStudy ? '#0b0b0d' : '#8f8b83' }}
+                style={{ background: concept ? '#8f8b83' : '#0b0b0d' }}
               />
-              {isCaseStudy ? 'Case study' : lang === 'pt' ? 'Projeto' : 'Project'}
+              {concept ? 'Concept' : 'Case study'}
             </span>
           </div>
 

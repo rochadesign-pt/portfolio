@@ -45,7 +45,7 @@ const paras = (locale) => ({
 })
 
 export const PROJECT_QUERY = `*[_type == "project"] | order(order asc){
-  "slug": slug.current, title, isCaseStudy, category, disciplines, industry, country, year, services,
+  "slug": slug.current, title, isCaseStudy, concept, category, disciplines, industry, country, year, services,
   coverColors, coverImage, tagline, intro, challenge, approach, outcome, quote, results,
   gallery[]{
     _type,
@@ -78,6 +78,7 @@ export function mapProject(p) {
     title: p.title,
     gallery,
     isCaseStudy: p.isCaseStudy !== false,
+    concept: p.concept === true,
     category: p.category || '',
     disciplines: p.disciplines || [],
     industry: p.industry || { pt: '', en: '' },
