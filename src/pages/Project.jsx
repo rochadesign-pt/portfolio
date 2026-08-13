@@ -12,6 +12,67 @@ import CountUp from '../components/CountUp'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
+// Per-block shapes. Half-width blocks pair up in the flex row.
+const ASPECT = { wide: 'aspect-[16/10]', portrait: 'aspect-[3/4]', tall: 'aspect-[4/5]', square: 'aspect-square' }
+
+function BlockNote({ heading, caption }) {
+  if (!heading && !caption) return null
+  return (
+    <figcaption className="max-w-2xl">
+      {heading && <span className="label mb-2 block text-accent-text">{heading}</span>}
+      {caption && <p className="leading-relaxed text-text/80">{caption}</p>}
+    </figcaption>
+  )
+}
+
+function ImageBlock({ block, lang }) {
+  return (
+    <figure className="flex w-full flex-col gap-5">
+      <BlockNote heading={block.heading?.[lang]} caption={block.caption?.[lang]} />
+      <ParallaxImage
+        colors={block.colors}
+        image={block.url}
+        className={`${ASPECT[block.aspect] || ASPECT.wide} w-full rounded-2xl`}
+      />
+    </figure>
+  )
+}
+
+// A colour palette — swatches with names + hex, for branding case studies.
+function PaletteBlock({ block, lang }) {
+  return (
+    <figure className="flex w-full flex-col gap-6">
+      <BlockNote heading={block.heading?.[lang]} caption={block.caption?.[lang]} />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+        {block.swatches.map((s, i) => (
+          <div key={i} className="flex flex-col gap-2.5">
+            <div className="aspect-square rounded-xl border border-line" style={{ background: s.hex }} />
+            <div className="text-xs leading-tight">
+              {s.name && <span className="block text-text">{s.name}</span>}
+              <span className="font-mono uppercase text-muted">{s.hex}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </figure>
+  )
+}
+
+// The case-study visual body: a flex flow where full blocks span the row and
+// two consecutive half blocks pair side by side (stacking on mobile).
+function BlockFlow({ blocks, lang }) {
+  if (!blocks?.length) return null
+  return (
+    <div className="flex flex-wrap gap-4 md:gap-6">
+      {blocks.map((b, i) => (
+        <Reveal key={i} className={b.kind === 'image' && b.width === 'half' ? 'w-full md:w-[calc(50%-0.75rem)]' : 'w-full'}>
+          {b.kind === 'palette' ? <PaletteBlock block={b} lang={lang} /> : <ImageBlock block={b} lang={lang} />}
+        </Reveal>
+      ))}
+    </div>
+  )
+}
+
 export default function Project() {
   const { slug } = useParams()
   const { t, lang } = useLang()
@@ -100,40 +161,32 @@ export default function Project() {
   )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  // Gallery item (from Sanity) for slot i: { url, heading, caption } — or
-  // undefined, in which case the duotone fallback colour shows.
-  const gi = (i) => p.galleryImages?.[i]
 
-  // An image with its editorial note. The caption is where the decision behind
-  // the image gets explained — so the case study reads as a story, not a
-  // slideshow. Note shows only when there's something to say.
-  const Figure = ({ i, className }) => {
-    const g = gi(i)
-    const heading = g?.heading?.[lang]
-    const caption = g?.caption?.[lang]
-    // The note leads INTO the image — "here's the decision" then "here's the
-    // result" — so the page reads text → image → text → image, a light rhythm
-    // rather than a stack of silent pictures.
-    return (
-      <figure className="flex flex-col gap-6">
-        {(heading || caption) && (
-          <figcaption className="max-w-2xl">
-            {heading && <span className="label mb-3 block text-accent-text">{heading}</span>}
-            {caption && <p className="text-lg leading-relaxed text-text/80">{caption}</p>}
-          </figcaption>
-        )}
-        <ParallaxImage colors={p.gallery[i % p.gallery.length]} image={g?.url} className={className} />
-      </figure>
-    )
+  // Case-study blocks come from Sanity (each with its own layout). When a
+  // project has none yet, derive a varied placeholder flow from any legacy
+  // gallery notes + the duotone fallback colours, so the layout still reads.
+  const legacyBlocks = () => {
+    const imgs = p.galleryImages || []
+    const cols = p.gallery?.length ? p.gallery : [['#1d1d20', '#0b0b0d']]
+    const count = imgs.length || 3
+    const W = ['full', 'half', 'half', 'full', 'full']
+    const A = ['wide', 'portrait', 'portrait', 'square', 'wide']
+    return Array.from({ length: count }, (_, i) => ({
+      kind: 'image',
+      url: imgs[i]?.url,
+      heading: imgs[i]?.heading || null,
+      caption: imgs[i]?.caption || null,
+      width: W[i % W.length],
+      aspect: A[i % A.length],
+      colors: cols[i % cols.length],
+    }))
   }
-
-  // Showcase after the Approach: every real gallery image beyond the two anchors,
-  // each with its note. With no real images yet, a few duotone slots keep the
-  // layout full so the placeholder state still reads.
-  const realCount = p.galleryImages?.length || 0
-  const showcase =
-    realCount > 2 ? Array.from({ length: realCount - 2 }, (_, k) => 2 + k) : realCount === 0 ? [2, 3, 4] : []
-  const ratios = ['aspect-[3/2]', 'aspect-[16/9]', 'aspect-[2/1]', 'aspect-[21/9]']
+  const blocks = p.blocks?.length ? p.blocks : legacyBlocks()
+  // The first block leads in full-width as the establishing shot; the rest flow.
+  const establishing = blocks[0]
+    ? { ...blocks[0], ...(blocks[0].kind === 'image' ? { width: 'full', aspect: 'wide' } : {}) }
+    : null
+  const showcase = blocks.slice(1)
 
   return (
     <PageTransition instant={zoomEntry}>
@@ -221,7 +274,7 @@ export default function Project() {
             </div>
 
             {/* Establishing image */}
-            <Figure i={0} className="aspect-[16/9] w-full rounded-2xl" />
+            {establishing && <BlockFlow blocks={[establishing]} lang={lang} />}
 
             {/* Challenge */}
             <div id="ch-challenge" className="scroll-mt-28">
@@ -231,9 +284,6 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Figure */}
-            <Figure i={1} className="aspect-[2/1] w-full rounded-2xl" />
-
             {/* Approach */}
             <div id="ch-approach" className="scroll-mt-28">
               <Reveal className="flex flex-col gap-6">
@@ -242,10 +292,8 @@ export default function Project() {
               </Reveal>
             </div>
 
-            {/* Showcase — each image with the decision behind it */}
-            {showcase.map((i, k) => (
-              <Figure key={i} i={i} className={`${ratios[k % ratios.length]} w-full rounded-2xl`} />
-            ))}
+            {/* Showcase — the flexible block flow (each block with its layout) */}
+            <BlockFlow blocks={showcase} lang={lang} />
 
             {/* Results: outcome + quote + stats */}
             <div id="ch-results" className="flex scroll-mt-28 flex-col gap-12">

@@ -65,6 +65,38 @@ export const projects = [
       { value: '−40%', label: { pt: 'Custo por peça de comunicação', en: 'Cost per asset' } },
     ],
     gallery: [['#ffc700', '#0b0b0d'], ['#1d1d20', '#151517'], ['#0b0b0d', '#ffc700'], ['#151517', '#1d1d20']],
+    // Demo of the flexible block system (branding): establishing → palette →
+    // square pair → full. Duotone placeholders until real images are added.
+    blocks: [
+      {
+        kind: 'image',
+        width: 'full',
+        aspect: 'wide',
+        colors: ['#ffc700', '#0b0b0d'],
+        heading: { pt: 'O logótipo', en: 'The logo' },
+        caption: {
+          pt: 'Uma marca com fundação — não só um símbolo bonito, mas um sistema que se defende sozinho.',
+          en: 'A brand with foundations — not just a pretty symbol, but a system that holds on its own.',
+        },
+      },
+      {
+        kind: 'palette',
+        heading: { pt: 'A paleta', en: 'The palette' },
+        caption: {
+          pt: 'Um amarelo que é nosso, ancorado em tinta e papel. Contraste alto, calor humano.',
+          en: 'A yellow that is ours, anchored in ink and paper. High contrast, human warmth.',
+        },
+        swatches: [
+          { hex: '#FFC700', name: 'Lumen Yellow' },
+          { hex: '#0B0B0D', name: 'Ink' },
+          { hex: '#F2EFE9', name: 'Paper' },
+          { hex: '#8F8B83', name: 'Stone' },
+        ],
+      },
+      { kind: 'image', width: 'half', aspect: 'square', colors: ['#0b0b0d', '#ffc700'], heading: { pt: 'Aplicações', en: 'In use' } },
+      { kind: 'image', width: 'half', aspect: 'square', colors: ['#1d1d20', '#151517'] },
+      { kind: 'image', width: 'full', aspect: 'wide', colors: ['#151517', '#ffc700'] },
+    ],
   },
   {
     slug: 'meridian',

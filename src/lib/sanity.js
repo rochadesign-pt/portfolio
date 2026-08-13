@@ -46,7 +46,12 @@ const paras = (locale) => ({
 
 export const PROJECT_QUERY = `*[_type == "project"] | order(order asc){
   "slug": slug.current, title, isCaseStudy, category, disciplines, industry, country, year, services,
-  coverColors, coverImage, tagline, intro, challenge, approach, outcome, quote, results, gallery
+  coverColors, coverImage, tagline, intro, challenge, approach, outcome, quote, results,
+  gallery[]{
+    _type,
+    _type == "captionedImage" => { image, width, aspect, heading, caption },
+    _type == "paletteBlock" => { heading, caption, swatches[]{ hex, name } }
+  }
 }`
 
 export const EXPLORATION_QUERY = `*[_type == "exploration"] | order(order asc){ name, category, image, ratio }`
@@ -90,11 +95,28 @@ export function mapProject(p) {
       ? { text: p.quote.text || { pt: '', en: '' }, author: p.quote.author || '', role: p.quote.role || { pt: '', en: '' } }
       : null,
     results: p.results || [],
-    // Real gallery images with their editorial note. Each item:
-    // { url, heading, caption } — heading/caption are bilingual or null.
-    galleryImages: (p.gallery || [])
-      .map((g) => ({ url: imgUrl(g?.image, 1400), heading: g?.heading || null, caption: g?.caption || null }))
-      .filter((g) => g.url),
+    // Case-study blocks, in order. Image blocks carry their own layout
+    // (width + aspect); palette blocks carry swatches. Duotone `colors` are the
+    // fallback shown until a real image is uploaded.
+    blocks: (p.gallery || []).map((g, i) => {
+      if (g?._type === 'paletteBlock') {
+        return {
+          kind: 'palette',
+          heading: g.heading || null,
+          caption: g.caption || null,
+          swatches: (g.swatches || []).filter((s) => s?.hex).map((s) => ({ hex: s.hex, name: s.name || null })),
+        }
+      }
+      return {
+        kind: 'image',
+        url: imgUrl(g?.image, 1600),
+        heading: g?.heading || null,
+        caption: g?.caption || null,
+        width: g?.width || 'full',
+        aspect: g?.aspect || 'wide',
+        colors: gallery[i % gallery.length],
+      }
+    }),
   }
 }
 

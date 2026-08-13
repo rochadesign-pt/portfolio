@@ -81,7 +81,8 @@ export default defineType({
       name: 'gallery',
       title: 'Gallery',
       type: 'array',
-      description: 'Case-study images, in order. Give each one a note explaining the decision behind it.',
+      description:
+        'Case-study blocks, in order. Mix image blocks (each with a note + layout) and colour-palette blocks. Two "Half" images in a row sit side by side.',
       of: [
         {
           type: 'object',
@@ -89,6 +90,36 @@ export default defineType({
           title: 'Image + note',
           fields: [
             { name: 'image', title: 'Image', type: 'image', options: { hotspot: true } },
+            {
+              name: 'width',
+              title: 'Width',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Full width', value: 'full' },
+                  { title: 'Half (pairs with the next Half)', value: 'half' },
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+              },
+              initialValue: 'full',
+            },
+            {
+              name: 'aspect',
+              title: 'Shape',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Wide (landscape)', value: 'wide' },
+                  { title: 'Portrait', value: 'portrait' },
+                  { title: 'Tall (phone screen)', value: 'tall' },
+                  { title: 'Square', value: 'square' },
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+              },
+              initialValue: 'wide',
+            },
             {
               name: 'heading',
               title: 'Note heading (optional, short)',
@@ -103,6 +134,34 @@ export default defineType({
             },
           ],
           preview: { select: { title: 'heading.en', subtitle: 'caption.en', media: 'image' } },
+        },
+        {
+          type: 'object',
+          name: 'paletteBlock',
+          title: 'Colour palette',
+          fields: [
+            { name: 'heading', title: 'Heading (optional)', type: 'localeString' },
+            { name: 'caption', title: 'Note (optional)', type: 'localeText' },
+            {
+              name: 'swatches',
+              title: 'Swatches',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    { name: 'hex', title: 'Hex', type: 'string', description: 'e.g. #FFC700' },
+                    { name: 'name', title: 'Name (optional)', type: 'string' },
+                  ],
+                  preview: { select: { title: 'name', subtitle: 'hex' } },
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: { title: 'heading.en' },
+            prepare: ({ title }) => ({ title: title || 'Colour palette' }),
+          },
         },
       ],
     }),
