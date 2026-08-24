@@ -60,6 +60,12 @@ export default function Footer() {
             </button>
           </div>
         </div>
+
+        {/* Bookend — the wordmark at colossal scale closes every page, a
+            signature stamped across the foot of the site (decorative). */}
+        <div className="mt-14 md:mt-20" aria-hidden="true">
+          <Wordmark className="h-auto w-full text-text/[0.07]" />
+        </div>
       </div>
     </footer>
   )
