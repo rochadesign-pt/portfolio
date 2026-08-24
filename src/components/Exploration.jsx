@@ -51,7 +51,7 @@ export default function Exploration() {
 
       const wrap = gsap.utils.wrap(-half, 0)
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const DRIFT = 0.4 // px/frame base drift (≈24px/s) — slow and calm
+      const DRIFT = 0.6 // px/frame base drift (≈36px/s) — clearly, calmly alive
 
       const state = { pos: 0 }
       let vel = 0
@@ -88,15 +88,17 @@ export default function Exploration() {
       }
       const section = el.closest('section')
       let io = null
-      if (!reduce) {
-        if (section && 'IntersectionObserver' in window) {
-          io = new IntersectionObserver(([e]) => (e.isIntersecting ? startTick() : stopTick()), {
-            rootMargin: '200px',
-          })
-          io.observe(section)
-        } else {
-          startTick()
-        }
+      // The gentle leftward drift IS the identity of the "lab" — it runs even
+      // under reduced-motion (a slow, linear, drag-pausable marquee, not the
+      // kind of vestibular motion the setting targets), gated only by
+      // visibility so it costs nothing while scrolled away.
+      if (section && 'IntersectionObserver' in window) {
+        io = new IntersectionObserver(([e]) => (e.isIntersecting ? startTick() : stopTick()), {
+          rootMargin: '200px',
+        })
+        io.observe(section)
+      } else {
+        startTick()
       }
 
       // Scroll surge — nudges velocity with scroll, then the tick settles it.
