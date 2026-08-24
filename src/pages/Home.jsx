@@ -64,7 +64,7 @@ function Hero() {
           <MaskText
             as="span"
             text={t.hero.accent}
-            className="block ital text-accent-text"
+            className="block emph"
             trigger="mount"
             active={started}
             delay={0.24}
@@ -174,7 +174,7 @@ function FeaturedWork() {
           </Reveal>
           <MaskReveal>
             <h2 className="display text-5xl md:text-7xl">
-              {t.work.title} <span className="ital text-accent-text">{t.work.titleAccent}</span>
+              {t.work.title} <span className="emph">{t.work.titleAccent}</span>
             </h2>
           </MaskReveal>
         </div>
@@ -212,7 +212,7 @@ function ServicesPreview() {
         </Reveal>
         <MaskReveal>
           <h2 className="display text-5xl md:text-7xl">
-            {t.services.title} <span className="ital text-accent-text">{t.services.titleAccent}</span>
+            {t.services.title} <span className="emph">{t.services.titleAccent}</span>
           </h2>
         </MaskReveal>
       </div>

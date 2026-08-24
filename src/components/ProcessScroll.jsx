@@ -66,7 +66,7 @@ export default function ProcessScroll() {
           <div>
             <span className="label">{p.label}</span>
             <h2 className="display mt-3 text-5xl md:text-7xl">
-              {p.title} <span className="ital text-accent-text">{p.titleAccent}</span>
+              {p.title} <span className="emph">{p.titleAccent}</span>
             </h2>
 
             {/* Huge morphing index — desktop only (needs the scrub) */}

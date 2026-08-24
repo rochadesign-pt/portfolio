@@ -32,7 +32,7 @@ export default function Work() {
         </Reveal>
         <MaskReveal>
           <h1 className="display text-6xl md:text-8xl">
-            {t.workPage.title} <span className="ital text-accent-text">{t.workPage.titleAccent}</span>
+            {t.workPage.title} <span className="emph">{t.workPage.titleAccent}</span>
           </h1>
         </MaskReveal>
         <Reveal className="mt-8 max-w-3xl md:mt-10">

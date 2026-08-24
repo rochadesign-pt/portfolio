@@ -21,7 +21,9 @@
   /* Switzer for display + body; Season Mix for the accent words */
   --font-sans: 'Switzer', 'Inter', system-ui, sans-serif;
   --font-display: 'Switzer', 'Inter', system-ui, sans-serif;
-  --font-accent: 'Season Mix', var(--font-display), sans-serif;
+  /* Unified on Switzer — emphasis is carried by colour weight (see .emph),
+     not a second typeface. (Season Mix retired; its trial licence now moot.) */
+  --font-accent: var(--font-display);
 
   --color-bg: #0b0b0d;
   --color-surface: #151517;
@@ -132,13 +134,24 @@
   );
 }
 
-/* Brand accent words inside headings — Season Mix, upright (no italic).
-   Only the accent colour + face set it apart from the surrounding Switzer. */
+/* Legacy accent subhead — now just Switzer, upright (kept so the couple of
+   stand-alone `ital` subheads still render; no longer a second face). */
 @utility ital {
-  font-family: var(--font-accent);
+  font-family: var(--font-display);
   font-style: normal;
   font-weight: 400;
   letter-spacing: -0.03em;
+}
+
+/* Emphasis by weight of COLOUR, not a second typeface. Inside a heading, the
+   detail word holds full strength while the surrounding text softens to ~60%.
+   One family (Switzer) throughout. */
+@utility emph {
+  color: var(--color-text);
+  font-style: normal;
+}
+:where(.display):has(.emph) {
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
 
 /* Reusable link underline that grows on hover */

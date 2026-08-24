@@ -239,7 +239,7 @@ export default function OriginGlobe() {
             two crossfade in place, with the coordinate readout below it. */}
         <div className="pointer-events-none absolute inset-x-0 top-[58%] -translate-y-1/2 px-6 text-center">
           <p ref={homeRef} className="display text-5xl leading-[1.02] md:text-8xl">
-            {o.home} <span className="ital text-accent-text">{o.homeAccent}</span>
+            {o.home} <span className="emph">{o.homeAccent}</span>
           </p>
         </div>
 
@@ -250,7 +250,7 @@ export default function OriginGlobe() {
           style={{ opacity: 0 }}
         >
           <p className="display text-5xl leading-[1.02] md:text-8xl">
-            {o.world} <span className="ital text-accent-text">{o.worldAccent}</span>
+            {o.world} <span className="emph">{o.worldAccent}</span>
           </p>
         </div>
 

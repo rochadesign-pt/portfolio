@@ -157,7 +157,7 @@ export default function Project() {
   )
 
   const Heading = ({ children }) => (
-    <h2 className="ital text-accent-text text-4xl md:text-5xl">{children}</h2>
+    <h2 className="emph text-4xl md:text-5xl">{children}</h2>
   )
 
   const scrollToBody = () => bodyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })

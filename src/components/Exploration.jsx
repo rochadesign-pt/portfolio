@@ -172,8 +172,8 @@ export default function Exploration() {
           <div className="grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-end">
             <MaskReveal>
               <h2 className="display text-4xl leading-[1.08] md:text-6xl">
-                {t.exploration.lead1} <span className="ital text-accent-text">{t.exploration.acc1}</span>{' '}
-                {t.exploration.lead2} <span className="ital text-accent-text">{t.exploration.acc2}</span>{' '}
+                {t.exploration.lead1} <span className="emph">{t.exploration.acc1}</span>{' '}
+                {t.exploration.lead2} <span className="emph">{t.exploration.acc2}</span>{' '}
                 {t.exploration.lead3}
               </h2>
             </MaskReveal>

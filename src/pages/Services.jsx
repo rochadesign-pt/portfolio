@@ -22,7 +22,7 @@ export default function Services() {
         <div className="grid gap-8 md:grid-cols-[1.35fr_1fr] md:items-end md:gap-16">
           <MaskReveal>
             <h1 className="display text-6xl md:text-8xl">
-              {s.title} <span className="ital text-accent-text">{s.titleAccent}</span>
+              {s.title} <span className="emph">{s.titleAccent}</span>
             </h1>
           </MaskReveal>
           <Reveal className="md:pb-3">

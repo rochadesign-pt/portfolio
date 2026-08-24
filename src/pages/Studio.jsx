@@ -40,7 +40,7 @@ export default function Studio() {
           <h1 className="display text-6xl leading-[0.98] md:text-8xl">
             {t.studioPage.title}
             <br />
-            {t.studioPage.titleLine2} <span className="ital text-accent-text">{t.studioPage.titleAccent}</span>
+            {t.studioPage.titleLine2} <span className="emph">{t.studioPage.titleAccent}</span>
           </h1>
         </MaskReveal>
         <Reveal className="mt-6 max-w-xl">
@@ -61,7 +61,7 @@ export default function Studio() {
             </Reveal>
             <MaskReveal>
               <h2 className="display text-4xl md:text-6xl">
-                {t.studioPage.placeTitle} <span className="ital text-accent-text">{t.studioPage.placeAccent}</span>
+                {t.studioPage.placeTitle} <span className="emph">{t.studioPage.placeAccent}</span>
               </h2>
             </MaskReveal>
           </div>
@@ -152,7 +152,7 @@ export default function Studio() {
             </Reveal>
             <MaskReveal>
               <h2 className="display text-4xl md:text-6xl">
-                {t.studioPage.workTitle} <span className="ital text-accent-text">{t.studioPage.workTitleAccent}</span>
+                {t.studioPage.workTitle} <span className="emph">{t.studioPage.workTitleAccent}</span>
               </h2>
             </MaskReveal>
           </div>
@@ -182,7 +182,7 @@ export default function Studio() {
             </Reveal>
             <MaskReveal>
               <h2 className="display text-4xl leading-[1.08] md:text-6xl">
-                {t.studioPage.aiTitle} <span className="ital text-accent-text">{t.studioPage.aiTitleAccent}</span>
+                {t.studioPage.aiTitle} <span className="emph">{t.studioPage.aiTitleAccent}</span>
               </h2>
             </MaskReveal>
           </div>
