@@ -42,7 +42,11 @@ export default function Exploration() {
     () => {
       const el = track.current
       if (!el) return
-      const half = el.scrollWidth / 2
+      // Wrap on the EXACT period — the offsetLeft of the first tile of the
+      // second (duplicated) copy — not scrollWidth/2, which is half a gap short
+      // and makes the loop visibly jump ("breckar") each time it wraps.
+      const second = el.children[explorations.length]
+      const half = second ? second.offsetLeft : el.scrollWidth / 2
       if (!half) return
 
       const wrap = gsap.utils.wrap(-half, 0)
