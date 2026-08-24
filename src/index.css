@@ -25,9 +25,9 @@
      not a second typeface. (Season Mix retired; its trial licence now moot.) */
   --font-accent: var(--font-display);
 
-  --color-bg: #0b0b0d;
-  --color-surface: #151517;
-  --color-surface-2: #1d1d20;
+  --color-bg: #141417;
+  --color-surface: #1e1e22;
+  --color-surface-2: #27272c;
   --color-text: #f2efe9;
   --color-muted: #8f8b83;
   --color-line: rgba(242, 239, 233, 0.12);
@@ -47,9 +47,9 @@
 /* Light theme — background #F5F5F5, white used for slight contrast */
 :root[data-theme='light'] {
   color-scheme: light;
-  --color-bg: #f5f5f5;
-  --color-surface: #ffffff;
-  --color-surface-2: #ececec;
+  --color-bg: #f3f2f0;
+  --color-surface: #fbfaf8;
+  --color-surface-2: #eae9e6;
   --color-text: #17140f;
   --color-muted: #6b6862;
   --color-line: rgba(23, 20, 15, 0.14);
@@ -253,9 +253,9 @@
    (light footer in dark mode and vice-versa) for a continuous CTA→footer flow. */
 .theme-invert {
   color-scheme: light;
-  --color-bg: #f5f5f5;
-  --color-surface: #ffffff;
-  --color-surface-2: #ececec;
+  --color-bg: #f3f2f0;
+  --color-surface: #fbfaf8;
+  --color-surface-2: #eae9e6;
   --color-text: #17140f;
   --color-muted: #6b6862;
   --color-line: rgba(23, 20, 15, 0.14);
@@ -265,9 +265,9 @@
 }
 :root[data-theme='light'] .theme-invert {
   color-scheme: dark;
-  --color-bg: #0b0b0d;
-  --color-surface: #151517;
-  --color-surface-2: #1d1d20;
+  --color-bg: #141417;
+  --color-surface: #1e1e22;
+  --color-surface-2: #27272c;
   --color-text: #f2efe9;
   --color-muted: #8f8b83;
   --color-line: rgba(242, 239, 233, 0.12);
