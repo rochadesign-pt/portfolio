@@ -26,17 +26,38 @@ export default function Marquee({
     () => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (reduce) return
-      const half = track.current.scrollWidth / 2
-      gsap.to(track.current, { x: -half, duration: half / speed, ease: 'none', repeat: -1 })
+      const el = track.current
+
+      // Seamless loop: travel exactly ONE copy's period, not scrollWidth/2.
+      // The content is rendered twice, so the first child of the second copy
+      // sits precisely one period in — its offsetLeft is the exact distance at
+      // which the two copies overlap with no seam. (scrollWidth/2 is off by
+      // half a gap and makes the loop visibly jump.)
+      let tween = null
+      const play = () => {
+        const second = el.children[items.length]
+        const period = second ? second.offsetLeft : el.scrollWidth / 2
+        if (!period) return
+        tween?.kill()
+        gsap.set(el, { x: 0 })
+        tween = gsap.to(el, { x: -period, duration: period / speed, ease: 'none', repeat: -1 })
+      }
+      play()
+      // Re-measure once webfonts have swapped in (they change item widths and
+      // would otherwise desync the loop).
+      document.fonts?.ready?.then(play)
 
       // Scroll-velocity skew
-      const skewTo = gsap.quickTo(track.current, 'skewX', { duration: 0.5, ease: 'power3' })
+      const skewTo = gsap.quickTo(el, 'skewX', { duration: 0.5, ease: 'power3' })
       const st = ScrollTrigger.create({
         onUpdate: (self) => skewTo(clamp(self.getVelocity() / -220, -14, 14)),
       })
-      return () => st.kill()
+      return () => {
+        tween?.kill()
+        st.kill()
+      }
     },
-    { scope: track },
+    { scope: track, dependencies: [items.length, speed] },
   )
 
   const content = [...items, ...items]
