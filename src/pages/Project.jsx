@@ -73,6 +73,50 @@ function BlockFlow({ blocks, lang }) {
   )
 }
 
+// Client quote as a full-bleed split panel: a tessellated brand motif on one
+// side, the quote on the other — colour-on-colour, an unusual, branded break
+// from the reading column (à la ANGIA). Falls back to nothing without a quote.
+function QuoteFeature({ quote, lang }) {
+  const text = quote?.text?.[lang]
+  if (!text && !quote?.author) return null
+  const role = quote?.role?.[lang]
+  return (
+    <section className="mt-24 bg-accent text-accent-ink md:mt-32">
+      <div className="mx-auto grid max-w-[1600px] md:grid-cols-[0.82fr_1.18fr]">
+        {/* Left — tessellated triangular brand pattern, with one solid mark */}
+        <div className="relative min-h-[240px] overflow-hidden border-b border-accent-ink/10 md:min-h-full md:border-b-0 md:border-r">
+          <svg aria-hidden="true" className="absolute inset-0 h-full w-full text-accent-ink/[0.10]">
+            <defs>
+              <pattern id="rds-quote-tess" width="72" height="62" patternUnits="userSpaceOnUse">
+                <path d="M36 6 L67 58 L5 58 Z" fill="currentColor" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#rds-quote-tess)" />
+          </svg>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 100 90"
+            className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 text-accent-ink md:h-32 md:w-32"
+            fill="currentColor"
+          >
+            <path d="M50 6 L94 84 L6 84 Z" />
+          </svg>
+        </div>
+        {/* Right — the quote */}
+        <Reveal className="flex flex-col justify-center px-6 py-16 md:px-16 md:py-24">
+          <p className="display text-2xl leading-[1.14] md:text-4xl lg:text-5xl">“{text}”</p>
+          {(quote.author || role) && (
+            <p className="label mt-8 text-accent-ink/70 md:mt-10">
+              {quote.author}
+              {role ? ` — ${role}` : ''}
+            </p>
+          )}
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
 export default function Project() {
   const { slug } = useParams()
   const { t, lang } = useLang()
@@ -302,21 +346,6 @@ export default function Project() {
                 <Para items={p.outcome[lang]} />
               </Reveal>
 
-              {p.quote && (p.quote.text?.[lang] || p.quote.author) && (
-                <Reveal>
-                  <blockquote className="border-t border-line pt-10">
-                    <p className="display text-3xl leading-[1.25] md:text-4xl">“{p.quote.text?.[lang]}”</p>
-                    <footer className="mt-6 flex items-center gap-3 text-sm">
-                      <span className="h-8 w-8 rounded-full bg-accent" />
-                      <span>
-                        <span className="text-text">{p.quote.author}</span>
-                        <span className="text-muted"> · {p.quote.role?.[lang]}</span>
-                      </span>
-                    </footer>
-                  </blockquote>
-                </Reveal>
-              )}
-
               <Reveal>
                 <div className="border-t border-line pt-8">
                   <span className="label mb-8 block">{t.project.results}</span>
@@ -334,6 +363,9 @@ export default function Project() {
           </div>
         </div>
       </section>
+
+      {/* Client quote — full-bleed branded split panel */}
+      <QuoteFeature quote={p.quote} lang={lang} />
 
       {/* Next project — full-bleed, cinematic hand-off that keeps the reading
           flowing straight into the next case. */}
