@@ -103,7 +103,7 @@ function ManifestoStats() {
         gsap.set(chars, { opacity: 1 })
         return
       }
-      gsap.set(chars, { opacity: 0.16 })
+      gsap.set(chars, { opacity: 0.2 })
       gsap.to(chars, {
         opacity: 1,
         ease: 'none',
@@ -116,46 +116,40 @@ function ManifestoStats() {
   )
 
   return (
-    <section ref={ref} className="border-y border-line bg-surface/40">
-      <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-10">
-          <span className="label">{t.intro.label}</span>
-        </Reveal>
+    <section ref={ref} className="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-44">
+      <Reveal className="mb-12 md:mb-16">
+        <span className="label">{t.intro.label}</span>
+      </Reveal>
 
-        <p className="display max-w-5xl text-3xl leading-[1.22] md:text-5xl md:leading-[1.25]">
-          {words.map((w, wi) => (
-            <Fragment key={wi}>
-              <span className="inline-block">
-                {[...w].map((ch, ci) => (
-                  <span key={ci} className="mf-char">
-                    {ch}
-                  </span>
-                ))}
-              </span>
-              {wi < words.length - 1 ? ' ' : ''}
-            </Fragment>
-          ))}
-        </p>
+      {/* Editorial statement — rests in a soft tone and lights up as you read
+          (char-by-char scrub), left-aligned with generous leading. */}
+      <p className="display max-w-4xl text-[1.7rem] leading-[1.34] md:text-[2.6rem] md:leading-[1.36]">
+        {words.map((w, wi) => (
+          <Fragment key={wi}>
+            <span className="inline-block">
+              {[...w].map((ch, ci) => (
+                <span key={ci} className="mf-char">
+                  {ch}
+                </span>
+              ))}
+            </span>
+            {wi < words.length - 1 ? ' ' : ''}
+          </Fragment>
+        ))}
+      </p>
 
-        <div className="mt-16 grid grid-cols-2 border-t border-line md:mt-24 md:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal
-              key={s.label.en}
-              delay={i * 0.06}
-              className="border-b border-line py-8 md:border-b-0 md:border-l md:pl-8 md:first:border-l-0 md:first:pl-0"
-            >
-              <Counter
-                value={s.value}
-                suffix={s.suffix}
-                className="display block text-6xl leading-[0.85] tabular-nums md:text-[5.5rem]"
-              />
-              <p className="mt-6 flex items-center gap-2">
-                <span className="h-1 w-1 flex-none rounded-full bg-accent-text" />
-                <span className="label">{s.label[lang]}</span>
-              </p>
-            </Reveal>
-          ))}
-        </div>
+      {/* Soft metrics — quiet and understated; the numbers whisper, not shout. */}
+      <div className="mt-20 flex flex-wrap gap-x-14 gap-y-8 md:mt-28 md:gap-x-20">
+        {stats.map((s, i) => (
+          <Reveal key={s.label.en} delay={i * 0.05}>
+            <Counter
+              value={s.value}
+              suffix={s.suffix}
+              className="display block text-2xl leading-none tabular-nums text-text/90 md:text-[1.9rem]"
+            />
+            <p className="label mt-2.5 text-muted">{s.label[lang]}</p>
+          </Reveal>
+        ))}
       </div>
     </section>
   )
