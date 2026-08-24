@@ -96,45 +96,49 @@ export default function Studio() {
         </div>
       </section>
 
-      {/* 3 — Manifesto (text-led, no photo) */}
-      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-6">
-          <span className="label">{t.behind.label}</span>
-        </Reveal>
-        <MaskReveal>
-          <h2 className="display max-w-4xl text-4xl leading-[1.1] md:text-6xl">{t.behind.title}</h2>
-        </MaskReveal>
-        <div className="mt-12 grid gap-8 md:grid-cols-2 md:gap-16">
-          <Reveal>
-            <p className="leading-relaxed text-muted md:text-lg">{t.behind.body1}</p>
+      {/* 3 — Manifesto — a bold full-bleed accent block: the one loud colour
+          moment of the page, with generous air around the type. */}
+      <section className="bg-accent text-accent-ink">
+        <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-44">
+          <Reveal className="mb-8">
+            <span className="label text-accent-ink/55">{t.behind.label}</span>
           </Reveal>
-          <Reveal>
-            <p className="leading-relaxed text-muted md:text-lg">{t.behind.body2}</p>
-          </Reveal>
+          <MaskReveal>
+            <h2 className="display max-w-5xl text-4xl leading-[1.03] md:text-7xl">{t.behind.title}</h2>
+          </MaskReveal>
+          <div className="mt-16 grid max-w-4xl gap-8 md:mt-24 md:grid-cols-2 md:gap-16">
+            <Reveal>
+              <p className="leading-relaxed text-accent-ink/75 md:text-lg">{t.behind.body1}</p>
+            </Reveal>
+            <Reveal>
+              <p className="leading-relaxed text-accent-ink/75 md:text-lg">{t.behind.body2}</p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* 4 — What we believe. Restrained cards (dark surface + a big ghosted
-          index that warms to the accent on hover) — a card language shared with
-          Services, but without the colour, to fit Studio's calmer register. */}
-      <section className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-12 md:mb-14">
-          <h2 className="label">{t.studioPage.valuesLabel}</h2>
-        </Reveal>
-        <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
-          {values.map((v, i) => (
-            <Reveal key={v.title.en} delay={i * 0.06}>
-              <article className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-8 transition-colors duration-500 hover:border-text/20 md:p-10">
-                <span className="display pointer-events-none absolute -right-3 -top-6 text-8xl leading-none text-text/[0.04] transition-colors duration-500 group-hover:text-accent-text/15 md:text-9xl">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div className="relative">
-                  <h3 className="display text-2xl md:text-3xl">{v.title[lang]}</h3>
-                  <p className="mt-4 max-w-md leading-relaxed text-muted">{v.desc[lang]}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
+      {/* 4 — What we believe — on a full-bleed inverted (dark) band, so it reads
+          as its own chapter and gives the page a light → colour → dark rhythm. */}
+      <section className="theme-invert bg-bg text-text">
+        <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
+          <Reveal className="mb-12 md:mb-16">
+            <h2 className="label">{t.studioPage.valuesLabel}</h2>
+          </Reveal>
+          <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
+            {values.map((v, i) => (
+              <Reveal key={v.title.en} delay={i * 0.06}>
+                <article className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-8 transition-colors duration-500 hover:border-text/20 md:p-10">
+                  <span className="display pointer-events-none absolute -right-3 -top-6 text-8xl leading-none text-text/[0.04] transition-colors duration-500 group-hover:text-accent-text/15 md:text-9xl">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div className="relative">
+                    <h3 className="display text-2xl md:text-3xl">{v.title[lang]}</h3>
+                    <p className="mt-4 max-w-md leading-relaxed text-muted">{v.desc[lang]}</p>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
