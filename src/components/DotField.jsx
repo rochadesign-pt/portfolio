@@ -2,14 +2,13 @@ import { useRef, useEffect } from 'react'
 
 // A whisper-quiet dot grid, rendered on canvas so it can breathe: the dots
 // twinkle slowly and a few streak into short dashes (ambient life), and around
-// the cursor they bloom into a small grid of crosses — a "magnet" that pulls the
-// field into lines, with the odd blue accent. Desktop gets the magnet (needs a
-// cursor); the ambient motion runs everywhere. Reduced-motion keeps the static
-// grid + cursor magnet but drops the autonomous twinkle/streaks.
+// the cursor they bloom brighter and a touch larger — a "magnet" spotlight, with
+// the odd blue accent. Desktop gets the magnet (needs a cursor); the ambient
+// motion runs everywhere. Reduced-motion keeps the static grid + cursor magnet
+// but drops the autonomous twinkle/streaks.
 const SPACING = 26 // grid pitch (matches the old CSS grid)
 const DOT_R = 1.0
 const MAGNET_R = 175 // px — cursor influence radius
-const ARM_MAX = 12 // half the pitch, so arms of adjacent crosses meet into a grid
 const BLUE = '90,120,255'
 
 export default function DotField({ className = '' }) {
@@ -78,18 +77,13 @@ export default function DotField({ className = '' }) {
         }
 
         if (infl > 0.03) {
-          // Bloom into a cross whose arms grow with proximity → grid near cursor
-          const arm = ARM_MAX * infl
+          // Bloom brighter + a touch larger with proximity → a dotted spotlight
           const col = d.blue && infl > 0.15 ? BLUE : base
           const la = Math.min(0.72, baseA + strongA * infl)
-          ctx.strokeStyle = `rgba(${col},${la})`
-          ctx.lineWidth = 1
+          ctx.fillStyle = `rgba(${col},${la})`
           ctx.beginPath()
-          ctx.moveTo(d.x - arm, d.y)
-          ctx.lineTo(d.x + arm, d.y)
-          ctx.moveTo(d.x, d.y - arm)
-          ctx.lineTo(d.x, d.y + arm)
-          ctx.stroke()
+          ctx.arc(d.x, d.y, DOT_R + 1.0 * infl, 0, Math.PI * 2)
+          ctx.fill()
           continue
         }
 

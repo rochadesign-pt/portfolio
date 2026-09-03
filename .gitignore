@@ -9,3 +9,6 @@ dist-server
 # local env (never commit real keys)
 .env
 .env.local
+
+# ShipStudio metadata
+.shipstudio/
