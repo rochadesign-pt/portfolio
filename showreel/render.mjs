@@ -1,4 +1,4 @@
-// Usage: node render.mjs [fps] [only-times-comma-separated]
+// Usage: [HTML=reel.html DUR=24 OUT=frames] node render.mjs [fps] [only-times-comma-separated]
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs'
 import http from 'node:http'
@@ -11,7 +11,7 @@ const svg = jsx
   .replace(/\{\/\*.*?\*\/\}/g, '')
   .replace(/className=\{className\}/, '')
   .replace(/role="img"/, '')
-writeFileSync(path.join(root, 'build.html'), readFileSync(path.join(root, 'reel.html'), 'utf8').replaceAll('{{WORDMARK}}', svg))
+writeFileSync(path.join(root, 'build.html'), readFileSync(path.join(root, process.env.HTML || 'reel.html'), 'utf8').replaceAll('{{WORDMARK}}', svg))
 
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2', '.webp': 'image/webp' }
 const server = http.createServer((req, res) => {
@@ -33,9 +33,11 @@ await page.goto('http://localhost:8765/build.html')
 await page.evaluate(() => window.ready)
 await page.waitForTimeout(300)
 
-const out = path.join(root, only ? 'stills' : 'frames')
+const out = path.join(root, only ? 'stills' : process.env.OUT || 'frames')
+const ticks = await page.evaluate(() => window.ticks)
+if (ticks) writeFileSync(path.join(root, 'ticks.json'), JSON.stringify(ticks))
 rmSync(out, { recursive: true, force: true }); mkdirSync(out)
-const times = only || Array.from({ length: Math.round(24 * fps) }, (_, i) => i / fps)
+const times = only || Array.from({ length: Math.round(Number(process.env.DUR || 24) * fps) }, (_, i) => i / fps)
 for (let i = 0; i < times.length; i++) {
   await page.evaluate((t) => window.seek(t), times[i])
   await page.screenshot({ path: path.join(out, only ? `t${times[i]}.png` : `f${String(i).padStart(4, '0')}.png`) })

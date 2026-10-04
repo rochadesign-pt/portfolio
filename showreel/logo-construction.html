@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+@font-face { font-family: 'Geist'; src: url(node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2) format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Geist'; src: url(node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2) format('woff2'); font-weight: 100 900; unicode-range: U+0100-024F, U+1E00-1EFF; }
+@font-face { font-family: 'Instrument Serif'; font-style: italic; src: url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2) format('woff2'); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0b0d; }
+body { font-family: 'Geist', sans-serif; color: #f2efe9; -webkit-font-smoothing: antialiased; }
+#src { position: absolute; left: 0; top: 0; width: 836px; visibility: hidden; }
+#v { position: absolute; inset: 0; }
+.g { fill: none; stroke: rgba(242,239,233,.28); stroke-width: var(--sw); }
+.g.k { stroke: rgba(242,239,233,.5); }
+.out { fill: none; stroke: #f2efe9; stroke-width: calc(var(--sw) * 1.4); stroke-linejoin: round; }
+.hd { stroke: rgba(242,239,233,.7); stroke-width: var(--sw); }
+.cc { fill: none; stroke: #f2efe9; stroke-width: var(--sw); }
+.dot { fill: #f2efe9; r: var(--dot); }
+.ctl { fill: #0b0b0d; stroke: #f2efe9; stroke-width: var(--sw); r: calc(var(--dot) * .85); }
+.lbl { font-size: var(--fs); fill: rgba(242,239,233,.55); letter-spacing: .08em; text-transform: uppercase; font-weight: 500; }
+.dim { stroke: #ffc700; stroke-width: calc(var(--sw) * 1.2); fill: none; }
+.dimt { font-size: var(--fs); fill: #ffc700; font-weight: 500; letter-spacing: .04em; }
+#guides { mix-blend-mode: difference; }
+.hud { position: absolute; font-size: 20px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; color: #8f8b83; font-variant-numeric: tabular-nums; }
+#step { color: #f2efe9; }
+#step span { display: inline-block; }
+#cap { position: absolute; left: 0; right: 0; top: 760px; text-align: center; }
+#cap .s { font-family: 'Instrument Serif'; font-style: italic; font-size: 78px; color: #ffc700; display: inline-block; overflow: hidden; }
+#cap .s span { display: inline-block; }
+#cap .l { margin-top: 18px; font-size: 20px; letter-spacing: .2em; text-transform: uppercase; color: #8f8b83; font-weight: 500; }
+#black { position: absolute; inset: 0; background: #000; opacity: 0; }
+#frame { position: absolute; inset: 40px; border: 1px solid rgba(242,239,233,.1); }
+.tick { position: absolute; width: 14px; height: 14px; border-color: rgba(242,239,233,.5); border-style: solid; }
+</style>
+</head>
+<body>
+<div id="src">{{WORDMARK}}</div>
+<svg id="v" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <g id="cam">
+    <g id="grid"></g>
+    <g id="fills"></g>
+    <g id="guides"><g id="outs"></g><g id="handles"></g><g id="circs"></g><g id="dots"></g><g id="dims"></g><g id="labels"></g></g>
+  </g>
+</svg>
+<div id="frame"></div>
+<div class="tick" style="left:40px;top:40px;border-width:2px 0 0 2px"></div>
+<div class="tick" style="right:40px;top:40px;border-width:2px 2px 0 0"></div>
+<div class="tick" style="left:40px;bottom:40px;border-width:0 0 2px 2px"></div>
+<div class="tick" style="right:40px;bottom:40px;border-width:0 2px 2px 0"></div>
+<div class="hud" style="left:80px;top:76px">Rocha Design Studio — Construção do logótipo</div>
+<div class="hud" style="right:80px;top:76px" id="step"><span>01 — Grelha</span></div>
+<div class="hud" style="left:80px;bottom:72px" id="xy">X 000.0 · Y 000.0</div>
+<div class="hud" style="right:80px;bottom:72px" id="zoom">Zoom 100%</div>
+<div id="cap"><div class="s"><span>Construção da marca.</span></div><div class="l" id="capl">ROCHA® · Design Studio</div></div>
+<div id="black"></div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg'
+const $ = (s) => document.querySelector(s)
+const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e }
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+window.ticks = []
+const tick = (t) => window.ticks.push(+t.toFixed(3))
+
+// ---------- geometry from the real wordmark ----------
+function parse(d) {
+  const tok = d.match(/[a-zA-Z]|-?(?:\d+\.\d*|\.\d+|\d+)(?:e[-+]?\d+)?/g)
+  let i = 0, cmd = '', cur = [0, 0], start = [0, 0], lastC = null
+  const segs = [], anchors = []
+  const num = () => parseFloat(tok[i++])
+  const isNum = () => i < tok.length && !/[a-zA-Z]/.test(tok[i])
+  while (i < tok.length) {
+    if (!isNum()) cmd = tok[i++]
+    const rel = cmd === cmd.toLowerCase(), C = cmd.toUpperCase()
+    const o = rel ? cur : [0, 0]
+    if (C === 'M') { cur = [o[0] + num(), o[1] + num()]; start = cur; anchors.push(cur); cmd = rel ? 'l' : 'L'; lastC = null }
+    else if (C === 'L' || C === 'H' || C === 'V') {
+      const p = C === 'L' ? [o[0] + num(), o[1] + num()] : C === 'H' ? [(rel ? cur[0] : 0) + num(), cur[1]] : [cur[0], (rel ? cur[1] : 0) + num()]
+      segs.push({ t: 'L', a: cur, b: p }); cur = p; anchors.push(p); lastC = null
+    } else if (C === 'C' || C === 'S') {
+      const c1 = C === 'C' ? [o[0] + num(), o[1] + num()] : lastC ? [2 * cur[0] - lastC[0], 2 * cur[1] - lastC[1]] : cur
+      const c2 = [o[0] + num(), o[1] + num()], p = [o[0] + num(), o[1] + num()]
+      segs.push({ t: 'C', a: cur, c1, c2, b: p }); lastC = c2; cur = p; anchors.push(p)
+    } else if (C === 'Z') { cur = start; lastC = null }
+  }
+  return { segs, anchors }
+}
+function geom(el) {
+  if (el.tagName === 'path') return parse(el.getAttribute('d'))
+  let pts
+  if (el.tagName === 'polygon') { const n = el.getAttribute('points').trim().split(/[\s,]+/).map(Number); pts = []; for (let k = 0; k < n.length; k += 2) pts.push([n[k], n[k + 1]]) }
+  else { const x = +el.getAttribute('x'), y = +el.getAttribute('y'), w = +el.getAttribute('width'), h = +el.getAttribute('height'); pts = [[x, y], [x + w, y], [x + w, y + h], [x, y + h]] }
+  return { anchors: pts, segs: pts.map((p, k) => ({ t: 'L', a: p, b: pts[(k + 1) % pts.length] })) }
+}
+const bez = (s, t) => { const u = 1 - t; return [0, 1].map((k) => u*u*u*s.a[k] + 3*u*u*t*s.c1[k] + 3*u*t*t*s.c2[k] + t*t*t*s.b[k]) }
+function circ(p1, p2, p3) {
+  const [ax, ay] = p1, [bx, by] = p2, [cx, cy] = p3
+  const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)); if (Math.abs(d) < 1e-6) return null
+  const ux = ((ax*ax + ay*ay) * (by - cy) + (bx*bx + by*by) * (cy - ay) + (cx*cx + cy*cy) * (ay - by)) / d
+  const uy = ((ax*ax + ay*ay) * (cx - bx) + (bx*bx + by*by) * (ax - cx) + (cx*cx + cy*cy) * (bx - ax)) / d
+  return { x: ux, y: uy, r: Math.hypot(ax - ux, ay - uy) }
+}
+
+const src = $('#src svg')
+const kids = [...src.children]
+const regEls = kids.slice(0, 2)
+const dsEls = [...kids[2].children]
+const rocha = kids.slice(3).sort((a, b) => a.getBBox().x - b.getBBox().x)
+
+// ---------- camera ----------
+const S0 = 1.78
+const cam = { cx: 418, cy: 112, z: 0.86 }
+const camEl = $('#cam'), labels = []
+function applyCam() {
+  const s = S0 * cam.z
+  camEl.setAttribute('transform', `translate(960 540) scale(${s}) translate(${-cam.cx} ${-cam.cy})`)
+  camEl.style.setProperty('--sw', (1.3 / s) + 'px')
+  camEl.style.setProperty('--dot', (4.2 / s) + 'px')
+  camEl.style.setProperty('--fs', (13 / s) + 'px')
+  const left = cam.cx - 960 / s + 72 / s
+  labels.forEach((l) => l.setAttribute('x', left))
+  $('#xy').textContent = `X ${cam.cx.toFixed(1).padStart(5, '0')} · Y ${cam.cy.toFixed(1).padStart(5, '0')}`
+  $('#zoom').textContent = `Zoom ${Math.round(cam.z * 100)}%`
+}
+const camTo = (t, d, v, ease = 'expo.inOut') => tl.to(cam, { ...v, duration: d, ease, onUpdate: applyCam }, t)
+
+// ---------- 01 grid (0–2s) ----------
+const grid = $('#grid')
+const H = [[0], [2.3, 'Altura das maiúsculas'], [23.6], [69.3, 'Barra'], [83.6, 'Eixo ótico'], [92.7], [120.4], [165, 'Linha de base'], [167.2], [210.4, 'Assinatura'], [251.3]]
+const V = [0, 129.6, 137.7, 297.1, 306.1, 455.5, 469.1, 497.5, 571.4, 600, 614.3, 665.1, 713.7, 765.4, 773, 836]
+H.forEach(([y, name], k) => {
+  const ltr = k % 2 === 0, x1 = ltr ? -500 : 1400
+  const ln = mk('line', { x1, y1: y, x2: x1, y2: y, class: 'g' + (name ? ' k' : '') }, grid)
+  tl.to(ln, { attr: { x2: ltr ? 1400 : -500 }, duration: 1.1, ease: 'power3.inOut' }, 0.05 + k * 0.05)
+  if (name) {
+    const t = mk('text', { y: y - 4 / S0, class: 'lbl' }, $('#labels')); t.textContent = name; labels.push(t)
+    tl.from(t, { opacity: 0, duration: 0.5 }, 0.7 + k * 0.06)
+  }
+})
+V.forEach((x, k) => {
+  const ttb = k % 2 === 0, y1 = ttb ? -400 : 700
+  const ln = mk('line', { x1: x, y1, x2: x, y2: y1, class: 'g' }, grid)
+  tl.to(ln, { attr: { y2: ttb ? 700 : -400 }, duration: 1.1, ease: 'power3.inOut' }, 0.3 + k * 0.04)
+})
+// diagonals from the A legs + a 45° through the ® (like the slant guides in a construction sheet)
+const diag = (p, q, t) => {
+  const dx = q[0] - p[0], dy = q[1] - p[1], L = 3000 / Math.hypot(dx, dy)
+  const a = [p[0] - dx * L, p[1] - dy * L], b = [p[0] + dx * L, p[1] + dy * L]
+  const ln = mk('line', { x1: a[0], y1: a[1], x2: a[0], y2: a[1], class: 'g' }, grid)
+  tl.to(ln, { attr: { x2: b[0], y2: b[1] }, duration: 1.6, ease: 'power3.inOut' }, t)
+}
+diag([665.1, 2.3], [614.3, 165], 0.5)
+diag([713.7, 2.3], [765.4, 165], 0.6)
+diag([801, 37.7], [851, 87.7], 0.7)
+for (let k = 0; k < 6; k++) tick(0.25 + k * 0.22)
+camTo(0, 2.0, { z: 1, cy: 120 }, 'power2.out')
+
+// ---------- per-letter construction ----------
+const fills = $('#fills')
+const fillOf = new Map()
+function build(el, t, dur, opts = {}) {
+  const g = geom(el)
+  // filled copy (revealed later)
+  const f = el.cloneNode(); f.removeAttribute('class'); f.setAttribute('fill', '#ffc700'); f.style.opacity = 0; fills.appendChild(f); fillOf.set(el, f)
+  // outline drawn on
+  const o = el.cloneNode(); o.setAttribute('class', 'out'); o.removeAttribute('fill'); $('#outs').appendChild(o)
+  const len = o.getTotalLength ? o.getTotalLength() : 1000
+  gsap.set(o, { strokeDasharray: len, strokeDashoffset: len })
+  tl.to(o, { strokeDashoffset: 0, duration: dur, ease: 'power2.inOut' }, t)
+  if (opts.light) return { o, f, g }
+  // anchors
+  const seen = new Set(), ds = []
+  g.anchors.forEach((p) => { const key = p.map((v) => v.toFixed(1)).join(); if (seen.has(key)) return; seen.add(key); ds.push(mk('circle', { cx: p[0], cy: p[1], class: 'dot' }, $('#dots'))) })
+  gsap.set(ds, { opacity: 0 })
+  tl.to(ds, { opacity: 1, duration: 0.05, stagger: { each: dur / Math.max(ds.length, 1), from: 'start' }, ease: 'none' }, t)
+  // bezier handles + fitted construction circles
+  const hs = [], cs = []
+  g.segs.filter((s) => s.t === 'C').forEach((s) => {
+    const ch = Math.hypot(s.b[0] - s.a[0], s.b[1] - s.a[1])
+    if (ch > (opts.minChord ?? 6)) {
+      hs.push(mk('line', { x1: s.a[0], y1: s.a[1], x2: s.c1[0], y2: s.c1[1], class: 'hd' }, $('#handles')))
+      hs.push(mk('line', { x1: s.b[0], y1: s.b[1], x2: s.c2[0], y2: s.c2[1], class: 'hd' }, $('#handles')))
+      hs.push(mk('circle', { cx: s.c1[0], cy: s.c1[1], class: 'ctl' }, $('#handles')))
+      hs.push(mk('circle', { cx: s.c2[0], cy: s.c2[1], class: 'ctl' }, $('#handles')))
+      const c = circ(s.a, bez(s, 0.5), s.b)
+      if (c && c.r < (opts.maxR ?? 140) && c.r > 4 && cs.length < (opts.maxCircles ?? 6)) {
+        const k = mk('circle', { cx: c.x, cy: c.y, r: c.r, class: 'cc' }, $('#circs'))
+        const L = 2 * Math.PI * c.r; gsap.set(k, { strokeDasharray: L, strokeDashoffset: L, rotation: -90, svgOrigin: `${c.x} ${c.y}` })
+        cs.push(k)
+      }
+    }
+  })
+  gsap.set(hs, { opacity: 0 })
+  tl.to(hs, { opacity: 1, duration: 0.15, stagger: dur / Math.max(hs.length, 1) }, t + 0.1)
+  cs.forEach((k, j) => tl.to(k, { strokeDashoffset: 0, duration: 0.6, ease: 'power2.inOut' }, t + 0.2 + j * (dur / cs.length) * 0.8))
+  return { o, f, g, hs, cs }
+}
+
+// ---------- 02 structure (2–6s): camera travels R → O → C → H → A ----------
+const step = (t, text) => {
+  const el = $('#step span')
+  tl.to(el, { yPercent: -100, opacity: 0, duration: 0.2, ease: 'power2.in' }, t - 0.2)
+  tl.set(el, { textContent: text }, t)
+  tl.fromTo(el, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.35, immediateRender: false }, t)
+}
+step(1.9, '02 — Estrutura')
+const centers = [65, 217, 381, 535, 690]
+const built = []
+camTo(1.6, 0.8, { cx: 60, cy: 84, z: 2.5 })
+rocha.forEach((el, k) => {
+  const t = 2.0 + k * 0.8
+  if (k > 0) camTo(t - 0.25, 0.8, { cx: centers[k], cy: 84 + (k % 2 ? -6 : 6) }, 'power2.inOut')
+  built.push(build(el, t, 0.85, { maxCircles: 4 }))
+  for (let j = 0; j < 4; j++) tick(t + j * 0.2)
+})
+camTo(5.95, 1.0, { cx: 418, cy: 120, z: 1 })
+
+// ---------- 03 form (7–9s): dimensions + fill sweep ----------
+step(6.9, '03 — Forma')
+const dims = $('#dims')
+const dimV = (x, y1, y2, txt, t) => {
+  const g = mk('g', {}, dims)
+  mk('line', { x1: x, y1, x2: x, y2, class: 'dim' }, g)
+  mk('line', { x1: x - 5, y1, x2: x + 5, y2: y1, class: 'dim' }, g)
+  mk('line', { x1: x - 5, y1: y2, x2: x + 5, y2, class: 'dim' }, g)
+  const tx = mk('text', { x: x + 8, y: (y1 + y2) / 2, class: 'dimt', 'text-anchor': 'start', 'dominant-baseline': 'middle' }, g); tx.textContent = txt
+  tl.from(g, { opacity: 0, duration: 0.4 }, t); return g
+}
+const dimH = (y, x1, x2, txt, t) => {
+  const g = mk('g', {}, dims)
+  mk('line', { x1, y1: y, x2, y2: y, class: 'dim' }, g)
+  mk('line', { x1, y1: y - 5, x2: x1, y2: y + 5, class: 'dim' }, g)
+  mk('line', { x1: x2, y1: y - 5, x2, y2: y + 5, class: 'dim' }, g)
+  const tx = mk('text', { x: (x1 + x2) / 2, y: y - 7, class: 'dimt', 'text-anchor': 'middle' }, g); tx.textContent = txt
+  tl.from(g, { opacity: 0, duration: 0.4 }, t); return g
+}
+const dimEls = [
+  dimV(790, 2.3, 165, '162.7', 7.0),
+  dimV(855, 0, 167.2, '167.2', 7.15),
+  dimH(-16, 469.1, 600, '130.9', 7.3),
+  dimH(-16, 614.3, 765.4, '151.1', 7.45),
+]
+const ang = mk('text', { x: 700, y: 196, class: 'dimt', 'text-anchor': 'middle' }, dims); ang.textContent = '∠ 17.3°'
+tl.from(ang, { opacity: 0, duration: 0.4 }, 7.6)
+;[7.0, 7.15, 7.3, 7.45, 7.6].forEach(tick)
+// fill sweep — each letter floods yellow left→right on the beat
+built.forEach((b, k) => {
+  const bb = rocha[k].getBBox(), id = 'clip' + k
+  const cp = mk('clipPath', { id }, fills); const r = mk('rect', { x: bb.x - 2, y: bb.y - 2, width: 0, height: bb.height + 4 }, cp)
+  b.f.setAttribute('clip-path', `url(#${id})`)
+  tl.set(b.f, { opacity: 1 }, 7.6 + k * 0.18)
+  tl.to(r, { attr: { width: bb.width + 4 }, duration: 0.6, ease: 'power3.inOut' }, 7.6 + k * 0.18)
+  tick(7.6 + k * 0.18)
+})
+tl.to('#handles', { opacity: 0.35, duration: 0.6 }, 8.2)
+camTo(7.0, 2.0, { z: 1.06, cx: 410 }, 'sine.inOut')
+
+// ---------- 04 symbol ® (9–10.6s) ----------
+step(9.0, '04 — Símbolo ®')
+camTo(8.9, 0.9, { cx: 801, cy: 38, z: 5.2 })
+tl.to(dimEls.concat(ang), { opacity: 0, duration: 0.3 }, 8.9)
+const hexC = [801, 37.7]
+const hexG = mk('g', {}, $('#circs'))
+const hc = mk('circle', { cx: hexC[0], cy: hexC[1], r: 37.5, class: 'cc' }, hexG)
+const hc2 = mk('circle', { cx: hexC[0], cy: hexC[1], r: 30, class: 'cc', style: 'stroke-dasharray: 2 2' }, hexG)
+for (let k = 0; k < 6; k++) {
+  const a = (k * 60 - 90) * Math.PI / 180
+  const ln = mk('line', { x1: hexC[0], y1: hexC[1], x2: hexC[0], y2: hexC[1], class: 'hd' }, hexG)
+  tl.to(ln, { attr: { x2: hexC[0] + Math.cos(a) * 46, y2: hexC[1] + Math.sin(a) * 46 }, duration: 0.6, ease: 'power3.out' }, 9.2 + k * 0.05)
+  tick(9.2 + k * 0.1)
+}
+gsap.set(hc, { strokeDasharray: 236, strokeDashoffset: 236, rotation: -90, svgOrigin: hexC.join(' ') })
+tl.to(hc, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 9.1)
+tl.from(hc2, { opacity: 0, scale: 0.5, svgOrigin: hexC.join(' '), duration: 0.6 }, 9.3)
+const regB = regEls.map((el, k) => build(el, 9.2 + k * 0.3, 0.7, { minChord: 1.5, maxR: 60, maxCircles: 4 }))
+regB.forEach((b, k) => { tl.to(b.f, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 10.0 + k * 0.1); tick(10 + k * 0.1) })
+
+// ---------- 05 signature (10.6–12s) ----------
+step(10.6, '05 — Assinatura')
+camTo(10.4, 1.0, { cx: 418, cy: 126, z: 1 })
+dsEls.forEach((el, k) => {
+  const b = build(el, 10.8 + k * 0.05, 0.5, { light: true })
+  tl.to(b.f, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 11.4 + k * 0.03)
+  b.f.dataset.ds = 1
+})
+for (let k = 0; k < 6; k++) tick(10.8 + k * 0.1)
+
+// ---------- 06 brand (12–15s) ----------
+step(12.0, '06 — Marca')
+tl.to(['#grid', '#outs', '#handles', '#circs', '#dots', '#labels'], { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, 12.0)
+const allFills = [...fills.querySelectorAll('[fill]')]
+const regFills = regB.map((b) => b.f)
+tl.to(allFills.filter((f) => !regFills.includes(f)), { attr: { fill: '#f2efe9' }, duration: 0.6, ease: 'power2.inOut' }, 12.0)
+camTo(12.0, 3.0, { z: 0.9, cy: 150 }, 'power3.out')
+tl.from('#cap .s span', { yPercent: 110, duration: 0.9 }, 12.5)
+tl.from('#capl', { opacity: 0, y: 14, duration: 0.6 }, 12.75)
+tl.to('#black', { opacity: 1, duration: 0.6, ease: 'power1.in' }, 14.4)
+
+tl.set({}, {}, 15)
+applyCam()
+window.seek = (t) => { tl.seek(t, false); applyCam() }
+window.ready = document.fonts.ready.then(() => true)
+</script>
+</body>
+</html>
