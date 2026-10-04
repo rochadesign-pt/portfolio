@@ -1,0 +1,417 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+@font-face { font-family: 'Geist'; src: url(node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2) format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Geist'; src: url(node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2) format('woff2'); font-weight: 100 900; unicode-range: U+0100-024F, U+1E00-1EFF; }
+@font-face { font-family: 'Instrument Serif'; font-style: italic; src: url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2) format('woff2'); }
+@font-face { font-family: 'Instrument Serif'; font-style: normal; src: url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2) format('woff2'); }
+
+:root { --bg: #0b0b0d; --text: #f2efe9; --muted: #8f8b83; --accent: #ffc700; --paper: #efeadf; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+body { font-family: 'Geist', sans-serif; color: var(--text); -webkit-font-smoothing: antialiased; }
+#stage { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
+.scene { position: absolute; inset: 0; overflow: hidden; }
+.inner { position: absolute; inset: 0; }
+.serif { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.mask > span { display: inline-block; }
+.label { font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; }
+
+/* intro */
+#intro { background: var(--bg); z-index: 1; }
+#intro .wm { position: absolute; left: 50%; top: 50%; width: 1000px; transform: translate(-50%, -50%); color: var(--text); }
+#intro .wm svg { width: 100%; display: block; overflow: hidden; }
+.ring { position: absolute; left: 50%; top: 50%; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%; border: 6px solid var(--accent); opacity: 0; }
+.corner { position: absolute; color: var(--muted); }
+.dots { position: absolute; inset: -60px; background-image: radial-gradient(rgba(242,239,233,.13) 1.6px, transparent 1.6px); background-size: 48px 48px; }
+
+/* tagline */
+#tag { z-index: 2; background: var(--bg); visibility: hidden; }
+#tag .lines { position: absolute; left: 140px; top: 250px; font-size: 156px; line-height: 1.02; letter-spacing: -0.045em; font-weight: 450; }
+#tag .acc { color: var(--accent); font-size: 1.12em; }
+#tag .uline { position: absolute; height: 10px; background: var(--accent); left: 0; bottom: 6px; width: 100%; transform: scaleX(0); transform-origin: left; }
+
+/* projects */
+.proj .title { position: absolute; z-index: 5; left: 120px; bottom: 150px; font-size: 300px; line-height: .9; letter-spacing: -0.055em; font-weight: 500; white-space: nowrap; }
+.proj .meta { position: absolute; left: 128px; bottom: 96px; font-size: 30px; font-weight: 400; display: flex; gap: 28px; opacity: .85; }
+.proj .meta i { font-style: normal; opacity: .45; }
+.pills { position: absolute; right: 120px; bottom: 96px; display: flex; gap: 12px; }
+.pill { font-size: 22px; padding: 12px 22px; border-radius: 999px; border: 1.5px solid currentColor; font-weight: 500; }
+
+#hud { position: absolute; inset: 0; z-index: 50; pointer-events: none; visibility: hidden; }
+#hud .tl { position: absolute; left: 120px; top: 80px; }
+#hud .tr { position: absolute; right: 120px; top: 80px; display: flex; gap: 10px; align-items: baseline; }
+#hud .tr .num { display: inline-block; height: 1.2em; overflow: hidden; vertical-align: bottom; }
+#hud .tr .num > div { display: flex; flex-direction: column; line-height: 1.2em; }
+#hud .bar { position: absolute; left: 120px; right: 120px; bottom: 60px; height: 3px; background: currentColor; opacity: .18; }
+#hud .fill { position: absolute; left: 120px; bottom: 60px; height: 3px; width: 1680px; background: currentColor; transform: scaleX(0); transform-origin: left; }
+
+/* lumen */
+#lumen { background: #ffc700; color: #0b0b0d; }
+#lumen .sun { position: absolute; left: 1380px; top: 470px; width: 0; height: 0; }
+#lumen .rays { position: absolute; width: 1700px; height: 1700px; left: -850px; top: -850px; border-radius: 50%;
+  background: repeating-conic-gradient(#0b0b0d 0deg 3deg, transparent 3deg 12deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 330px, #000 331px 520px, transparent 800px); opacity: .9; }
+#lumen .disc { position: absolute; width: 560px; height: 560px; left: -280px; top: -280px; border-radius: 50%; background: #0b0b0d; }
+#lumen .core { position: absolute; width: 200px; height: 200px; left: -100px; top: -100px; border-radius: 50%; background: #ffc700; }
+
+/* meridian */
+#meridian { background: #1a5fd0; color: #fff; }
+#meridian .deck { position: absolute; left: 1010px; top: 90px; width: 820px; height: 760px; perspective: 1600px; }
+#meridian .deckin { position: absolute; inset: 0; transform: rotateY(-22deg) rotateX(10deg) rotateZ(2deg); transform-style: preserve-3d; }
+.card { position: absolute; background: #fff; border-radius: 22px; box-shadow: 0 40px 80px rgba(5,20,60,.35); padding: 26px; color: #0e1b33; }
+.card .h { height: 16px; width: 40%; background: #0e1b33; border-radius: 8px; margin-bottom: 18px; }
+.card .r { height: 12px; background: #dfe5f1; border-radius: 6px; margin-bottom: 12px; }
+.card .chart { display: flex; align-items: flex-end; gap: 10px; height: 150px; margin-top: 10px; }
+.card .chart div { flex: 1; background: #7c8cff; border-radius: 6px 6px 2px 2px; }
+.card .btn { margin-top: 16px; height: 46px; width: 160px; border-radius: 12px; background: #1a5fd0; }
+.card .av { width: 54px; height: 54px; border-radius: 50%; background: #7c8cff; float: left; margin-right: 16px; }
+
+/* ferve */
+#ferve { background: #ff7a4d; color: #0b0b0d; }
+.bag { position: absolute; width: 250px; height: 380px; border-radius: 26px 26px 14px 14px; box-shadow: 0 30px 60px rgba(60,20,0,.3); overflow: hidden; }
+.bag .crimp { height: 34px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 4px, transparent 4px 12px); }
+.bag .name { position: absolute; left: 22px; top: 70px; font-size: 64px; font-weight: 700; letter-spacing: -0.05em; }
+.bag .orig { position: absolute; left: 24px; bottom: 74px; font-family: 'Instrument Serif'; font-style: italic; font-size: 38px; }
+.bag .band { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; }
+#ferve .stamp { position: absolute; left: 1110px; top: 50px; width: 250px; height: 250px; }
+
+/* orbit */
+#orbit { background: #0b0b0d; color: #4de3c1; }
+#orbit .sys { position: absolute; left: 1380px; top: 470px; }
+.orb { position: absolute; border: 1.5px solid rgba(77,227,193,.35); border-radius: 50%; }
+.orb .pl { position: absolute; top: 50%; right: -11px; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: #4de3c1; box-shadow: 0 0 30px #4de3c1; }
+#orbit .sun { position: absolute; width: 90px; height: 90px; left: -45px; top: -45px; border-radius: 50%; background: #4de3c1; }
+#orbit .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(16, 1fr); grid-template-rows: repeat(9, 1fr); gap: 2px; }
+#orbit .grid div { background: #4de3c1; opacity: 0; }
+
+/* eco */
+#eco { background: #1a6fb4; color: #fff; }
+#eco .shot { position: absolute; left: 860px; top: 0; width: 1440px; height: 1080px; background: url(eco.webp) center/cover; transform-origin: 30% 60%; }
+#eco .fadeL { position: absolute; left: 0; top: 0; width: 1500px; height: 100%; background: linear-gradient(90deg, #1a6fb4 0 860px, rgba(26,111,180,.85) 1000px, rgba(26,111,180,0) 1500px); }
+
+/* pulse */
+#pulse { background: #ff5c8a; color: #0b0b0d; }
+#pulse .ecg { position: absolute; left: 0; top: 260px; width: 1920px; height: 400px; }
+#pulse .phone { position: absolute; left: 1290px; top: 120px; width: 400px; height: 820px; border-radius: 64px; background: #0b0b0d; padding: 18px; box-shadow: 0 50px 100px rgba(90,0,30,.4); }
+#pulse .screen { position: absolute; inset: 18px; border-radius: 48px; background: #141416; overflow: hidden; color: #fff; }
+#pulse .bpm { position: absolute; left: 40px; top: 120px; font-size: 150px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
+#pulse .unit { position: absolute; left: 44px; top: 280px; font-size: 26px; color: #ff5c8a; letter-spacing: .12em; font-weight: 600; }
+#pulse .mini { position: absolute; left: 0; top: 360px; width: 364px; height: 200px; }
+#pulse .rowc { position: absolute; left: 30px; right: 30px; height: 70px; border-radius: 20px; background: #1f1f23; }
+
+/* montage */
+.mcut { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; visibility: hidden; font-size: 330px; letter-spacing: -0.055em; font-weight: 500; }
+.mcut.s { font-size: 380px; }
+#grid { position: absolute; inset: 0; background: #0b0b0d; visibility: hidden; }
+#grid .gin { position: absolute; left: 120px; top: 150px; width: 1680px; height: 780px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 24px; }
+.tile { border-radius: 22px; display: flex; align-items: flex-end; padding: 30px 34px; font-size: 64px; letter-spacing: -0.045em; font-weight: 500; transform: scale(0); }
+#flash { position: absolute; inset: 0; background: var(--accent); z-index: 60; transform: scaleY(0); transform-origin: bottom; }
+
+/* end */
+#end { position: absolute; inset: 0; z-index: 70; background: #0b0b0d; visibility: hidden; }
+#end .wm { position: absolute; left: 50%; top: 400px; width: 1060px; margin-left: -530px; color: var(--text); }
+#end .wm svg { width: 100%; display: block; }
+#end .burst { position: absolute; left: 50%; top: 400px; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: var(--accent); transform: scale(0); }
+#end .cta { position: absolute; left: 0; right: 0; top: 760px; text-align: center; font-size: 84px; color: var(--accent); }
+#end .foot { position: absolute; left: 120px; right: 120px; bottom: 80px; display: flex; justify-content: space-between; color: var(--muted); }
+.marq { position: absolute; top: 90px; left: 0; white-space: nowrap; font-size: 190px; font-weight: 500; letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 1.5px rgba(242,239,233,.1); }
+#black { position: absolute; inset: 0; background: #000; z-index: 100; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 0–2s intro -->
+  <section class="scene" id="intro">
+    <div class="dots"></div>
+    <div class="ring" id="ring1"></div>
+    <div class="ring" id="ring2"></div>
+    <div class="wm" id="wm1">{{WORDMARK}}</div>
+    <div class="corner label" style="left:120px;top:80px" id="c1">Showreel</div>
+    <div class="corner label" style="right:120px;top:80px" id="c2">Branding · Web · Produto</div>
+  </section>
+
+  <!-- 2–4s tagline -->
+  <section class="scene" id="tag">
+    <div class="dots" id="tagdots"></div>
+    <div class="lines">
+      <span class="mask"><span>Desenhamos marcas e</span></span>
+      <span class="mask"><span>produtos digitais com</span></span>
+      <span class="mask"><span><span class="serif acc" style="position:relative">craft e intenção.<i class="uline"></i></span></span></span>
+    </div>
+  </section>
+
+  <!-- 4–16s projects -->
+  <section class="scene proj" id="lumen" style="z-index:3">
+    <div class="inner">
+      <div class="sun"><div class="rays"></div><div class="disc"></div><div class="core"></div></div>
+      <div class="title"></div>
+      <div class="meta"><span>Brand Identity</span><i>/</i><span>Fintech</span><i>/</i><span>2025</span></div>
+      <div class="pills" style="bottom:auto;top:150px;right:auto;left:128px"><span class="pill">Estratégia</span><span class="pill">Naming</span><span class="pill">Identidade visual</span></div>
+    </div>
+  </section>
+
+  <section class="scene proj" id="meridian" style="z-index:4">
+    <div class="inner">
+      <div class="deck"><div class="deckin">
+        <div class="card" style="left:0;top:40px;width:470px;height:330px"><div class="h"></div><div class="chart"><div style="height:40%"></div><div style="height:65%"></div><div style="height:50%"></div><div style="height:85%"></div><div style="height:70%"></div><div style="height:100%"></div></div></div>
+        <div class="card" style="left:500px;top:0;width:330px;height:250px"><div class="av"></div><div class="h" style="width:50%;margin-top:8px"></div><div class="r" style="clear:both;margin-top:30px"></div><div class="r" style="width:70%"></div><div class="btn"></div></div>
+        <div class="card" style="left:80px;top:400px;width:400px;height:300px"><div class="h"></div><div class="r"></div><div class="r" style="width:85%"></div><div class="r" style="width:60%"></div><div class="r"></div><div class="btn" style="width:100%"></div></div>
+        <div class="card" style="left:510px;top:280px;width:330px;height:380px;background:#0e1b33"><div class="h" style="background:#7c8cff"></div><div class="r" style="background:#22335a"></div><div class="r" style="background:#22335a;width:70%"></div><div class="chart" style="height:180px"><div style="height:30%;background:#fff"></div><div style="height:55%;background:#fff"></div><div style="height:100%;background:#fff"></div><div style="height:75%;background:#fff"></div></div></div>
+      </div></div>
+      <div class="title"></div>
+      <div class="meta"><span>Product &amp; Web</span><i>/</i><span>SaaS B2B</span><i>/</i><span>2025</span></div>
+      <div class="pills"><span class="pill">UI/UX</span><span class="pill">Design system</span><span class="pill">Web design</span></div>
+    </div>
+  </section>
+
+  <section class="scene proj" id="ferve" style="z-index:5">
+    <div class="inner">
+      <div class="bag" style="left:1000px;top:330px;background:#2b1a12;color:#ff7a4d"><div class="crimp"></div><div class="name">Ferve</div><div class="orig">Etiópia</div><div class="band" style="background:#ffc700"></div></div>
+      <div class="bag" style="left:1270px;top:290px;background:#efeadf;color:#0b0b0d"><div class="crimp"></div><div class="name">Ferve</div><div class="orig">Colômbia</div><div class="band" style="background:#ff7a4d"></div></div>
+      <div class="bag" style="left:1540px;top:350px;background:#0b0b0d;color:#efeadf"><div class="crimp"></div><div class="name">Ferve</div><div class="orig">Brasil</div><div class="band" style="background:#4de3c1"></div></div>
+      <svg class="stamp" viewBox="0 0 300 300"><defs><path id="circ" d="M150,150 m-118,0 a118,118 0 1,1 236,0 a118,118 0 1,1 -236,0"/></defs>
+        <text font-family="Geist" font-weight="600" font-size="27" letter-spacing="5" fill="#0b0b0d"><textPath href="#circ">FERVE • COFFEE ROASTERS • CAFÉ DE BAIRRO •</textPath></text>
+        <circle cx="150" cy="150" r="22" fill="#0b0b0d"/></svg>
+      <div class="title"></div>
+      <div class="meta"><span>Brand &amp; E-commerce</span><i>/</i><span>Café de especialidade</span><i>/</i><span>2024</span></div>
+      <div class="pills" style="bottom:auto;top:150px;right:auto;left:128px"><span class="pill">Naming</span><span class="pill">Packaging</span><span class="pill">E-commerce</span></div>
+    </div>
+  </section>
+
+  <section class="scene proj" id="orbit" style="z-index:6">
+    <div class="inner">
+      <div class="grid" id="ogrid"></div>
+      <div class="sys">
+        <div class="sun"></div>
+        <div class="orb" style="width:300px;height:300px;left:-150px;top:-150px"><div class="pl"></div></div>
+        <div class="orb" style="width:540px;height:540px;left:-270px;top:-270px"><div class="pl" style="width:30px;height:30px;margin-top:-15px;right:-15px"></div></div>
+        <div class="orb" style="width:800px;height:800px;left:-400px;top:-400px"><div class="pl" style="width:16px;height:16px;margin-top:-8px;right:-8px"></div></div>
+      </div>
+      <div class="title"></div>
+      <div class="meta"><span>Design System</span><i>/</i><span>Software</span><i>/</i><span>2024</span></div>
+      <div class="pills"><span class="pill">Tokens</span><span class="pill">Componentes</span><span class="pill">Documentação</span></div>
+    </div>
+  </section>
+
+  <section class="scene proj" id="eco" style="z-index:7">
+    <div class="inner">
+      <div class="shot"></div>
+      <div class="fadeL"></div>
+      <div class="title" style="font-size:190px"></div>
+      <div class="meta"><span>E-commerce</span><i>/</i><span>Bens sustentáveis</span><i>/</i><span>2024</span></div>
+      <div class="pills" style="bottom:auto;top:150px;right:auto;left:128px"><span class="pill">Shopify</span><span class="pill">UX &amp; Automação</span></div>
+    </div>
+  </section>
+
+  <section class="scene proj" id="pulse" style="z-index:8">
+    <div class="inner">
+      <svg class="ecg" viewBox="0 0 1920 400" fill="none"><path id="ecgp" d="M0 220 H420 L460 220 L490 120 L520 300 L555 40 L590 360 L620 220 H860 L890 180 L915 220 H1180 L1210 120 L1240 300 L1275 40 L1310 360 L1340 220 H1920" stroke="#0b0b0d" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" opacity=".22"/></svg>
+      <div class="phone"><div class="screen">
+        <div class="label" style="position:absolute;left:44px;top:70px;font-size:20px;color:#8f8b83">Ritmo cardíaco</div>
+        <div class="bpm" id="bpm">62</div><div class="unit">BPM · AGORA</div>
+        <svg class="mini" viewBox="0 0 364 200" fill="none"><path id="minip" d="M0 110 H80 L100 110 L115 50 L130 170 L148 20 L166 190 L182 110 H364" stroke="#ff5c8a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="rowc" style="top:590px"></div><div class="rowc" style="top:676px;opacity:.6"></div>
+      </div></div>
+      <div class="title"></div>
+      <div class="meta"><span>Mobile App</span><i>/</i><span>Saúde digital</span><i>/</i><span>2024</span></div>
+      <div class="pills" style="bottom:auto;top:150px;right:auto;left:128px"><span class="pill">UI/UX</span><span class="pill">Prototipagem</span><span class="pill">Motion</span></div>
+    </div>
+  </section>
+
+  <!-- 16–20 montage -->
+  <section class="scene" id="mont" style="z-index:9;visibility:hidden">
+    <div class="mcut" style="background:#ffc700;color:#0b0b0d">Lumen</div>
+    <div class="mcut s serif" style="background:#1a5fd0;color:#fff">Meridian</div>
+    <div class="mcut" style="background:#ff7a4d;color:#0b0b0d">Ferve</div>
+    <div class="mcut s serif" style="background:#0b0b0d;color:#4de3c1">Orbit</div>
+    <div class="mcut" style="background:#1a6fb4;color:#fff;font-size:250px">Ecoxperience</div>
+    <div class="mcut s serif" style="background:#ff5c8a;color:#0b0b0d">Pulse</div>
+    <div class="mcut" style="background:#efeadf;color:#0b0b0d">Branding.</div>
+    <div class="mcut s serif" style="background:#0b0b0d;color:#ffc700">Web &amp; Produto.</div>
+    <div id="grid"><div class="gin">
+      <div class="tile" style="background:#ffc700;color:#0b0b0d">Lumen</div>
+      <div class="tile" style="background:#1a5fd0;color:#fff">Meridian</div>
+      <div class="tile" style="background:#ff7a4d;color:#0b0b0d">Ferve</div>
+      <div class="tile" style="background:#151517;color:#4de3c1;border:1.5px solid rgba(77,227,193,.3)">Orbit</div>
+      <div class="tile" style="background:linear-gradient(0deg,rgba(11,11,13,.85),rgba(11,11,13,0) 60%),url(eco.webp) 70% 40%/180%,#1a6fb4;color:#fff">Ecoxperience</div>
+      <div class="tile" style="background:#ff5c8a;color:#0b0b0d">Pulse</div>
+    </div>
+    <div class="label" style="position:absolute;left:120px;top:80px;color:#8f8b83">Trabalho selecionado</div>
+    <div class="label" style="position:absolute;right:120px;top:80px;color:#8f8b83">06 projetos</div>
+    </div>
+  </section>
+
+  <div id="hud">
+    <div class="tl label">Trabalho selecionado</div>
+    <div class="tr label"><span class="num"><div id="numcol"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></div></span><span style="opacity:.5">/ 06</span></div>
+    <div class="bar"></div><div class="fill" id="fill"></div>
+  </div>
+
+  <div id="flash"></div>
+
+  <!-- 20–24 end -->
+  <section id="end">
+    <div class="dots" style="opacity:.6"></div>
+    <div class="marq" id="marq">Branding · Web · Produto · Motion · Branding · Web · Produto · Motion ·</div>
+    <div class="burst" id="burst"></div>
+    <div class="wm" id="wm2">{{WORDMARK}}</div>
+    <div class="cta serif"><span class="mask" style="display:inline-block"><span>Vamos começar algo grande.</span></span></div>
+    <div class="foot label"><span id="f1">hello@rochadesign.pt</span><span id="f2">rochadesign.pt</span></div>
+  </section>
+  <div id="black"></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+const $ = (s, r = document) => r.querySelector(s)
+const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+
+// ---------- 0–2 intro ----------
+const wm1 = $('#wm1 svg')
+const kids = [...wm1.children]
+const reg = kids.slice(0, 2), ds = kids[2]
+const rocha = kids.slice(3).sort((a, b) => a.getBBox().x - b.getBBox().x)
+tl.from(rocha, { y: 270, duration: 0.7, stagger: 0.07 }, 0.05)
+tl.from(ds, { y: 60, opacity: 0, duration: 0.6 }, 0.5)
+tl.from(reg, { opacity: 0, scale: 0, rotation: -180, svgOrigin: '801 37', duration: 0.6 }, 0.85)
+tl.from(['#c1', '#c2'], { opacity: 0, y: 20, duration: 0.6, stagger: 0.1 }, 0.2)
+tl.fromTo('#intro .dots', { y: 0 }, { y: -48, duration: 2, ease: 'none' }, 0)
+;[['#ring1', 0.5], ['#ring2', 1.5]].forEach(([r, t]) => {
+  tl.fromTo(r, { scale: 0.3, opacity: 1 }, { scale: 9, opacity: 0, duration: 0.7, ease: 'power3.out' }, t)
+})
+tl.to('#wm1', { scale: 1.06, duration: 1.5, ease: 'none' }, 0.3)
+tl.to(wm1.children, { y: -270, duration: 0.35, ease: 'power3.in', stagger: 0.02 }, 1.68)
+
+// ---------- 2–4 tagline ----------
+tl.set('#tag', { visibility: 'visible' }, 2)
+const tagLines = $$('#tag .mask > span')
+tagLines.forEach((l, i) => tl.from(l, { yPercent: 110, duration: 0.6 }, 2 + i * 0.5))
+tl.to('#tag .uline', { scaleX: 1, duration: 0.45, ease: 'expo.inOut' }, 3.4)
+tl.fromTo('#tag .lines', { x: 0 }, { x: -40, duration: 2, ease: 'none' }, 2)
+tl.fromTo('#tagdots', { y: 0 }, { y: -96, duration: 2, ease: 'none' }, 2)
+
+// ---------- 4–16 projects ----------
+const projects = [
+  { id: 'lumen', name: 'Lumen', ink: '#0b0b0d', from: 'inset(100% 0% 0% 0%)' },
+  { id: 'meridian', name: 'Meridian', ink: '#ffffff', from: 'inset(0% 0% 0% 100%)' },
+  { id: 'ferve', name: 'Ferve', ink: '#0b0b0d', from: 'circle(0% at 72% 55%)', to: 'circle(150% at 72% 55%)' },
+  { id: 'orbit', name: 'Orbit', ink: '#4de3c1', from: 'inset(0% 0% 100% 0%)' },
+  { id: 'eco', name: 'Ecoxperience', ink: '#ffffff', from: 'inset(0% 50% 0% 50%)' },
+  { id: 'pulse', name: 'Pulse', ink: '#0b0b0d', from: 'inset(0% 100% 0% 0%)' },
+]
+projects.forEach((p, i) => {
+  const t0 = 4 + i * 2
+  const el = $('#' + p.id)
+  const title = $('.title', el)
+  title.innerHTML = [...p.name].map((c) => `<span class="mask" style="display:inline-block"><span>${c}</span></span>`).join('')
+  gsap.set(el, { clipPath: p.from })
+  tl.fromTo(el, { clipPath: p.from }, { clipPath: p.to || 'inset(0% 0% 0% 0%)', duration: 0.32, ease: 'power4.inOut', immediateRender: false }, t0 - 0.3)
+  tl.fromTo($('.inner', el), { scale: 1.12 }, { scale: 1, duration: 1.2 }, t0 - 0.3)
+  tl.from($$('.mask > span', title), { yPercent: 105, duration: 0.7, stagger: 0.035 }, t0 - 0.05)
+  tl.from($$('.meta > *', el), { opacity: 0, y: 24, duration: 0.5, stagger: 0.04 }, t0 + 0.25)
+  tl.from($$('.pill', el), { opacity: 0, y: 30, scale: 0.8, duration: 0.5, stagger: 0.08, ease: 'back.out(2)' }, t0 + 0.5)
+  tl.to(title, { x: -30, duration: 2, ease: 'none' }, t0)
+  tl.set('#hud', { color: p.ink }, t0 - 0.15)
+  if (i > 0) tl.to('#numcol', { yPercent: -(100 / 6) * i, duration: 0.45, ease: 'expo.inOut' }, t0 - 0.25)
+})
+tl.set('#hud', { visibility: 'visible' }, 3.85)
+tl.from('#hud .tl, #hud .tr', { opacity: 0, y: -20, duration: 0.5 }, 3.9)
+tl.to('#fill', { scaleX: 1, duration: 12, ease: 'none' }, 4)
+tl.set('#hud', { visibility: 'hidden' }, 15.9)
+
+// lumen 4–6
+tl.from('#lumen .disc', { scale: 0, duration: 0.8 }, 4.0)
+tl.from('#lumen .core', { scale: 0, duration: 0.8 }, 4.15)
+tl.fromTo('#lumen .rays', { rotation: 0, scale: 0.6 }, { rotation: 45, scale: 1, duration: 2.2, ease: 'power2.out' }, 3.9)
+;[4.5, 5.0, 5.5].forEach((t) => tl.fromTo('#lumen .core', { scale: 1.35 }, { scale: 1, duration: 0.4, immediateRender: false }, t))
+
+// meridian 6–8
+tl.from('#meridian .card', { y: 500, opacity: 0, duration: 0.9, stagger: 0.07 }, 5.85)
+tl.to('#meridian .card', { y: (i) => -40 - i * 20, duration: 1.4, ease: 'none', stagger: 0 }, 6.6)
+tl.from('#meridian .chart div', { scaleY: 0, transformOrigin: 'bottom', duration: 0.6, stagger: 0.03, ease: 'back.out(1.6)' }, 6.25)
+tl.fromTo('#meridian .deckin', { rotationY: -30 }, { rotationY: -16, duration: 2.2, ease: 'power2.out' }, 5.8)
+
+// ferve 8–10
+$$('#ferve .bag').forEach((b, i) => {
+  tl.from(b, { y: -1000, rotation: (i - 1) * 14, duration: 0.6, ease: 'bounce.out' }, 7.9 + i * 0.25)
+  tl.to(b, { y: -20 - i * 6, rotation: (i - 1) * -3, duration: 1.0, ease: 'sine.inOut' }, 8.6 + i * 0.05)
+})
+tl.fromTo('#ferve .stamp', { rotation: -90, scale: 0 }, { rotation: 120, scale: 1, duration: 2.2, ease: 'power3.out' }, 7.9)
+
+// orbit 10–12
+const og = $('#ogrid')
+for (let k = 0; k < 144; k++) og.appendChild(document.createElement('div'))
+let seed = 11
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+const cells = [...og.children]
+for (let s = 0; s < 16; s++) {
+  const t = 10 + s * 0.125
+  const pick = cells.filter(() => rnd() < 0.05)
+  tl.fromTo(pick, { opacity: 0.16 }, { opacity: 0, duration: 0.4, ease: 'power2.out', immediateRender: false }, t)
+}
+$$('#orbit .orb').forEach((o, i) => {
+  tl.fromTo(o, { rotation: i * 70 }, { rotation: i * 70 + [240, -150, 90][i], duration: 2.3, ease: 'power2.out' }, 9.8)
+  tl.from(o, { scale: 0, opacity: 0, duration: 0.8 }, 9.9 + i * 0.08)
+})
+tl.from('#orbit .sun', { scale: 0, duration: 0.6, ease: 'back.out(3)' }, 10.0)
+;[10.5, 11.0, 11.5].forEach((t) => tl.fromTo('#orbit .sun', { scale: 1.3 }, { scale: 1, duration: 0.4, immediateRender: false }, t))
+
+// eco 12–14
+tl.fromTo('#eco .shot', { scale: 1.35, x: 160 }, { scale: 1.02, x: 0, duration: 2.3, ease: 'power3.out' }, 11.8)
+
+// pulse 14–16
+const ecg = $('#ecgp'), L1 = ecg.getTotalLength()
+gsap.set(ecg, { strokeDasharray: L1, strokeDashoffset: L1 })
+tl.to(ecg, { strokeDashoffset: 0, duration: 1.6, ease: 'power1.inOut' }, 13.9)
+const mini = $('#minip'), L2 = mini.getTotalLength()
+gsap.set(mini, { strokeDasharray: L2, strokeDashoffset: L2 })
+tl.to(mini, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' }, 14.2)
+tl.from('#pulse .phone', { y: 900, rotation: 6, duration: 0.9 }, 13.85)
+tl.to('#pulse .phone', { rotation: -6, y: -30, duration: 1.5, ease: 'sine.inOut' }, 14.5)
+const bpm = { v: 62 }
+tl.to(bpm, { v: 128, duration: 1.4, ease: 'power2.out', onUpdate: () => ($('#bpm').textContent = Math.round(bpm.v)) }, 14.2)
+
+// ---------- 16–20 montage ----------
+tl.set('#mont', { visibility: 'visible' }, 15.95)
+const cuts = $$('.mcut')
+cuts.forEach((c, i) => {
+  const t = 16 + i * 0.25
+  tl.set(c, { visibility: 'visible' }, t)
+  tl.fromTo(c, { scale: 1.25, letterSpacing: '0em' }, { scale: 1, letterSpacing: '-0.055em', duration: 0.25, ease: 'power3.out', immediateRender: false }, t)
+  tl.set(c, { visibility: 'hidden' }, t + 0.25)
+})
+tl.set('#grid', { visibility: 'visible' }, 18)
+$$('.tile').forEach((tile, i) => tl.to(tile, { scale: 1, duration: 0.45, ease: 'back.out(1.8)' }, 18 + i * 0.2))
+tl.fromTo('#grid .gin', { scale: 1 }, { scale: 1.07, duration: 2, ease: 'power1.in' }, 18)
+tl.from('#grid .label', { opacity: 0, duration: 0.4 }, 18)
+tl.to('#flash', { scaleY: 1, duration: 0.25, ease: 'power4.in' }, 19.75)
+
+// ---------- 20–24 end ----------
+tl.set('#end', { visibility: 'visible' }, 20)
+tl.set('#flash', { transformOrigin: 'top' }, 20)
+tl.to('#flash', { scaleY: 0, duration: 0.45, ease: 'power4.out' }, 20)
+tl.fromTo('#wm2', { scale: 1.7, filter: 'blur(24px)', opacity: 0 }, { scale: 1, filter: 'blur(0px)', opacity: 1, duration: 0.7 }, 20.02)
+tl.to('#wm2', { scale: 0.96, duration: 3.5, ease: 'none' }, 20.7)
+const reg2 = [...$('#wm2 svg').children].slice(0, 2)
+tl.to(reg2, { fill: '#ffc700', duration: 0.01 }, 20.0)
+tl.from(reg2, { rotation: 360, svgOrigin: '801 37', duration: 1.2, ease: 'expo.out' }, 20.1)
+tl.from('#end .cta .mask > span', { yPercent: 110, duration: 0.8 }, 20.6)
+tl.from(['#f1', '#f2'], { opacity: 0, y: 20, duration: 0.6, stagger: 0.1 }, 21.0)
+tl.fromTo('#end .dots', { y: 0 }, { y: -60, duration: 4, ease: 'none' }, 20)
+tl.fromTo('#marq', { x: 0 }, { x: -1100, duration: 4, ease: 'none' }, 20)
+tl.from('#marq', { opacity: 0, duration: 0.8, ease: 'power1.out' }, 20.3)
+tl.fromTo('#burst', { scale: 0, opacity: 0.9 }, { scale: 90, opacity: 0, duration: 1.2, ease: 'power3.out' }, 23.0)
+tl.to('#black', { opacity: 1, duration: 0.5, ease: 'power1.in' }, 23.5)
+
+tl.set({}, {}, 24)
+window.seek = (t) => { tl.seek(t, false) }
+window.ready = document.fonts.ready.then(() => true)
+</script>
+</body>
+</html>
