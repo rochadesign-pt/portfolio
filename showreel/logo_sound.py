@@ -1,7 +1,7 @@
 # Sound design for logo-construction (15s): drone pad, precise ticks on every
 # anchor/dimension event (ticks.json, exported by render.mjs), whooshes on camera
 # moves and a hit + chime on the final reveal at 12s.
-import json, wave
+import json, os, sys, wave
 import numpy as np
 
 SR = 48000
@@ -43,36 +43,39 @@ def chime(freqs, length=3.0):
     s = sum(np.sin(2 * np.pi * f * t) * (0.6 ** k) for k, f in enumerate(freqs))
     return s * np.exp(-t / 1.1) * np.minimum(t / 0.005, 1)
 
+SFX = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else {}
+OUT = sys.argv[2] if len(sys.argv) > 2 else 'logo.wav'
+HIT = SFX.get('hit', 12.0)
+
 # drone pad: A minor-ish, swelling, low-passed by keeping it to sines
 pad = np.zeros(N)
 for f, g in [(55, .5), (110, .35), (164.8, .18), (220, .12), (261.6, .08)]:
     pad += g * np.sin(2 * np.pi * f * t_all + np.sin(2 * np.pi * 0.2 * t_all) * 0.5)
 swell = np.clip(t_all / 2.5, 0, 1) * (0.75 + 0.25 * np.sin(2 * np.pi * t_all / 4))
-pad *= swell * np.where(t_all < 12, 1, np.exp(-(t_all - 12) / 0.4))  # drops out on the reveal
+pad *= swell * np.where(t_all < HIT, 1, np.exp(-(t_all - HIT) / 0.4))  # drops out on the reveal
 L += pad * 0.35; R += pad * 0.35
 
-ticks = json.load(open('ticks.json'))
+ticks = SFX.get('ticks') or json.load(open('ticks.json'))
 for k, t in enumerate(ticks):
     add(tick(2600 + (k % 5) * 300), t, 0.35, ((k % 3) - 1) * 0.5)
 
-for t, d in [(1.55, 0.9), (5.9, 1.1), (8.85, 1.0), (10.35, 1.1)]:
-    add(whoosh(d), t, 0.35)
-add(whoosh(1.2), 10.8, 0.15)
+for t, d in SFX.get('whoosh') or [(1.55, 0.9), (5.9, 1.1), (8.85, 1.0), (10.35, 1.1), (10.8, 1.2)]:
+    add(whoosh(d), t, 0.3)
 
 # soft heartbeat pulses under the build
-for t in np.arange(2.0, 12.0, 1.0):
+for t in np.arange(2.0, HIT, 1.0):
     n = int(0.3 * SR); tt = np.arange(n) / SR
     add(np.sin(2 * np.pi * np.cumsum(45 + 40 * np.exp(-tt / 0.03)) / SR) * np.exp(-tt / 0.12), t, 0.45)
 
-add(hit(), 12.0, 0.9)
-add(chime([880, 1318.5, 1760, 2637]), 12.0, 0.25, -0.2)
-add(chime([659.3, 987.8]), 12.55, 0.15, 0.3)
+add(hit(), HIT, 0.9)
+add(chime([880, 1318.5, 1760, 2637]), HIT, 0.25, -0.2)
+add(chime([659.3, 987.8]), HIT + 0.55, 0.15, 0.3)
 
 mix = np.stack([L, R], 1)
 mix /= np.abs(mix).max() + 1e-9
 mix = np.tanh(mix * 1.2) / np.tanh(1.2) * 0.9
 fade = int(0.7 * SR); mix[-fade:] *= np.linspace(1, 0, fade)[:, None]
-with wave.open('logo.wav', 'wb') as w:
+with wave.open(OUT, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((mix * 32767).astype('<i2').tobytes())
 print('ok')

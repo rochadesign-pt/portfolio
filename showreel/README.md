@@ -47,3 +47,23 @@ python3 logo_sound.py                                                  # → log
 ffmpeg -y -framerate 30 -i frames-logo/f%04d.png -i logo.wav -c:v libx264 -preset slow -crf 16 \
   -pix_fmt yuv420p -c:a aac -b:a 256k -movflags +faststart -shortest rds-logo-construction.mp4
 ```
+
+## Detalhe do R
+
+`rds-logo-detail-R.mp4` — 15s, macro sobre um só glifo (o R do wordmark real) a mostrar
+cortes e arredondamentos. Os raios e ângulos são calculados a partir do path.
+
+| Tempo | Detalhe |
+| --- | --- |
+| 0–3s | Grelha do glifo, contorno, pontos e alças |
+| 3–5.7s | 01 Bojo & contraforma — raio do bojo, raio da contraforma, haste = bojo |
+| 5.7–8.2s | 02 Junção da perna — corte de transição, ângulo da perna |
+| 8.2–10.8s | 03 Perna & remate — curva da perna e os dois raios pequenos do pé |
+| 10.8–15s | R preenche a amarelo, recua para o wordmark, "Cada curva, com intenção." |
+
+```bash
+HTML=logo-detail.html DUR=15 OUT=frames-detail node render.mjs 30   # também gera sfx.json
+python3 logo_sound.py sfx.json detail.wav
+ffmpeg -y -framerate 30 -i frames-detail/f%04d.png -i detail.wav -c:v libx264 -preset slow -crf 16 \
+  -pix_fmt yuv420p -c:a aac -b:a 256k -movflags +faststart -shortest rds-logo-detail-R.mp4
+```

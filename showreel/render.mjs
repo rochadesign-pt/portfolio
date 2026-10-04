@@ -36,6 +36,8 @@ await page.waitForTimeout(300)
 const out = path.join(root, only ? 'stills' : process.env.OUT || 'frames')
 const ticks = await page.evaluate(() => window.ticks)
 if (ticks) writeFileSync(path.join(root, 'ticks.json'), JSON.stringify(ticks))
+const sfx = await page.evaluate(() => window.sfx)
+if (sfx) writeFileSync(path.join(root, 'sfx.json'), JSON.stringify(sfx))
 rmSync(out, { recursive: true, force: true }); mkdirSync(out)
 const times = only || Array.from({ length: Math.round(Number(process.env.DUR || 24) * fps) }, (_, i) => i / fps)
 for (let i = 0; i < times.length; i++) {
