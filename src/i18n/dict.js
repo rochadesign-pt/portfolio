@@ -37,6 +37,14 @@ export const dict = {
       accent: 'craft e intenção.',
       sub: 'Somos um estúdio de design focado em branding, web e produto. Trabalhamos com quem leva a sua marca a sério.',
       scroll: 'Scroll',
+      discover: 'Ver trabalho',
+      talk: 'Vamos falar',
+      based: 'Aveiro, Portugal',
+      pillars: [
+        { title: 'Branding', body: 'Identidades com fundação, não só um logótipo.' },
+        { title: 'Web & Digital', body: 'Sites desenhados para converter, do protótipo ao live.' },
+        { title: 'UI/UX & Produto', body: 'Interfaces que as pessoas gostam de usar.' },
+      ],
     },
     intro: {
       label: 'Quem somos',
@@ -249,6 +257,14 @@ export const dict = {
       accent: 'craft and intent.',
       sub: 'A design studio focused on branding, web and product. We work with people who take their brand seriously.',
       scroll: 'Scroll',
+      discover: 'See our work',
+      talk: "Let's talk",
+      based: 'Aveiro, Portugal',
+      pillars: [
+        { title: 'Branding', body: 'Identities with real foundations, not just a logo.' },
+        { title: 'Web & Digital', body: 'Sites designed to convert, from prototype to live.' },
+        { title: 'UI/UX & Product', body: 'Interfaces people actually enjoy using.' },
+      ],
     },
     intro: {
       label: 'Who we are',

@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -9,7 +9,6 @@ import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
 import { useContent } from '../content/ContentProvider'
 import { stats } from '../data/site'
-import { fadeUp } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import Marquee from '../components/Marquee'
 import Counter from '../components/Counter'
@@ -18,13 +17,20 @@ import Exploration from '../components/Exploration'
 import ServiceColumns from '../components/ServiceColumns'
 import CTASection from '../components/CTASection'
 import DotField from '../components/DotField'
+import DotSphere from '../components/DotSphere'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
+// Hero as a composition of interlocking tiles: the headline lives in a "paper"
+// block that steps down into a second block (joined by a concave fillet), and
+// around it sit a live dot sphere, the yellow CTA tile, a location tile and the
+// three service pillars. Tiles assemble in sequence once the preloader is done.
 function Hero() {
   const { t } = useLang()
+  const reduce = useReducedMotion()
+  const ref = useRef(null)
   const [started, setStarted] = useState(false)
 
   // Start the hero entrance when the preloader finishes (or immediately if it
@@ -43,47 +49,123 @@ function Hero() {
     }
   }, [])
 
+  useGSAP(
+    () => {
+      const tiles = ref.current.querySelectorAll('[data-tile]')
+      if (reduce) {
+        gsap.set(tiles, { autoAlpha: 1 })
+        return
+      }
+      if (!started) {
+        gsap.set(tiles, { autoAlpha: 0, y: 24, scale: 0.96 })
+        return
+      }
+      gsap.to(tiles, {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.9,
+        ease: 'expo.out',
+        stagger: { each: 0.07, from: 'start' },
+        delay: 0.1,
+      })
+    },
+    { scope: ref, dependencies: [started, reduce] },
+  )
+
+  const [p1, p2, p3] = t.hero.pillars
+
   return (
-    <section className="relative overflow-hidden pt-40 pb-24 md:pt-52">
-      {/* Full-bleed dot field behind the hero — brightens around the cursor */}
+    <section ref={ref} className="relative overflow-hidden pt-28 pb-20 md:pt-32 md:pb-28">
+      {/* Full-bleed dot field behind the tiles — brightens around the cursor */}
       <DotField />
 
-      <div className="relative mx-auto max-w-[1400px] px-6 md:px-10">
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate={started ? 'show' : 'hidden'}
-          className="label mb-8"
-        >
-          {t.hero.eyebrow}
-        </motion.p>
+      <div className="relative mx-auto max-w-[1400px] px-4 md:px-10">
+        <div className="hero-grid">
+          {/* Headline block */}
+          <div data-tile className="hero-a tile-paper">
+            <p className="label hero-eyebrow">{t.hero.eyebrow}</p>
+            <h1 className="display hero-title">
+              <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.15} />
+              <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.24} />
+              <MaskText as="span" text={t.hero.accent} className="block emph" trigger="mount" active={started} delay={0.34} />
+            </h1>
+          </div>
 
-        <h1 className="display text-[12vw] leading-[0.92] md:text-[6rem] lg:text-[clamp(4rem,7.4vw,7.25rem)]">
-          <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.05} />
-          <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.14} />
-          <MaskText
-            as="span"
-            text={t.hero.accent}
-            className="block emph"
-            trigger="mount"
-            active={started}
-            delay={0.24}
-          />
-        </h1>
+          {/* Step that hangs off the headline block */}
+          <div data-tile className="hero-b tile-paper" aria-hidden="true">
+            <span className="hero-fillet" />
+          </div>
 
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate={started ? 'show' : 'hidden'}
-          transition={{ delay: 0.45 }}
-          className="mt-10 flex max-w-xl flex-col gap-6 md:flex-row md:items-end md:justify-between"
-        >
-          <p className="max-w-md text-lg text-muted">{t.hero.sub}</p>
-        </motion.div>
+          {/* Intro copy + link, on the dark ground */}
+          <div data-tile className="hero-sub">
+            <p className="max-w-sm text-base text-muted md:text-lg">{t.hero.sub}</p>
+            <Link to="/work" className="hero-link group">
+              {t.hero.discover}
+              <Arrow className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
 
+          <Pillar className="hero-p1" item={p1} />
+
+          {/* Yellow CTA tile */}
+          <Link data-tile to="/contact" className="hero-cta group" aria-label={t.hero.talk}>
+            <span className="label hero-cta-label">{t.hero.talk}</span>
+            <Arrow className="h-9 w-9 transition-transform duration-500 ease-[var(--ease-ios)] group-hover:-translate-y-1 group-hover:translate-x-1 md:h-12 md:w-12" />
+          </Link>
+
+          {/* Live dot sphere */}
+          <div data-tile className="hero-s tile-dark">
+            <DotSphere />
+            <span className="label hero-fig">Fig. 01</span>
+          </div>
+
+          {/* Location tile */}
+          <div data-tile className="hero-d tile-paper">
+            <span className="label hero-fig">{t.hero.based}</span>
+            <HeroClock />
+          </div>
+
+          <Pillar className="hero-p2" item={p2} />
+          <Pillar className="hero-p3" item={p3} />
+        </div>
       </div>
     </section>
   )
+}
+
+function Pillar({ item, className }) {
+  return (
+    <div data-tile className={`hero-pillar ${className}`}>
+      <span aria-hidden="true" className="hero-plus" />
+      <p className="mt-4 text-sm font-medium text-text">{item.title}</p>
+      <p className="mt-1.5 max-w-[15rem] text-sm leading-snug text-muted">{item.body}</p>
+    </div>
+  )
+}
+
+function Arrow({ className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true" className={`h-4 w-4 ${className}`}>
+      <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  )
+}
+
+// Local time in Aveiro — big, tabular, ticking by the minute.
+function HeroClock() {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 15000)
+    return () => clearInterval(id)
+  }, [])
+  const time = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Lisbon',
+  }).format(now)
+  return <span className="display hero-clock tabular-nums">{time}</span>
 }
 
 // Manifesto + metrics in one section: the statement illuminates character by
