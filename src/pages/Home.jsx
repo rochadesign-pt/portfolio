@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -9,6 +9,7 @@ import MaskText from '../components/MaskText'
 import MaskReveal from '../components/MaskReveal'
 import { useContent } from '../content/ContentProvider'
 import { stats } from '../data/site'
+import { fadeUp } from '../lib/motion'
 import Reveal from '../components/Reveal'
 import Marquee from '../components/Marquee'
 import Counter from '../components/Counter'
@@ -16,22 +17,23 @@ import WorkCard from '../components/WorkCard'
 import Exploration from '../components/Exploration'
 import ServiceColumns from '../components/ServiceColumns'
 import CTASection from '../components/CTASection'
-import DotField from '../components/DotField'
-import DotSphere from '../components/DotSphere'
+import PixelField from '../components/PixelField'
 import PageTransition from '../components/PageTransition'
 import { useSeo } from '../lib/useSeo'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-// Hero as a composition of interlocking tiles: the headline lives in a "paper"
-// block that steps down into a second block (joined by a concave fillet), and
-// around it sit a live dot sphere, the yellow CTA tile, a location tile and the
-// three service pillars. Tiles assemble in sequence once the preloader is done.
+// Hero in a "blueprint" frame: headline left, intro + actions right, then a
+// full-bleed pixel skyline and three service tabs. The tabs auto-advance (a
+// progress line runs along the active one) and each reshapes the skyline.
+const TAB_MS = 6000
+
 function Hero() {
   const { t } = useLang()
   const reduce = useReducedMotion()
-  const ref = useRef(null)
   const [started, setStarted] = useState(false)
+  const [tab, setTab] = useState(0)
+  const [paused, setPaused] = useState(false)
 
   // Start the hero entrance when the preloader finishes (or immediately if it
   // was skipped), with a safety fallback so content never stays hidden.
@@ -49,123 +51,83 @@ function Hero() {
     }
   }, [])
 
-  useGSAP(
-    () => {
-      const tiles = ref.current.querySelectorAll('[data-tile]')
-      if (reduce) {
-        gsap.set(tiles, { autoAlpha: 1 })
-        return
-      }
-      if (!started) {
-        gsap.set(tiles, { autoAlpha: 0, y: 24, scale: 0.96 })
-        return
-      }
-      gsap.to(tiles, {
-        autoAlpha: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.9,
-        ease: 'expo.out',
-        stagger: { each: 0.07, from: 'start' },
-        delay: 0.1,
-      })
-    },
-    { scope: ref, dependencies: [started, reduce] },
-  )
-
-  const [p1, p2, p3] = t.hero.pillars
+  // Auto-advance the tabs (paused on hover / focus, off under reduced motion)
+  useEffect(() => {
+    if (!started || paused || reduce) return
+    const id = setTimeout(() => setTab((i) => (i + 1) % t.hero.tabs.length), TAB_MS)
+    return () => clearTimeout(id)
+  }, [tab, started, paused, reduce, t.hero.tabs.length])
 
   return (
-    <section ref={ref} className="relative overflow-hidden pt-28 pb-20 md:pt-32 md:pb-28">
-      {/* Full-bleed dot field behind the tiles — brightens around the cursor */}
-      <DotField />
+    <section className="bp-row relative !border-t-0">
+      <div className="bp-inner grid gap-10 pt-36 pb-16 md:grid-cols-12 md:pt-44 md:pb-20">
+        <h1 className="display text-[2.3rem] leading-[1.04] md:col-span-7 md:text-[clamp(3rem,5vw,4.75rem)]">
+          <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.05} />
+          <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.12} />
+          <MaskText as="span" text={t.hero.accent} className="block emph" trigger="mount" active={started} delay={0.2} />
+        </h1>
 
-      <div className="relative mx-auto max-w-[1400px] px-4 md:px-10">
-        <div className="hero-grid">
-          {/* Headline block */}
-          <div data-tile className="hero-a tile-paper">
-            <p className="label hero-eyebrow">{t.hero.eyebrow}</p>
-            <h1 className="display hero-title">
-              <MaskText as="span" text={t.hero.line1} className="block" trigger="mount" active={started} delay={0.15} />
-              <MaskText as="span" text={t.hero.line2} className="block" trigger="mount" active={started} delay={0.24} />
-              <MaskText as="span" text={t.hero.accent} className="block emph" trigger="mount" active={started} delay={0.34} />
-            </h1>
-          </div>
-
-          {/* Step that hangs off the headline block */}
-          <div data-tile className="hero-b tile-paper" aria-hidden="true">
-            <span className="hero-fillet" />
-          </div>
-
-          {/* Intro copy + link, on the dark ground */}
-          <div data-tile className="hero-sub">
-            <p className="max-w-sm text-base text-muted md:text-lg">{t.hero.sub}</p>
-            <Link to="/work" className="hero-link group">
-              {t.hero.discover}
-              <Arrow className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={started ? 'show' : 'hidden'}
+          transition={{ delay: 0.4 }}
+          className="md:col-span-4 md:col-start-9 md:pt-3"
+        >
+          <p className="max-w-sm text-[15px] leading-relaxed text-muted">{t.hero.sub}</p>
+          <div className="mt-7 flex flex-wrap gap-2.5">
+            <Link to="/contact" className="pill pill-solid">
+              {t.hero.talk}
+            </Link>
+            <Link to="/work" className="pill">
+              {t.hero.discover} <span aria-hidden="true">→</span>
             </Link>
           </div>
+        </motion.div>
+      </div>
 
-          <Pillar className="hero-p1" item={p1} />
+      <PixelField seed={tab} className="h-[220px] w-full md:h-[300px]" />
 
-          {/* Yellow CTA tile */}
-          <Link data-tile to="/contact" className="hero-cta group" aria-label={t.hero.talk}>
-            <span className="label hero-cta-label">{t.hero.talk}</span>
-            <Arrow className="h-9 w-9 transition-transform duration-500 ease-[var(--ease-ios)] group-hover:-translate-y-1 group-hover:translate-x-1 md:h-12 md:w-12" />
-          </Link>
-
-          {/* Live dot sphere */}
-          <div data-tile className="hero-s tile-dark">
-            <DotSphere />
-            <span className="label hero-fig">Fig. 01</span>
-          </div>
-
-          {/* Location tile */}
-          <div data-tile className="hero-d tile-paper">
-            <span className="label hero-fig">{t.hero.based}</span>
-            <HeroClock />
-          </div>
-
-          <Pillar className="hero-p2" item={p2} />
-          <Pillar className="hero-p3" item={p3} />
+      <div className="bp-row">
+        <div
+          className="bp-inner grid md:grid-cols-3"
+          role="tablist"
+          aria-label={t.services.label}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          {t.hero.tabs.map((item, i) => {
+            const active = i === tab
+            return (
+              <button
+                key={item.title}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(i)}
+                onFocus={() => setPaused(true)}
+                onBlur={() => setPaused(false)}
+                className={`hero-tab ${active ? 'is-active' : ''}`}
+              >
+                <span className="hero-tab-bar" aria-hidden="true">
+                  <span
+                    key={`${tab}-${paused}`}
+                    className="hero-tab-fill"
+                    style={{ animationDuration: `${TAB_MS}ms`, animationPlayState: paused || reduce ? 'paused' : 'running' }}
+                  />
+                </span>
+                <span className="text-sm">
+                  <span className="tabular-nums text-muted">0{i + 1} — </span>
+                  {item.title}
+                </span>
+                <span className="hero-tab-body mt-2 block max-w-xs text-sm leading-snug text-muted">{item.body}</span>
+              </button>
+            )
+          })}
         </div>
       </div>
     </section>
   )
-}
-
-function Pillar({ item, className }) {
-  return (
-    <div data-tile className={`hero-pillar ${className}`}>
-      <span aria-hidden="true" className="hero-plus" />
-      <p className="mt-4 text-sm font-medium text-text">{item.title}</p>
-      <p className="mt-1.5 max-w-[15rem] text-sm leading-snug text-muted">{item.body}</p>
-    </div>
-  )
-}
-
-function Arrow({ className = '' }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true" className={`h-4 w-4 ${className}`}>
-      <path d="M7 17 17 7M8 7h9v9" />
-    </svg>
-  )
-}
-
-// Local time in Aveiro — big, tabular, ticking by the minute.
-function HeroClock() {
-  const [now, setNow] = useState(() => new Date())
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 15000)
-    return () => clearInterval(id)
-  }, [])
-  const time = new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-    timeZone: 'Europe/Lisbon',
-  }).format(now)
-  return <span className="display hero-clock tabular-nums">{time}</span>
 }
 
 // Manifesto + metrics in one section: the statement illuminates character by
@@ -336,11 +298,24 @@ export default function Home() {
   useSeo(t.seo.home)
   return (
     <PageTransition>
-      <Hero />
-      <ClientsBand />
-      <FeaturedWork />
-      <ManifestoStats />
-      <ServicesPreview />
+      {/* Blueprint frame: hairline rails down the content edges, a hairline
+          between sections and a "+" where they cross. */}
+      <div className="bp">
+        <span className="bp-rails" aria-hidden="true" />
+        <Hero />
+        <div className="bp-row">
+          <ClientsBand />
+        </div>
+        <div className="bp-row">
+          <FeaturedWork />
+        </div>
+        <div className="bp-row">
+          <ManifestoStats />
+        </div>
+        <div className="bp-row">
+          <ServicesPreview />
+        </div>
+      </div>
 
       {/* Closing sticky stack, in two sequenced stages:
           1. The "lab" pins to the viewport (z-0).

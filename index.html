@@ -112,9 +112,9 @@
   <body>
     <script>
       try {
-        document.documentElement.dataset.theme = localStorage.getItem('rds-theme') || 'dark'
+        document.documentElement.dataset.theme = localStorage.getItem('rds-theme') || 'light'
       } catch (e) {
-        document.documentElement.dataset.theme = 'dark'
+        document.documentElement.dataset.theme = 'light'
       }
     </script>
     <div id="root"></div>

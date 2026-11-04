@@ -3,13 +3,14 @@ import { useLang } from '../i18n/LanguageContext'
 import { social, contact } from '../data/site'
 import LiveClock from './LiveClock'
 import Wordmark from './Wordmark'
+import PixelField from './PixelField'
 
 export default function Footer() {
   const { t, lang } = useLang()
 
   return (
-    <footer className="theme-invert relative bg-bg px-6 pt-16 pb-8 text-text md:px-10">
-      <div className="mx-auto max-w-[1400px]">
+    <footer className="relative overflow-hidden border-t border-line bg-bg pt-16 text-text">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
             <Wordmark className="mb-5 h-10 w-auto text-text" />
@@ -61,12 +62,11 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bookend — the wordmark at colossal scale closes every page, a
-            signature stamped across the foot of the site (decorative). */}
-        <div className="mt-14 md:mt-20" aria-hidden="true">
-          <Wordmark className="h-auto w-full text-text/[0.07]" />
-        </div>
       </div>
+
+      {/* Bookend — the wordmark in pixels, full-bleed, scattering into the
+          bottom edge; the pixels part around the cursor (decorative). */}
+      <PixelField mode="text" text="ROCHA" className="mt-14 h-[30vw] w-full md:mt-20" />
     </footer>
   )
 }

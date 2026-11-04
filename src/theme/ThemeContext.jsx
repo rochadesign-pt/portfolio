@@ -12,7 +12,7 @@ export function ThemeProvider({ children }) {
     if (typeof document !== 'undefined' && document.documentElement.dataset.theme) {
       return document.documentElement.dataset.theme
     }
-    return 'dark'
+    return 'light'
   })
 
   useEffect(() => {
